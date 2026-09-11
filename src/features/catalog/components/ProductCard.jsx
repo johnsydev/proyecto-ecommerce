@@ -7,6 +7,8 @@ export default function ProductCard({ hit }) {
   
     const [tieneDescuento, setTieneDescuento] = useState(false);
     const navigate = useNavigate();
+    const isAvailable = hit.in_stock && hit.b2c.enabled;
+    const notAvailableText = !hit.b2c.enabled ? "Producto no disponible" : "Producto agotado";
 
     useEffect(() => {
         if (hit.b2c.discount_percentage > 0) {
@@ -51,10 +53,10 @@ export default function ProductCard({ hit }) {
             )}
         </p>
 
-        {(hit.in_stock && hit.b2c.enabled) ? (
+        {(isAvailable) ? (
             <button className="product-button"><ShoppingCart size={22} strokeWidth={2} /> Agregar al carrito</button>
         ) : (
-            <span className="pc-without-stock"><XCircle size={22} strokeWidth={2} />Producto {!hit.b2c.enabled ? "no disponible" : "agotado"}</span>
+            <button className="pc-without-stock"><XCircle size={22} strokeWidth={2} />{notAvailableText}</button>
         )}
         </div>
     </div>
