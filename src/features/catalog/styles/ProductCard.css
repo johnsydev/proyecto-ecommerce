@@ -1,169 +1,293 @@
 .product-card {
-    width: 260px;
-    height: 425px;
+  width: 100%;
+  min-width: 0;
+  min-height: 360px;
+  height: 100%;
 
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+  background: #ffffff;
 
-    overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
 
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+  overflow: hidden;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
 }
-
-
 
 
 .product-img-container {
-    width: 100%;
-    height: 230px;
-    flex-shrink: 0;
+  width: 100%;
+  height: 200px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: #ffffff; 
 
-    background: #f8fafc;
-
-    padding: 0;
-    box-sizing: border-box;
-
-    cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+
+@media (max-width: 600px) {
+
+  .product-img-container {
     width: 100%;
-    height: 100%;
+    height: 125px;
+    padding: 0; 
+  }
 
-    object-fit: contain;
-
-    transition: transform 0.25s ease;
 }
-
-.product-card:hover .product-img {
-    transform: scale(1.02);
-}
-
-
-
 
 .product-info {
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  min-width: 0;
 
-    flex: 1;
+  display: flex;
+  flex-direction: column;
 
-    padding: 18px;
+  flex: 1;
 
-    box-sizing: border-box;
+  padding: 18px;
+
+  box-sizing: border-box;
 }
-
-
-
 
 .product-title {
-    margin: 0 0 12px;
+  margin: 0 0 8px;
 
-    min-height: 45px;
-    max-height: 45px;
+  min-height: 45px;
+  max-height: 45px;
 
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
 
-    color: #1f2937;
+  color: #1f2937;
 
-    overflow: hidden;
-    cursor: pointer;
-}
+  overflow: hidden;
 
-
-
-
-.product-price {
-    margin: auto 0 16px;
-
-    font-size: 22px;
-    font-weight: 500;
-
-    color: #345499;
-}
-
-
-
-
-.product-button {
-    width: 100%;
-    height: 46px;
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    padding: 10px 16px;
-
-    border: 1px solid #345499;
-    border-radius: 8px;
-
-    background: #ffffff;
-    color: black;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    box-sizing: border-box;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-.product-button:hover {
-    background: #345499;
-    color: white;
-}
-
-.product-button:active {
-    transform: scale(0.98);
-}
-
-.product-button svg {
-    flex-shrink: 0;
-    display: block;
-}
-
-
-.product-regular-price-discount {
-    font-size: 20px;
-    text-decoration: line-through;
-    margin-left: 8px;
-    color: #b4b6b9;
+  cursor: pointer;
 }
 
 .product-model {
-    margin: -4px 0 8px;
+  margin: 0 0 8px;
 
-    font-size: 12px;
-    font-weight: 400;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
 
-    color: #9ca3af;
+  color: #9ca3af;
 
-    line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  margin: auto 0 16px;
+
+  font-size: 22px;
+  font-weight: 500;
+
+  color: #345499;
+}
+
+.product-discount {
+  color: #345499;
+}
+
+.product-regular-price {
+  color: #345499;
+}
+
+.product-regular-price-discount {
+  margin-left: 8px;
+
+  font-size: 16px;
+
+  color: #b4b6b9;
+
+  text-decoration: line-through;
+}
+
+.product-button {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #345499;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #000000;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.product-button:hover {
+  background: #345499;
+
+  color: #ffffff;
+}
+
+.product-button:active {
+  transform: scale(0.98);
+}
+
+.product-button svg {
+  flex-shrink: 0;
+
+  display: block;
+}
+
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+  .product-info {
+    padding: 14px;
+  }
+
+  .product-title {
+    font-size: 15px;
+  }
+
+  .product-price {
+    font-size: 20px;
+  }
+
+  .product-regular-price-discount {
+    font-size: 14px;
+  }
+}
+
+/* Celular */
+
+@media (max-width: 600px) {
+
+    .product-card {
+        width: 100%;
+        min-width: 0;
+
+        min-height: 270px;
+
+        border-radius: 9px;
+    }
+
+    .product-img-container {
+        width: 100%;
+        height: 125px;
+
+        padding: 5px;
+    }
+
+    .product-info {
+        min-width: 0;
+
+        padding: 8px;
+    }
+
+    .product-title {
+        min-height: 34px;
+        max-height: 34px;
+
+        margin: 0 0 4px;
+
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .product-model {
+        margin: 0 0 4px;
+
+        font-size: 9px;
+        line-height: 1.2;
+    }
+
+    .product-price {
+        margin: auto 0 8px;
+
+        font-size: 16px;
+        line-height: 1.2;
+    }
+
+    .product-discount {
+        font-size: 16px;
+    }
+
+    .product-regular-price {
+        font-size: 16px;
+    }
+
+    .product-regular-price-discount {
+        margin-left: 4px;
+
+        font-size: 10px;
+    }
+
+    .product-button {
+        width: 100%;
+
+        min-height: 36px;
+
+        margin-top: auto;
+
+        gap: 4px;
+
+        padding: 5px 3px;
+
+        font-size: 10px;
+
+        white-space: nowrap;
+    }
+
+    .product-button svg {
+        width: 14px;
+        height: 14px;
+    }
 }

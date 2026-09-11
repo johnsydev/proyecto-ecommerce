@@ -1,51 +1,114 @@
 .product-grid {
-    margin: 0px 0;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
 
+.ais-Hits {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Lista de productos */
 .ais-Hits-list {
+    width: 100%;
+
     display: grid;
-    grid-template-columns: repeat(4, 250px);
-    justify-content: center;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(210px, 1fr)
+    );
+
     gap: 24px;
+
     list-style: none;
+
     padding: 0;
     margin: 0;
+
+    box-sizing: border-box;
 }
 
 .ais-Hits-item {
+    width: 100%;
+    min-width: 0;
+
     margin: 0;
+    padding: 0;
+
+    display: flex;
+
+    box-sizing: border-box;
 }
 
 .no-results-found {
+    width: 100%;
+
     text-align: center;
+
     font-size: 22px;
+
     color: #6b7280;
+
     margin-top: 70px;
     margin-bottom: 20px;
 }
 
 .no-results-image {
+    display: block;
+
+    width: 180px;
+    max-width: 60%;
+
+    height: auto;
+
     object-fit: contain;
-    margin-bottom: 20px;
+
+    margin: 0 auto 20px;
+
     opacity: 0.8;
-    width: 20%;
-    height: 20%;
 }
 
-@media (max-width: 1100px) {
+
+/* Tablet*/
+
+@media (max-width: 1000px) {
+
     .ais-Hits-list {
-        grid-template-columns: repeat(3, 250px);
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(190px, 1fr)
+        );
+
+        gap: 18px;
     }
 }
 
-@media (max-width: 850px) {
-    .ais-Hits-list {
-        grid-template-columns: repeat(2, 250px);
-    }
-}
 
-@media (max-width: 550px) {
+/* Celular */
+
+@media (max-width: 600px) {
+
     .ais-Hits-list {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .ais-Hits-item {
+        min-width: 0;
+    }
+
+    .no-results-found {
+        margin-top: 40px;
+        margin-bottom: 16px;
+
+        font-size: 18px;
+    }
+
+    .no-results-image {
+        width: 150px;
+        max-width: 55%;
     }
 }

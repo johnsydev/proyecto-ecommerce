@@ -1,11 +1,27 @@
-import { RefinementList } from "react-instantsearch";
+import { RefinementList, ClearRefinements } from "react-instantsearch";
 import PriceSlider from "./PriceSlider"; 
+import { Funnel } from "lucide-react"; 
 import "../styles/Filters.css";
 
 export default function Filters() {
     return (
         <div className="filters-container">
-            <h2 className="filters-title">Filtros</h2>
+           
+            <div className="filters-header">
+                <h2 className="filters-title">
+                    <Funnel size={20} strokeWidth={2.5} className="filters-icon" />
+                    Filtros
+                </h2>
+                <ClearRefinements 
+                    translations={{
+                        resetButtonText: 'Limpiar',
+                    }}
+                    classNames={{
+                        button: 'clear-filters-button',
+                        disabledButton: 'clear-filters-button--disabled'
+                    }}
+                />
+            </div>
 
             <div className="filter-section">
                 <h3 className="filter-subtitle">Categoría</h3>
@@ -13,7 +29,7 @@ export default function Filters() {
                     attribute="categories" 
                     searchable={true} 
                     searchablePlaceholder="Buscar categoría..."
-                    limit={50} /* Carga hasta 50 categorías */
+                    limit={50} 
                 />
             </div>
 
@@ -23,13 +39,13 @@ export default function Filters() {
                     attribute="brand" 
                     searchable={true} 
                     searchablePlaceholder="Buscar marca..."
-                    limit={50} /* Carga hasta 50 marcas */
+                    limit={50} 
                 />
             </div>
 
             <div className="filter-section">
                 <h3 className="filter-subtitle">Precio (₡)</h3>
-                {/* double slider conectado a Algolia */}
+              
                 <PriceSlider attribute="b2c.sale_price" />
             </div>
 

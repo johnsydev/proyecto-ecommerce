@@ -1,9 +1,12 @@
-function Home() {
-  return (
-    <div>
-      <h1>Página de inicio</h1>
-    </div>
-  );
-}
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default Home
+export default function Home() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/search', { replace: true });
+  }, [navigate]);
+
+  return null;
+}

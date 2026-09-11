@@ -1,54 +1,405 @@
 .catalog-page {
-    display: grid;
-   
-    grid-template-columns: 280px 1fr;
-    gap: 50px; 
-    max-width: 1300px; /* Un poco más de ancho */
+    width: 100%;
+    max-width: 1300px;
+
     margin: 0 auto;
     padding: 40px 20px;
-    
+
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+
+    gap: 50px;
+
+    align-items: start;
+
+    box-sizing: border-box;
 }
 
 .panel-izq {
     width: 100%;
+
     position: sticky;
-    top: 20px; 
+    top: 100px;
+
     align-self: start;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
 }
 
+
 .panel-der {
+    width: 100%;
     min-width: 0;
+
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Empuja todo su contenido hacia la izquierda */
+    align-items: stretch;
+
+    align-self: start;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+.panel-der > .product-grid {
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
 }
 
 .panel-der h1 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 2rem;
-    color: #1a1a1a;
-    font-weight: 700;
-    text-align: left;
     width: 100%;
+
+    margin: 0 0 20px;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    color: #1a1a1a;
+
+    text-align: left;
 }
 
-/* Controlamos el ancho y posición de la barra de búsqueda desde afuera */
+
 .panel-der .search-bar {
     width: 100%;
-    max-width: 1500px; /* Evita que se estire demasiado en pantallas grandes */
-    margin-bottom: 30px;
-    margin-left: 0; /* Anula cualquier centrado automático previo */
+    max-width: 1500px;
+
+    margin-top: 0;
+    margin-left: 0;
     margin-right: auto;
+    margin-bottom: 30px;
 }
 
-@media (max-width: 768px) {
+.filters-floating-btn {
+    display: none;
+}
+
+.mobile-filters {
+    display: none;
+}
+
+.filters-overlay {
+    display: none;
+}
+
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+
     .catalog-page {
-        grid-template-columns: 1fr;
+        grid-template-columns: 230px minmax(0, 1fr);
+
         gap: 30px;
+
+        padding: 30px 18px;
     }
 
     .panel-izq {
-        position: static;
+        top: 95px;
+    }
+
+    .panel-der h1 {
+        font-size: 1.7rem;
+    }
+}
+
+/* Tablet y celular */
+
+@media (max-width: 900px) {
+
+    .catalog-page {
+        width: 100%;
+
+        display: block;
+
+        margin: 0 auto;
+
+        padding: 30px 14px 20px;
+
+        box-sizing: border-box;
+    }
+
+    .panel-izq {
+        display: none;
+    }
+
+    .panel-der {
+        width: 100%;
+        min-width: 0;
+
+        margin: 0;
+        padding: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        box-sizing: border-box;
+    }
+
+    /* Boton flotante */
+    .filters-floating-btn {
+        position: fixed;
+
+        right: 18px;
+        bottom: 22px;
+
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+
+        background-color: #345499;
+
+        color: #ffffff;
+
+        border: none;
+        border-radius: 16px;
+
+        box-shadow:
+            0 6px 18px rgba(0, 0, 0, 0.22),
+            0 2px 5px rgba(0, 0, 0, 0.12);
+
+        cursor: pointer;
+
+        z-index: 1500;
+
+        transition:
+            background-color 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .filters-floating-btn:hover {
+        background-color: #2a437a;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 8px 22px rgba(0, 0, 0, 0.27),
+            0 3px 7px rgba(0, 0, 0, 0.15);
+    }
+
+    .filters-floating-btn:active {
+        transform: scale(0.94);
+    }
+
+    .filters-floating-btn svg {
+        display: block;
+
+        flex-shrink: 0;
+    }
+
+    .filters-overlay {
+        position: fixed;
+
+        inset: 0;
+
+        display: block;
+
+        background-color: rgba(15, 23, 42, 0.48);
+
+        z-index: 1999;
+
+        backdrop-filter: blur(1px);
+    }
+
+    .mobile-filters {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: min(82vw, 330px);
+
+        height: 100vh;
+        height: 100dvh;
+
+        display: flex;
+        flex-direction: column;
+
+        background-color: #ffffff;
+
+        z-index: 2000;
+
+        box-shadow: 6px 0 25px rgba(0, 0, 0, 0.25);
+
+        transform: translateX(-105%);
+
+        transition:
+            transform 0.3s cubic-bezier(
+                0.4,
+                0,
+                0.2,
+                1
+            );
+
+        box-sizing: border-box;
+    }
+
+    .mobile-filters.open {
+        transform: translateX(0);
+    }
+
+
+    .mobile-filters-header {
+        width: 100%;
+        min-height: 62px;
+
+        padding: 0 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        flex-shrink: 0;
+
+        background-color: #ffffff;
+
+        border-bottom: 1px solid #e5e7eb;
+
+        box-sizing: border-box;
+    }
+
+    .mobile-filters-title {
+        display: flex;
+        align-items: center;
+
+        gap: 9px;
+
+        color: #1e293b;
+
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .mobile-filters-title svg {
+        color: #345499;
+    }
+
+    .mobile-filters-close {
+        width: 36px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+
+        background-color: #f1f5f9;
+
+        border: none;
+        border-radius: 8px;
+
+        color: #334155;
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+
+    .mobile-filters-close:hover {
+        background-color: #e2e8f0;
+
+        color: #0f172a;
+    }
+
+    .mobile-filters-close:active {
+        transform: scale(0.95);
+    }
+
+    .mobile-filters-content {
+        width: 100%;
+
+        flex: 1;
+
+        padding: 16px;
+
+        overflow-y: auto;
+
+        box-sizing: border-box;
+    }
+
+    .panel-der > .product-grid {
+        width: 100%;
+
+        margin: 0;
+        padding: 0;
+    }
+
+    .panel-der h1 {
+        width: 100%;
+
+        margin: 0 0 16px;
+
+        font-size: 1.5rem;
+    }
+
+    .panel-der .search-bar {
+        width: 100%;
+
+        margin: 0 0 20px;
+    }
+}
+
+
+/* celular pequeño */
+
+@media (max-width: 480px) {
+
+    .catalog-page {
+        padding: 6px 10px 16px;
+    }
+
+    .panel-der {
+        margin: 0;
+        padding: 0;
+    }
+
+    .filters-floating-btn {
+        right: 14px;
+        bottom: 12px;
+
+        width: 42px;
+        height: 42px;
+    }
+
+    .filters-floating-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .mobile-filters {
+        width: 85vw;
+        max-width: 310px;
+    }
+
+    .mobile-filters-header {
+        min-height: 58px;
+
+        padding: 0 12px;
+    }
+
+    .mobile-filters-content {
+        padding: 12px;
+    }
+
+    .panel-der h1 {
+        font-size: 1.35rem;
     }
 }

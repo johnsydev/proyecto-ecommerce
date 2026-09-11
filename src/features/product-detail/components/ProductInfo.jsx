@@ -20,21 +20,16 @@ export default function ProductInfo({ product }) {
         {product ? (
             <>
                 <span className="pi-route-product">
-                    {product?.categories.map((category, index) => (
+                    {product?.categories?.map((category, index) => (
                         <span key={category}>
                             <span
                                 className="pi-category-link"
                                 onClick={() =>
-                                    navigate("/search", {
-                                        state: {
-                                            category: category
-                                        }
-                                    })
+                                    navigate("/search", { state: { category } })
                                 }
                             >
                                 {category}
                             </span>
-
                             {index < product.categories.length - 1 && " > "}
                         </span>
                     ))}

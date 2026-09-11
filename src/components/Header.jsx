@@ -1,6 +1,6 @@
-import SearchBar from "../../catalog/components/SearchBar";
+import SearchBar from "../features/catalog/components/SearchBar";
 import "../styles/Header.css";
-import robotLogo from "../../../assets/ElectroLogo.png";
+import robotLogo from "../assets/ElectroLogo.png";
 
 export default function Header() {
     return (
@@ -8,10 +8,10 @@ export default function Header() {
             <div className="header-container">
                 
                
-                <div className="header-brand">
+                <a href="#/search" className="header-brand">
                     <img src={robotLogo} alt="Electro-Commerce CR Logo" className="header-logo-img" />
                     <span className="header-title">Electro-Commerce CR</span>
-                </div>
+                </a>
 
                 
                 <div className="header-search-container">
@@ -20,18 +20,20 @@ export default function Header() {
 
                 
                 <div className="header-actions">
-                    <div className="account-icon-wrapper">
-                            <svg className="account-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                    </div>
-                    <div className="account-text">
-                        <span className="account-label">Account</span>
-                        <div className="account-links">
-                            <a href="#signin">Sign In</a>
-                            <span className="separator">/</span>
-                            <a href="#signup">Sign Up</a>
+                    <div className="header-account">
+                        <div className="account-icon-wrapper">
+                                <svg className="account-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                        </div>
+                        <div className="account-text">
+                            <span className="account-label">Cuenta</span>
+                            <div className="account-links">
+                                <a href="#signin">Acceso</a>
+                                <span className="separator">/</span>
+                                <a href="#signup">Registro</a>
+                            </div>
                         </div>
                     </div>
 

@@ -48,7 +48,6 @@
     color: #222;
 }
 
-
 .stock-color-green {
     color: #4caf50 !important;
 }
@@ -61,3 +60,30 @@
     color: #f44336 !important;
 }
 
+
+/* Tablet */
+@media (max-width: 900px) {
+    .pi-branch-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Teléfono */
+@media (max-width: 650px) {
+    .pi-branch-list {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 8px;
+    }
+
+    .pi-branch-item {
+        padding: 10px 6px;
+    }
+
+    .pi-branch-title {
+        font-size: 13px;
+    }
+
+    .pi-branch-item > span:last-child {
+        font-size: 13px;
+    }
+}

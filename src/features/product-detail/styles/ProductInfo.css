@@ -1,8 +1,15 @@
+.pi-page,
+.pi-page * {
+    box-sizing: border-box;
+}
+
 .pi-page {
     width: 80%;
-    max-width: 1800px;
+    max-width: 2000px;
     text-align: left;
     align-self: center;
+    margin: 0 auto;
+    margin-top: 15px;
 }
 
 .pi-route-product {
@@ -27,9 +34,6 @@
     gap: 40px;
     align-items: start;
 }
-
-
-/* Para la imagen */
 
 .pi-izq {
     width: 100%;
@@ -67,27 +71,29 @@
     margin: 0 0 10px;
 }
 
-
-
 .pi-product-badges {
     width: 100%;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: flex-start;
 }
 
 .pi-product-badge {
-    flex: 1 1 220px;
+    flex: 1 1 200px;
     min-width: 0;
-    height: 35px;
-
-    display: flex;
+    
+    height: 36px !important; 
+    max-height: 36px !important;
+    
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    gap: 8px;
-    padding: 10px 16px;
+    gap: 6px;
+    padding: 0 12px;
 
     border: 1px solid #345499;
     border-radius: 8px;
@@ -95,19 +101,17 @@
     background: #ffffff;
     color: black;
 
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
-
     box-sizing: border-box;
 }
 
 .pi-product-badge svg {
+    width: 16px !important;
+    height: 16px !important;
     flex-shrink: 0;
     display: block;
 }
-
-
-/* Características */
 
 .pi-product-info-container-details {
     margin-bottom: 20px;
@@ -131,13 +135,15 @@
     margin-bottom: 3px;
 }
 
-
-
 .pi-container-prices {
     margin: 0 0 16px;
     font-size: 22px;
     font-weight: 500;
     color: #345499;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .pi-product-price {
@@ -148,7 +154,6 @@
 .pi-product-regular-price-discount {
     font-size: 20px;
     text-decoration: line-through;
-    margin-left: 8px;
     color: #b4b6b9;
 }
 
@@ -166,8 +171,6 @@
 
     padding: 2px 8px;
     border-radius: 4px;
-
-    margin-left: 12px;
 }
 
 .pi-product-discount-badge svg {
@@ -176,16 +179,18 @@
     flex-shrink: 0;
 }
 
-
 .pi-shipping-container {
     width: 100%;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    flex-wrap: nowrap;
     gap: 12px;
 }
 
 .pi-shipping-quantity-container {
     width: 90px;
+    flex: 0 0 90px;
     display: flex;
     align-items: center;
     gap: 0;
@@ -194,25 +199,32 @@
     border-radius: 6px;
 
     padding: 0;
-    flex-shrink: 0;
-    box-sizing: border-box;
+    overflow: hidden;
+    height: 45px;
 }
 
 .pi-shipping-quantity {
     flex: 1;
     text-align: center;
+    font-size: 14px;
+    font-weight: 600;
     padding: 0 5px;
 }
 
 .pi-shipping-button-del,
 .pi-shipping-button-add {
     background-color: #345499;
+    color: #ffffff;
     border: none;
 
     padding: 5px 10px;
 
     cursor: pointer;
-    height: 44px;
+    height: 100%;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pi-shipping-button-add {
@@ -229,12 +241,8 @@
     cursor: not-allowed;
 }
 
-
-
-
 .pi-add-to-cart {
-    flex: 1;
-    width: auto;
+    flex: 1 1 auto;
     min-width: 0;
     height: 45px;
 
@@ -253,9 +261,9 @@
 
     font-size: 14px;
     font-weight: 600;
+    white-space: nowrap;
 
     cursor: pointer;
-    box-sizing: border-box;
 
     transition:
         background 0.2s ease,
@@ -277,12 +285,8 @@
     display: block;
 }
 
-
-
-
 .pi-without-stock {
-    flex: 1;
-    width: auto;
+    flex: 1 1 auto;
     min-width: 0;
     height: 45px;
 
@@ -303,13 +307,7 @@
 
     font-size: 16px;
     font-weight: 600;
-
-    box-sizing: border-box;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
+    white-space: nowrap;
 }
 
 .pi-without-stock:hover {
@@ -321,9 +319,6 @@
     flex-shrink: 0;
     display: block;
 }
-
-
-
 
 .pi-product-info-container-description {
     width: 100%;
@@ -339,10 +334,25 @@
     line-height: 1.6;
 }
 
+@media (max-width: 1300px) {
+    .pi-page {
+        margin-top: 12px;
+    }
 
-/* tablet */
+    .pi-product-badges {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+}
+
+/* Tablet */
 
 @media (max-width: 900px) {
+    .pi-page {
+        width: 92%;
+        margin-top: 12px;
+    }
 
     .pi-product-detail-grid {
         grid-template-columns: 1fr 1fr;
@@ -350,6 +360,7 @@
     }
 
     .pi-product-image {
+        max-width: 100%;
         max-height: 400px;
     }
 
@@ -357,13 +368,23 @@
         flex-basis: 180px;
         font-size: 13px;
     }
+
+    .pi-product-description {
+        font-size: 14.4px;
+    }
+
+    .pi-page h3 {
+        font-size: 1.1rem;
+    }
 }
 
-
-
-/* telefono */
-
-@media (max-width: 650px) {
+/* Celular */
+@media (max-width: 700px) {
+    .pi-page {
+        width: 100%;
+        padding: 0 10px;
+        margin-top: 15px;
+    }
 
     .pi-product-detail-grid {
         grid-template-columns: 1fr;
@@ -371,54 +392,81 @@
     }
 
     .pi-izq {
+        width: 100%;
         min-height: 0;
     }
 
     .pi-product-image {
-        max-height: 300px;
+        width: 100%;
+        max-width: 100%;
+        max-height: 350px;
     }
 
     .pi-product-badges {
         flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
     }
 
     .pi-product-badge {
         width: 100%;
-        flex: none;
+        height: 34px !important;
+        max-height: 34px !important;
+        font-size: 14.4px;
+        padding: 0 10px;
+        justify-content: left;
+    }
+
+    .pi-product-badge svg {
+        width: 14px !important;
+        height: 14px !important;
     }
 
     .pi-shipping-container {
-        width: 100%;
+        gap: 8px;
+    }
+
+    .pi-shipping-quantity-container {
+        width: 80px;
+        flex: 0 0 80px;
+        height: 44px;
     }
 
     .pi-add-to-cart {
-        flex: 1;
+        font-size: 12px;
+        padding: 0 8px;
+        height: 44px;
     }
 }
 
+/* Teléfono pequeño */
+@media (max-width: 420px) {
+    .pi-page {
+        padding: 0 8px;
+        margin-top: 15px;
+    }
 
-/* telefono pequeño */
-
-@media (max-width: 400px) {
+    .pi-route-product {
+        font-size: 12px;
+    }
 
     .pi-product-title {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
-    .pi-product-image {
-        max-height: 250px;
+    .pi-product-badge {
+        justify-content: left;
+        font-size: 12px;
+        padding: 5px 8px;
     }
 
-    .pi-shipping-container {
-        flex-wrap: wrap;
+    .pi-shipping-quantity-container {
+        width: 75px;
+        flex: 0 0 75px;
     }
 
     .pi-add-to-cart {
-        width: 100%;
-        flex: none;
-    }
-
-    .pi-product-discount-badge {
-        margin-left: 5px;
+        font-size: 13px;
+        padding: 0 6px;
     }
 }

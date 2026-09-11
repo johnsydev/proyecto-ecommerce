@@ -1,29 +1,45 @@
 .catalog-pagination {
+    width: 100%;
+
     display: flex;
     justify-content: center;
-    width: 100%;
+
     margin: 40px 0 8px;
     padding: 0 16px;
+
     box-sizing: border-box;
+}
+
+.catalog-pagination .ais-Pagination {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
 }
 
 .ais-Pagination-list {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
     justify-content: center;
+
+    flex-wrap: nowrap;
+
     gap: 8px;
-    width: max-content;
+
     max-width: 100%;
-    overflow-x: auto;
+
     margin: 0;
     padding: 0;
+
     list-style: none;
 }
 
 .ais-Pagination-item {
     flex: 0 0 42px;
+
+    width: 42px;
     height: 42px;
+
     min-width: 0;
 }
 
@@ -31,63 +47,238 @@
 .ais-Pagination-item--previousPage,
 .ais-Pagination-item--nextPage,
 .ais-Pagination-item--lastPage {
+    width: auto;
+
     flex: 0 0 auto;
 }
 
 .ais-Pagination-link {
+    width: 100%;
+    height: 100%;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
+
     padding: 0 12px;
+
     box-sizing: border-box;
+
     border: 1px solid #d1d5db;
     border-radius: 8px;
+
     background: #ffffff;
+
     color: #374151;
+
     font-size: 0.9rem;
+    font-weight: 500;
+
     line-height: 1;
+
     white-space: nowrap;
+
     text-decoration: none;
-    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
 }
 
 .ais-Pagination-link:hover {
     border-color: #345499;
+
     color: #345499;
+
+    background-color: #f8fafc;
 }
 
 .ais-Pagination-item--selected .ais-Pagination-link {
     border-color: #345499;
+
     background: #345499;
+
     color: #ffffff;
+
     font-weight: 700;
 }
 
 .ais-Pagination-item--disabled .ais-Pagination-link {
     cursor: not-allowed;
-    opacity: 0.45;
+
+    opacity: 0.4;
 }
 
-@media (max-width: 550px) {
+/* Tablet y celular */
+
+@media (max-width: 768px) {
+
     .catalog-pagination {
-        margin-top: 28px;
-        padding: 0 8px;
+        margin: 28px 0 4px;
+        padding: 0;
+        overflow: hidden;
     }
 
-    .ais-Pagination-link {
-        padding: 0 10px;
-        font-size: 0.8rem;
+    .ais-Pagination-list {
+        width: 100%;
+        max-width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 5px;
+
+        margin: 0;
+        padding: 0;
+
+        overflow: visible;
     }
 
     .ais-Pagination-item {
-        flex-basis: 38px;
+        width: 38px;
         height: 38px;
+
+        flex: 0 0 38px;
     }
 
-    .ais-Pagination-item--firstPage,
+    .ais-Pagination-link {
+        width: 100%;
+        height: 100%;
+
+        padding: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 0.8rem;
+
+        border-radius: 7px;
+    }
+
+
+    /* Primera Pagina */
+
+    .ais-Pagination-item--firstPage {
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+    }
+
+    .ais-Pagination-item--firstPage .ais-Pagination-link {
+        font-size: 0;
+    }
+
+    .ais-Pagination-item--firstPage .ais-Pagination-link::before {
+        content: "<<";
+
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    /* Anterior */
+
+    .ais-Pagination-item--previousPage {
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+    }
+
+    .ais-Pagination-item--previousPage .ais-Pagination-link {
+        font-size: 0;
+    }
+
+    .ais-Pagination-item--previousPage .ais-Pagination-link::before {
+        content: "<";
+
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    /* Siguiente */
+
+    .ais-Pagination-item--nextPage {
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+    }
+
+    .ais-Pagination-item--nextPage .ais-Pagination-link {
+        font-size: 0;
+    }
+
+    .ais-Pagination-item--nextPage .ais-Pagination-link::before {
+        content: ">";
+
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+
+    /* Ultima pagina */
+
     .ais-Pagination-item--lastPage {
-        display: none;
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+    }
+
+    .ais-Pagination-item--lastPage .ais-Pagination-link {
+        font-size: 0;
+    }
+
+    .ais-Pagination-item--lastPage .ais-Pagination-link::before {
+        content: ">>";
+
+        font-size: 15px;
+        font-weight: 700;
+    }
+}
+
+
+/* Celular pequeño */
+
+@media (max-width: 400px) {
+
+    .catalog-pagination {
+        padding: 0;
+    }
+
+    .ais-Pagination-list {
+        gap: 3px;
+    }
+
+    .ais-Pagination-item,
+    .ais-Pagination-item--firstPage,
+    .ais-Pagination-item--previousPage,
+    .ais-Pagination-item--nextPage,
+    .ais-Pagination-item--lastPage {
+        width: 32px;
+        height: 32px;
+
+        flex: 0 0 32px;
+    }
+
+    .ais-Pagination-link {
+        font-size: 0.72rem;
+
+        border-radius: 6px;
+    }
+
+    .ais-Pagination-item--firstPage .ais-Pagination-link::before,
+    .ais-Pagination-item--lastPage .ais-Pagination-link::before {
+        font-size: 13px;
+    }
+
+    .ais-Pagination-item--previousPage .ais-Pagination-link::before,
+    .ais-Pagination-item--nextPage .ais-Pagination-link::before {
+        font-size: 17px;
     }
 }

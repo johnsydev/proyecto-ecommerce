@@ -1,6 +1,6 @@
 import "../styles/Footer.css";
 
-import robotLogo from "../../../assets/ElectroLogo.png"; 
+import robotLogo from "../assets/ElectroLogo.png"; 
 
 export default function Footer() {
     return (
