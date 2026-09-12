@@ -1,0 +1,123 @@
+.price-slider-container {
+  padding: 10px 0;
+}
+
+/* Contenedor de los inputs de texto tipo Min / Max */
+.price-inputs-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.price-input-group {
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 8px;
+  width: 45%;
+  transition: border-color 0.2s;
+}
+
+.price-input-group:focus-within {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.price-input-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-right: 4px;
+}
+
+.price-input-group input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111;
+  outline: none;
+  /* Ocultar flechas de incremento nativas del input number */
+  -moz-appearance: textfield;
+}
+
+.price-input-group input::-webkit-outer-spin-button,
+.price-input-group input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.price-dash {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+/* Estilos del Dual Slider (Igual que antes) */
+.dual-slider {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  margin-bottom: 12px;
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+
+.slider-track {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 1;
+}
+
+.dual-slider input[type="range"] {
+  position: absolute;
+  left: 0;
+  top: -6px;
+  width: 100%;
+  height: 18px;
+  background: none;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  z-index: 2;
+}
+
+.dual-slider input[type="range"]::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #007bff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease;
+}
+
+.dual-slider input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.thumb-min::-webkit-slider-thumb {
+  z-index: 4;
+}
+
+.thumb-max::-webkit-slider-thumb {
+  z-index: 5;
+}
+
+.price-limits {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}

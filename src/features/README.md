@@ -1,0 +1,1 @@
+Aquí van las carpetas con cada característica del E-Commerce (por ejemplo, catalog).

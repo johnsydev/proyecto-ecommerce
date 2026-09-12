@@ -1,0 +1,470 @@
+.ctg-search-bar {
+  width: 100%;
+  max-width: 650px;
+  margin: 0;
+  position: relative;
+}
+
+.ctg-search-bar .aa-Form {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 16px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #1e293b;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.ctg-search-bar .aa-Form:focus-within {
+  border-color: #345499;
+  box-shadow: 0 0 0 3px rgba(52, 84, 153, 0.2);
+}
+
+.ctg-search-bar .aa-Input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #f8fafc;
+  font-family: var(--sans, sans-serif);
+  font-size: 0.9rem;
+}
+
+.ctg-search-bar .aa-Input::placeholder {
+  color: #94a3b8;
+}
+
+.ctg-search-bar .aa-InputWrapper {
+  flex: 1;
+}
+
+/* Buscar (botón) */
+.ctg-search-bar .aa-InputWrapperPrefix {
+  order: 3;
+}
+
+.ctg-search-bar .aa-SubmitButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: #345499;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.ctg-search-bar .aa-SubmitButton:hover {
+  background-color: #2a437a;
+}
+
+.ctg-search-bar .aa-SubmitButton svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+/* Botón limpiar (equis) */
+.ctg-search-bar .aa-InputWrapperSuffix {
+  order: 2;
+}
+
+.ctg-search-bar .aa-ClearButton {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #bac6d8;
+  cursor: pointer;
+  margin-right: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.ctg-search-bar
+  .aa-Form:has(.aa-Input:not(:placeholder-shown))
+  .aa-ClearButton {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mostrar botón de limpiar cuando hay texto y sin focus */
+.ctg-search-bar
+  .aa-Form:has(.aa-Input:not(:placeholder-shown))
+  .aa-ClearButton {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ctg-search-bar .aa-ClearButton svg {
+  width: 16px;
+  height: 16px;
+  color: currentColor;
+}
+
+/* Panel Desplegable (Autocomplete Panel) */
+.ctg-search-bar .aa-Panel {
+  position: absolute !important;
+  top: calc(100% + 6px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  z-index: 9999 !important;
+  text-align: left;
+
+  background: #1e293b; /* Adaptado al tema oscuro */
+  border: 1px solid #334155;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.ctg-search-bar .aa-List {
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.ctg-search-bar .aa-Item {
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ctg-search-bar .aa-Item[aria-selected="true"] {
+  background: #334155;
+}
+
+/* Ítems del Resultado */
+.ctg-autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #334155;
+  transition: background-color 0.15s ease;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="productosAutocompletado"]
+  .aa-Item:last-child
+  .ctg-autocomplete-item {
+  border-bottom: none;
+}
+
+.ctg-autocomplete-item:hover {
+  background-color: #334155;
+}
+
+.ctg-autocomplete-item-image {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+  border-radius: 4px;
+}
+
+.ctg-autocomplete-item-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.ctg-autocomplete-item-info {
+  flex: 1;
+  padding: 0;
+  min-width: 0;
+}
+
+.ctg-autocomplete-item-info strong {
+  display: block;
+  font-size: 14px;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ctg-autocomplete-item-info p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ctg-autocomplete-item-price {
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.ctg-autocomplete-item-regular-price {
+  font-size: 11px;
+  color: #64748b;
+  text-decoration: line-through;
+  margin-left: 0px;
+  transform: translateY(-0.3px);
+}
+
+.ctg-autocomplete-empty {
+  padding: 14px 10px;
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.ctg-search-bar input[type="search"]::-webkit-search-cancel-button,
+.ctg-search-bar input[type="search"]::-webkit-search-decoration,
+.ctg-search-bar input[type="search"]::-webkit-search-results-button,
+.ctg-search-bar input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ctg-search-bar input[type="search"]::-ms-clear,
+.ctg-search-bar input[type="search"]::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-Item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 6px 12px;
+  border-bottom: 1px solid #334155;
+  cursor: pointer;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-Item:last-child {
+  border-bottom: none;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-Item[aria-selected="true"] {
+  background-color: #334155;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemContent,
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemLink,
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: #0f172a;
+  color: #60a5fa;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemIcon
+  svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemContentTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemActions {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  gap: 2px;
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemActionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  color: #94a3b8;
+  cursor: pointer;
+  border-radius: 4px;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* basurero */
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemActions
+  .aa-ItemActionButton:first-child:hover {
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* flecha */
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemActions
+  .aa-ItemActionButton:last-child:hover {
+  color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.15);
+}
+
+.ctg-search-bar
+  .aa-Source[data-autocomplete-source-id="recentSearchesPlugin"]
+  .aa-ItemActionButton
+  svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.ctg-search-bar .aa-Panel mark,
+.ctg-search-bar .ctg-autocomplete-item mark {
+  background-color: rgba(52, 84, 153, 0.4);
+  color: #ffffff;
+  border-radius: 2px;
+}
+
+/* header de búsquedas recientes */
+.ctg-recent-searches-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+  border-bottom: 1px solid #334155;
+}
+
+.ctg-recent-searches-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.ctg-recent-searches-clear-all {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.ctg-recent-searches-clear-all:hover {
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+/* header de autocompletado */
+.ctg-autocomplete-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px;
+  border-bottom: 1px solid #334155;
+}
+
+.ctg-autocomplete-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.ctg-search-bar .aa-Panel:not(:has(.aa-Item)) {
+  display: none;
+}
+
+/* Contenedor de detalles */
+.ctg-autocomplete-item-details {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.ctg-autocomplete-item-model {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Badge sin stock */
+.ctg-autocomplete-badge-out-of-stock {
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  align-self: center;
+  transform: translateY(1px);
+}
+
+.ctg-autocomplete-item.is-out-of-stock .ctg-autocomplete-item-image img {
+  opacity: 0.5;
+}

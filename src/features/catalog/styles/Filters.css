@@ -1,0 +1,327 @@
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* --- BOTÓN LIMPIAR FILTROS --- */
+.clear-filters-button {
+  background-color: #f1f5f9;
+  color: #345499;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-filters-button:hover {
+  background-color: #345499;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.clear-filters-button--disabled:hover {
+  background-color: transparent;
+  color: #9ca3af;
+  transform: none;
+}
+
+/* Estado cuando no hay filtros activos (deshabilitado) */
+.clear-filters-button--disabled {
+  background-color: transparent;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+  padding: 5px 0;
+  transform: none;
+}
+
+.filters-icon {
+  color: #345499;
+  margin-top: 1px;
+}
+
+/* --- CONTENEDORES PRINCIPALES --- */
+.filters-container {
+  width: 100%;
+  min-width: 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.filters-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-section {
+  margin-bottom: 25px;
+}
+
+.filter-subtitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #000;
+  text-align: left;
+}
+
+/* --- LISTAS Y CHECKBOXES --- */
+.ais-RefinementList-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-height: 220px; /* Altura máxima de la caja antes de scrollear */
+  overflow-y: auto; /* Activa el scroll vertical */
+  padding-right: 5px !important; /* Espacio para que el scroll no tape los contadores */
+}
+/* barra de scroll */
+.ais-RefinementList-list::-webkit-scrollbar {
+  width: 6px;
+}
+.ais-RefinementList-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+.ais-RefinementList-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+.ais-RefinementList-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.ais-RefinementList-item {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ais-RefinementList-label {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Checkbox cuadrado y limpio */
+.ais-RefinementList-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  margin: 2px 12px 0 0; /*  margen para alinear con la primera línea de texto */
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  background-color: #fff;
+  transition: all 0.2s;
+}
+
+.ais-RefinementList-checkbox:checked {
+  background-color: #fff;
+  border-color: #007bff;
+}
+
+.ais-RefinementList-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  color: #007bff;
+  font-size: 14px;
+  font-weight: bold;
+  top: -2px;
+  left: 2px;
+}
+
+/* Texto del filtro */
+.ais-RefinementList-labelText {
+  flex-grow: 1;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #222;
+  line-height: 1.3;
+  text-align: left !important; /* obliga la alineación izquierda */
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.ais-RefinementList-count {
+  flex-shrink: 0;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  margin-top: 1px; /* Para que alinee con la primera línea de texto */
+}
+
+/* --- BUSCADOR INTERNO DE MARCA/CATEGORÍA --- */
+.ais-RefinementList-searchBox .ais-SearchBox-form {
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.ais-RefinementList-searchBox .ais-SearchBox-input {
+  width: 100%;
+  padding: 10px 35px 10px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  outline: none;
+  background-color: #ffffff !important;
+  color: #333 !important;
+}
+
+.ais-RefinementList-searchBox .ais-SearchBox-input:focus {
+  border-color: #007bff;
+}
+
+.ais-RefinementList-searchBox .ais-SearchBox-submit {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ais-RefinementList-searchBox .ais-SearchBox-submitIcon {
+  width: 16px;
+  height: 16px;
+  fill: #6b7280;
+}
+
+.ais-RefinementList-searchBox .ais-SearchBox-reset {
+  display: none;
+}
+
+/* --- BOTÓN MOSTRAR MÁS --- */
+.ais-RefinementList-showMore {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  margin-top: 5px;
+  color: #007bff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: 1px dashed #cbd5e0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ais-RefinementList-showMore:hover {
+  background-color: #f8fbff;
+  border-color: #007bff;
+}
+
+.ais-RefinementList-showMore--disabled {
+  display: none;
+}
+
+/* Ocultar el botón Show More ya que ahora se scrollea */
+.ais-RefinementList-showMore {
+  display: none !important;
+}
+
+/* --- EFECTOS HOVER --- */
+.ais-RefinementList-label:hover .ais-RefinementList-labelText {
+  color: #345499 !important;
+  transition: color 0.2s ease;
+}
+
+.ais-RefinementList-label:hover .ais-RefinementList-checkbox {
+  border-color: #345499 !important;
+}
+
+.ais-RefinementList-label:hover .ais-RefinementList-count {
+  background-color: #345499 !important;
+  color: white !important;
+  border-color: #345499 !important;
+  transition: all 0.2s ease;
+}
+
+.ais-RefinementList-item--selected .ais-RefinementList-checkbox {
+  background-color: #345499 !important;
+  border-color: #345499 !important;
+}
+
+.ais-RefinementList-item--selected .ais-RefinementList-checkbox::after {
+  content: "✓";
+  position: absolute;
+  color: white !important; /* Check blanco con el fondo azul */
+  font-size: 12px;
+  font-weight: bold;
+  top: -1px;
+  left: 3px;
+}
+
+/* --- PRECIO (RangeInput) --- */
+.ais-RangeInput-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ais-RangeInput-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.ais-RangeInput-separator {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.ais-RangeInput-submit {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.ais-RangeInput-submit:hover {
+  background-color: #0056b3;
+}

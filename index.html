@@ -1,0 +1,34 @@
+<!--
+Objetivo:
+Definir la estructura principal de la página web y preparar el punto de entrada
+donde se carga la aplicación desarrollada con React.
+
+Entrada:
+- El archivo main.jsx, que inicia y carga la aplicación.
+- El archivo ElectroLogo.png, utilizado como ícono de la página.
+
+Salida:
+- Muestra la estructura base de la aplicación en el navegador.
+- Crea el elemento con id "root", donde React renderiza el contenido.
+- Define el título, el ícono y la configuración básica de visualización de la página.
+
+Restricciones:
+- El archivo main.jsx debe existir en la ruta indicada.
+- El archivo ElectroLogo.png debe encontrarse en la ruta especificada.
+- Debe existir el elemento con id "root" para que React pueda mostrar la aplicación.
+- El navegador debe soportar módulos de JavaScript.
+-->
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/src/assets/ElectroLogo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electro-Commerce CR</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
