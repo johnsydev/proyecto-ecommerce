@@ -2,6 +2,33 @@ import "../styles/Footer.css";
 
 import robotLogo from "../assets/ElectroLogo.png"; 
 
+/*
+ * Objetivo:
+ * Mostrar el pie de página de la aplicación con información de la tienda,
+ * enlaces de navegación, datos de contacto y formulario de correo.
+ *
+ * Entrada:
+ * - El logo ElectroLogo.png utilizado como imagen de la marca.
+ * - Los datos de contacto, sucursales y enlaces definidos directamente
+ *   dentro del componente.
+ * - El año actual obtenido mediante Date().getFullYear().
+ *
+ * Salida:
+ * - Muestra el footer completo de la página.
+ * - Presenta información de la tienda, sucursales y medios de contacto.
+ * - Muestra un formulario para ingresar un correo electrónico.
+ * - Muestra automáticamente el año actual en los derechos de autor.
+ *
+ * Restricciones:
+ * - El archivo ElectroLogo.png debe existir en la ruta indicada.
+ * - El archivo Footer.css debe estar disponible para aplicar los estilos del componente.
+ * - El campo del formulario solo acepta datos con formato de correo electrónico.
+ * - El formulario actualmente evita el envío mediante preventDefault, por lo que
+ *   no registra ni envía el correo ingresado.
+ * - Algunos enlaces no envían al usuario a otras páginas, ya que no estaban definidos en 
+ *   el alcance del proyecto.
+ */
+
 export default function Footer() {
     return (
         <footer className="site-footer">
