@@ -46,6 +46,7 @@ function CatalogPage() {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     refine(category ?? "");
   }, [category, refine]);
 

@@ -16,7 +16,7 @@ import searchClient from "../../catalog/services/algolia";
  * Salida:
  * - Guarda en el estado la información del producto encontrado.
  * - Envía el producto al componente ProductInfo para mostrar sus detalles.
- * - Muestra un mensaje de error en la consola si no se puede obtener el producto.
+ * - Muestra un mensaje de error si no se puede obtener el producto.
  *
  * Restricciones:
  * - El componente debe ejecutarse dentro de un Router para poder utilizar useParams.
@@ -24,8 +24,6 @@ import searchClient from "../../catalog/services/algolia";
  * - La variable VITE_ALGOLIA_INDEX_NAME debe estar definida correctamente.
  * - El cliente de Algolia debe estar configurado y tener acceso al índice.
  * - Se necesita conexión a Internet para consultar la información del producto.
- * - Mientras se realiza la consulta, el valor de product permanece en null,
- *   por lo que ProductInfo debe poder manejar ese estado.
  */
 
 export default function ProductDetails() {
@@ -33,6 +31,8 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     searchClient
       .getObject({
         indexName: import.meta.env.VITE_ALGOLIA_INDEX_NAME,
@@ -43,8 +43,13 @@ export default function ProductDetails() {
       })
       .catch((error) => {
         console.error("Error al obtener los detalles del producto:", error);
+        setProduct(null);
       });
   }, [id]);
+
+  if (!product) {
+    return null;
+  }
 
   return <ProductInfo product={product} />;
 }
