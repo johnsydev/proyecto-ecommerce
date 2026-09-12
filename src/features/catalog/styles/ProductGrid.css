@@ -1,114 +1,104 @@
 .product-grid {
-    width: 100%;
-    margin: 0;
-    box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .ais-Hits {
-    width: 100%;
-    box-sizing: border-box;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Lista de productos */
 .ais-Hits-list {
-    width: 100%;
+  width: 100%;
 
-    display: grid;
+  display: grid;
 
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(210px, 1fr)
-    );
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
 
-    gap: 24px;
+  gap: 24px;
 
-    list-style: none;
+  list-style: none;
 
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .ais-Hits-item {
-    width: 100%;
-    min-width: 0;
+  width: 100%;
+  min-width: 0;
 
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 
-    display: flex;
+  display: flex;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .no-results-found {
-    width: 100%;
+  width: 100%;
 
-    text-align: center;
+  text-align: center;
 
-    font-size: 22px;
+  font-size: 22px;
 
-    color: #6b7280;
+  color: #6b7280;
 
-    margin-top: 70px;
-    margin-bottom: 20px;
+  margin-top: 70px;
+  margin-bottom: 20px;
 }
 
 .no-results-image {
-    display: block;
+  display: block;
 
-    width: 180px;
-    max-width: 60%;
+  width: 180px;
+  max-width: 60%;
 
-    height: auto;
+  height: auto;
 
-    object-fit: contain;
+  object-fit: contain;
 
-    margin: 0 auto 20px;
+  margin: 0 auto 20px;
 
-    opacity: 0.8;
+  opacity: 0.8;
 }
-
 
 /* Tablet*/
 
 @media (max-width: 1000px) {
+  .ais-Hits-list {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 
-    .ais-Hits-list {
-        grid-template-columns: repeat(
-            auto-fit,
-            minmax(190px, 1fr)
-        );
-
-        gap: 18px;
-    }
+    gap: 18px;
+  }
 }
-
 
 /* Celular */
 
 @media (max-width: 600px) {
+  .ais-Hits-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    .ais-Hits-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
 
-        gap: 10px;
-    }
+  .ais-Hits-item {
+    min-width: 0;
+  }
 
-    .ais-Hits-item {
-        min-width: 0;
-    }
+  .no-results-found {
+    margin-top: 40px;
+    margin-bottom: 16px;
 
-    .no-results-found {
-        margin-top: 40px;
-        margin-bottom: 16px;
+    font-size: 18px;
+  }
 
-        font-size: 18px;
-    }
-
-    .no-results-image {
-        width: 150px;
-        max-width: 55%;
-    }
+  .no-results-image {
+    width: 150px;
+    max-width: 55%;
+  }
 }

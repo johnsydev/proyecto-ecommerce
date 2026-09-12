@@ -43,196 +43,200 @@ import "../styles/SearchBar.css";
  */
 
 export default function SearchBar() {
-    const containerRef = useRef(null);
-    const panelRootRef = useRef(null);
-    const panelDomRef = useRef(null);
-    const searchInstanceRef = useRef(null);
-    const navigate = useNavigate();
+  const containerRef = useRef(null);
+  const panelRootRef = useRef(null);
+  const panelDomRef = useRef(null);
+  const searchInstanceRef = useRef(null);
+  const navigate = useNavigate();
 
-    const { query, refine } = useSearchBox();
+  const { query, refine } = useSearchBox();
 
-    const refineRef = useRef(refine);
-    useEffect(() => {
-        refineRef.current = refine;
-    }, [refine]);
+  const refineRef = useRef(refine);
+  useEffect(() => {
+    refineRef.current = refine;
+  }, [refine]);
 
-    const debouncedRefine = useMemo(
-        () => debounce((value) => refineRef.current(value), 300),
-        []
-    );
+  const debouncedRefine = useMemo(
+    () => debounce((value) => refineRef.current(value), 300),
+    [],
+  );
 
-    const recentSearchesPlugin = useMemo(() => {
-        const plugin = createLocalStorageRecentSearchesPlugin({
-            key: "RECENT_SEARCH",
-            limit: 5,
-            transformSource({ source }) {
-                return {
-                    ...source,
-                    onSelect({ item }) {
-                        if (item.query) {
-                            refineRef.current(item.query);
-                        }
-                    },
-                    templates: {
-                        ...source.templates,
-                        header() {
-                            return (
-                                <div className="ctg-recent-searches-header">
-                                    <span className="ctg-recent-searches-title">Búsquedas recientes</span>
-                                    <button
-                                        type="button"
-                                        className="ctg-recent-searches-clear-all"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
+  const recentSearchesPlugin = useMemo(() => {
+    const plugin = createLocalStorageRecentSearchesPlugin({
+      key: "RECENT_SEARCH",
+      limit: 5,
+      transformSource({ source }) {
+        return {
+          ...source,
+          onSelect({ item }) {
+            if (item.query) {
+              refineRef.current(item.query);
+            }
+          },
+          templates: {
+            ...source.templates,
+            header() {
+              return (
+                <div className="ctg-recent-searches-header">
+                  <span className="ctg-recent-searches-title">
+                    Búsquedas recientes
+                  </span>
+                  <button
+                    type="button"
+                    className="ctg-recent-searches-clear-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
 
-                                            Object.keys(localStorage)
-                                                .filter((k) => k.includes("RECENT_SEARCH"))
-                                                .forEach((k) => localStorage.removeItem(k));
+                      Object.keys(localStorage)
+                        .filter((k) => k.includes("RECENT_SEARCH"))
+                        .forEach((k) => localStorage.removeItem(k));
 
-                                            searchInstanceRef.current?.refresh();
-                                            searchInstanceRef.current?.setIsOpen(false);
-                                        }}
-                                    >
-                                        Borrar todo
-                                    </button>
-                                </div>
-                            );
-                        },
-                    },
-                };
+                      searchInstanceRef.current?.refresh();
+                      searchInstanceRef.current?.setIsOpen(false);
+                    }}
+                  >
+                    Borrar todo
+                  </button>
+                </div>
+              );
             },
-        });
-        return plugin;
-    }, []);
-
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const search = autocomplete({
-            container: containerRef.current,
-            panelContainer: containerRef.current, // se coloca en div
-            placeholder: "Buscar productos...",
-            openOnFocus: true,
-            initialState: { query },
-            detachedMediaQuery: "none",
-            plugins: [recentSearchesPlugin],
-
-            onSubmit({ state }) {
-                refineRef.current(state.query);
-            },
-            onReset() {
-                refineRef.current("");
-            },
-            onStateChange({ prevState, state }) {
-                if (prevState.query !== state.query) {
-                    debouncedRefine(state.query);
-                }
-            },
-
-            renderer: { createElement, Fragment, render: () => {} },
-            render({ children }, root) {
-                if (!panelRootRef.current || panelDomRef.current !== root) {
-                    panelDomRef.current = root;
-                    panelRootRef.current?.unmount();
-                    panelRootRef.current = createRoot(root);
-                }
-                panelRootRef.current.render(children);
-            },
-
-            getSources({ query }) {
-
-                if (!query) return [];
-
-                return [
-                    {
-                        sourceId: "productosAutocompletado",
-                        getItems() {
-                            return getAlgoliaResults({
-                                searchClient,
-                                queries: [{
-                                        indexName: import.meta.env.VITE_ALGOLIA_INDEX_NAME,
-                                        params: { query, hitsPerPage: 5 },
-                                    },
-                                ],
-                            });
-                        },
-
-                        onSelect({ item, setIsOpen }) {
-                            if (item.title) {
-                                navigate(`/producto/${item.objectID}`);
-                            }
-                            else {
-                                refineRef.current(query);
-                            }
-                            setIsOpen(false);
-                        },
-
-                        templates: {
-                            header() {
-                                return (
-                                    <div className="ctg-autocomplete-header">
-                                        <span className="ctg-autocomplete-title">Productos</span>
-                                    </div>
-                                );
-                            },
-                            item({ item }) {
-                                const isOutOfStock = Number(item.stock_quantity) <= 0;
-                                const isEnabled = item.b2c?.enabled;
-
-                                return (
-                                    <div className={`ctg-autocomplete-item ${isOutOfStock ? "is-out-of-stock" : ""}`}>
-                                        <div className="ctg-autocomplete-item-image">
-                                            <img src={item.image_url} alt={item.title} />
-                                        </div>
-                                        <div className="ctg-autocomplete-item-info">
-                                            <strong>{item.title}</strong>
-                                            {item.model ? (
-                                                <p>
-                                                    [{item.model}]{" "}
-                                                    <span className="ctg-autocomplete-item-price">
-                                                        {item.currency !== "CRC" ? "$" : "₡"}
-                                                        {Number(item.b2c.sale_price).toLocaleString("en-US")}
-                                                    </span>
-                                                    {item.b2c.discount_percentage > 0 ? (
-                                                        <span className="ctg-autocomplete-item-regular-price">
-                                                            {item.currency !== "CRC" ? "$" : "₡"}
-                                                            {Number(item.b2c.regular_price).toLocaleString("en-US")}
-                                                        </span>
-                                                    ) : null}
-                                                    
-                                                    {isOutOfStock ? (
-                                                        <span className="ctg-autocomplete-badge-out-of-stock">
-                                                            {isEnabled ? "Sin existencias" : "No disponible"}
-                                                        </span>
-                                                    ) : null}
-                                                </p>
-                                            ) : null}
-                                        </div>
-                                    </div>
-                                );
-                            },
-                            noResults() {
-                                return (
-                                    <div className="ctg-autocomplete-empty">
-                                        Sin resultados
-                                    </div>
-                                );
-                            },
-                        },
-                    },
-                ];
-            },
-        });
-
-        searchInstanceRef.current = search; //guarda instancia para poder refrescar al borrar
-
-        return () => {
-            search.destroy();
-            searchInstanceRef.current = null;
-            panelRootRef.current?.unmount();
-            panelRootRef.current = null;
+          },
         };
-    }, []);
+      },
+    });
+    return plugin;
+  }, []);
 
-    return <div className="ctg-search-bar" ref={containerRef} />;
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const search = autocomplete({
+      container: containerRef.current,
+      panelContainer: containerRef.current, // se coloca en div
+      placeholder: "Buscar productos...",
+      openOnFocus: true,
+      initialState: { query },
+      detachedMediaQuery: "none",
+      plugins: [recentSearchesPlugin],
+
+      onSubmit({ state }) {
+        refineRef.current(state.query);
+      },
+      onReset() {
+        refineRef.current("");
+      },
+      onStateChange({ prevState, state }) {
+        if (prevState.query !== state.query) {
+          debouncedRefine(state.query);
+        }
+      },
+
+      renderer: { createElement, Fragment, render: () => {} },
+      render({ children }, root) {
+        if (!panelRootRef.current || panelDomRef.current !== root) {
+          panelDomRef.current = root;
+          panelRootRef.current?.unmount();
+          panelRootRef.current = createRoot(root);
+        }
+        panelRootRef.current.render(children);
+      },
+
+      getSources({ query }) {
+        if (!query) return [];
+
+        return [
+          {
+            sourceId: "productosAutocompletado",
+            getItems() {
+              return getAlgoliaResults({
+                searchClient,
+                queries: [
+                  {
+                    indexName: import.meta.env.VITE_ALGOLIA_INDEX_NAME,
+                    params: { query, hitsPerPage: 5 },
+                  },
+                ],
+              });
+            },
+
+            onSelect({ item, setIsOpen }) {
+              if (item.title) {
+                navigate(`/producto/${item.objectID}`);
+              } else {
+                refineRef.current(query);
+              }
+              setIsOpen(false);
+            },
+
+            templates: {
+              header() {
+                return (
+                  <div className="ctg-autocomplete-header">
+                    <span className="ctg-autocomplete-title">Productos</span>
+                  </div>
+                );
+              },
+              item({ item }) {
+                const isOutOfStock = Number(item.stock_quantity) <= 0;
+                const isEnabled = item.b2c?.enabled;
+
+                return (
+                  <div
+                    className={`ctg-autocomplete-item ${isOutOfStock ? "is-out-of-stock" : ""}`}
+                  >
+                    <div className="ctg-autocomplete-item-image">
+                      <img src={item.image_url} alt={item.title} />
+                    </div>
+                    <div className="ctg-autocomplete-item-info">
+                      <strong>{item.title}</strong>
+                      {item.model ? (
+                        <p>
+                          [{item.model}]{" "}
+                          <span className="ctg-autocomplete-item-price">
+                            {item.currency !== "CRC" ? "$" : "₡"}
+                            {Number(item.b2c.sale_price).toLocaleString(
+                              "en-US",
+                            )}
+                          </span>
+                          {item.b2c.discount_percentage > 0 ? (
+                            <span className="ctg-autocomplete-item-regular-price">
+                              {item.currency !== "CRC" ? "$" : "₡"}
+                              {Number(item.b2c.regular_price).toLocaleString(
+                                "en-US",
+                              )}
+                            </span>
+                          ) : null}
+                          {isOutOfStock ? (
+                            <span className="ctg-autocomplete-badge-out-of-stock">
+                              {isEnabled ? "Sin existencias" : "No disponible"}
+                            </span>
+                          ) : null}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              },
+              noResults() {
+                return (
+                  <div className="ctg-autocomplete-empty">Sin resultados</div>
+                );
+              },
+            },
+          },
+        ];
+      },
+    });
+
+    searchInstanceRef.current = search; //guarda instancia para poder refrescar al borrar
+
+    return () => {
+      search.destroy();
+      searchInstanceRef.current = null;
+      panelRootRef.current?.unmount();
+      panelRootRef.current = null;
+    };
+  }, []);
+
+  return <div className="ctg-search-bar" ref={containerRef} />;
 }

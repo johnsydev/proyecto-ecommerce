@@ -34,126 +34,132 @@ import "../styles/PriceSlider.css";
  */
 
 export default function PriceSlider(props) {
-    const { range, refine, start } = useRange(props);
-    const { min, max } = range;
+  const { range, refine, start } = useRange(props);
+  const { min, max } = range;
 
-    const absMin = min ?? 0;
-    const absMax = max ?? 100000;
+  const absMin = min ?? 0;
+  const absMax = max ?? 100000;
 
-    const currentMin = (start[0] !== -Infinity && start[0] !== Infinity && !isNaN(start[0])) ? start[0] : absMin;
-    const currentMax = (start[1] !== -Infinity && start[1] !== Infinity && !isNaN(start[1])) ? start[1] : absMax;
+  const currentMin =
+    start[0] !== -Infinity && start[0] !== Infinity && !isNaN(start[0])
+      ? start[0]
+      : absMin;
+  const currentMax =
+    start[1] !== -Infinity && start[1] !== Infinity && !isNaN(start[1])
+      ? start[1]
+      : absMax;
 
-    // Estados locales para los inputs de texto (permite escribir libremente sin romper el formato)
-    const [minValueInput, setMinValueInput] = useState(currentMin);
-    const [maxValueInput, setMaxValueInput] = useState(currentMax);
+  // Estados locales para los inputs de texto (permite escribir libremente sin romper el formato)
+  const [minValueInput, setMinValueInput] = useState(currentMin);
+  const [maxValueInput, setMaxValueInput] = useState(currentMax);
 
-    // Sincronizar si cambia desde afuera 
-    useEffect(() => {
-        setMinValueInput(currentMin);
-        setMaxValueInput(currentMax);
-    }, [currentMin, currentMax]);
+  // Sincronizar si cambia desde afuera
+  useEffect(() => {
+    setMinValueInput(currentMin);
+    setMaxValueInput(currentMax);
+  }, [currentMin, currentMax]);
 
-    const handleSliderMinChange = (e) => {
-        const value = Number(e.target.value);
-        if (value <= currentMax) {
-            refine([value, currentMax]);
-        }
-    };
-
-    const handleSliderMaxChange = (e) => {
-        const value = Number(e.target.value);
-        if (value >= currentMin) {
-            refine([currentMin, value]);
-        }
-    };
-
-    // Cuando el usuario escribe en el input de texto "Min"
-    const handleMinInputChange = (e) => {
-        setMinValueInput(e.target.value);
-    };
-
-    const handleMinInputBlur = () => {
-        let value = Number(minValueInput);
-        if (isNaN(value) || value < absMin) value = absMin;
-        if (value > currentMax) value = currentMax;
-        setMinValueInput(value);
-        refine([value, currentMax]);
-    };
-
-    // Cuando el usuario escribe en el input de texto "Max"
-    const handleMaxInputChange = (e) => {
-        setMaxValueInput(e.target.value);
-    };
-
-    const handleMaxInputBlur = () => {
-        let value = Number(maxValueInput);
-        if (isNaN(value) || value > absMax) value = absMax;
-        if (value < currentMin) value = currentMin;
-        setMaxValueInput(value);
-        refine([currentMin, value]);
-    };
-
-    if (min === null || max === null) {
-        return null;
+  const handleSliderMinChange = (e) => {
+    const value = Number(e.target.value);
+    if (value <= currentMax) {
+      refine([value, currentMax]);
     }
+  };
 
-    return (
-        <div className="price-slider-container">
-            {/* Inputs de texto sincronizados arriba */}
-            <div className="price-inputs-grid">
-                <div className="price-input-group">
-                    <label htmlFor="price-min">Min</label>
-                    <input
-                        id="price-min"
-                        type="number"
-                        value={minValueInput}
-                        onChange={handleMinInputChange}
-                        onBlur={handleMinInputBlur}
-                        onKeyDown={(e) => e.key === 'Enter' && handleMinInputBlur()}
-                        min={absMin}
-                        max={absMax}
-                    />
-                </div>
-                <span className="price-dash">-</span>
-                <div className="price-input-group">
-                    <label>Max</label>
-                    <input
-                        type="number"
-                        value={maxValueInput}
-                        onChange={handleMaxInputChange}
-                        onBlur={handleMaxInputBlur}
-                        onKeyDown={(e) => e.key === 'Enter' && handleMaxInputBlur()}
-                        min={absMin}
-                        max={absMax}
-                    />
-                </div>
-            </div>
-            
-            {/* Double Slider visual */}
-            <div className="dual-slider">
-                <input
-                    type="range"
-                    min={absMin}
-                    max={absMax}
-                    value={currentMin}
-                    onChange={handleSliderMinChange}
-                    className="thumb thumb-min"
-                />
-                <input
-                    type="range"
-                    min={absMin}
-                    max={absMax}
-                    value={currentMax}
-                    onChange={handleSliderMaxChange}
-                    className="thumb thumb-max"
-                />
-                <div className="slider-track"></div>
-            </div>
+  const handleSliderMaxChange = (e) => {
+    const value = Number(e.target.value);
+    if (value >= currentMin) {
+      refine([currentMin, value]);
+    }
+  };
 
-            <div className="price-limits">
-                <span>₡{Number(absMin).toLocaleString("en-US")}</span>
-                <span>₡{Number(absMax).toLocaleString("en-US")}</span>
-            </div>
+  // Cuando el usuario escribe en el input de texto "Min"
+  const handleMinInputChange = (e) => {
+    setMinValueInput(e.target.value);
+  };
+
+  const handleMinInputBlur = () => {
+    let value = Number(minValueInput);
+    if (isNaN(value) || value < absMin) value = absMin;
+    if (value > currentMax) value = currentMax;
+    setMinValueInput(value);
+    refine([value, currentMax]);
+  };
+
+  // Cuando el usuario escribe en el input de texto "Max"
+  const handleMaxInputChange = (e) => {
+    setMaxValueInput(e.target.value);
+  };
+
+  const handleMaxInputBlur = () => {
+    let value = Number(maxValueInput);
+    if (isNaN(value) || value > absMax) value = absMax;
+    if (value < currentMin) value = currentMin;
+    setMaxValueInput(value);
+    refine([currentMin, value]);
+  };
+
+  if (min === null || max === null) {
+    return null;
+  }
+
+  return (
+    <div className="price-slider-container">
+      {/* Inputs de texto sincronizados arriba */}
+      <div className="price-inputs-grid">
+        <div className="price-input-group">
+          <label htmlFor="price-min">Min</label>
+          <input
+            id="price-min"
+            type="number"
+            value={minValueInput}
+            onChange={handleMinInputChange}
+            onBlur={handleMinInputBlur}
+            onKeyDown={(e) => e.key === "Enter" && handleMinInputBlur()}
+            min={absMin}
+            max={absMax}
+          />
         </div>
-    );
+        <span className="price-dash">-</span>
+        <div className="price-input-group">
+          <label>Max</label>
+          <input
+            type="number"
+            value={maxValueInput}
+            onChange={handleMaxInputChange}
+            onBlur={handleMaxInputBlur}
+            onKeyDown={(e) => e.key === "Enter" && handleMaxInputBlur()}
+            min={absMin}
+            max={absMax}
+          />
+        </div>
+      </div>
+
+      {/* Double Slider visual */}
+      <div className="dual-slider">
+        <input
+          type="range"
+          min={absMin}
+          max={absMax}
+          value={currentMin}
+          onChange={handleSliderMinChange}
+          className="thumb thumb-min"
+        />
+        <input
+          type="range"
+          min={absMin}
+          max={absMax}
+          value={currentMax}
+          onChange={handleSliderMaxChange}
+          className="thumb thumb-max"
+        />
+        <div className="slider-track"></div>
+      </div>
+
+      <div className="price-limits">
+        <span>₡{Number(absMin).toLocaleString("en-US")}</span>
+        <span>₡{Number(absMax).toLocaleString("en-US")}</span>
+      </div>
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useSearchBox } from "react-instantsearch";
+import { useSearchBox, ClearRefinements } from "react-instantsearch";
 import { Funnel, X } from "lucide-react";
 
 import ProductGrid from "../features/catalog/components/ProductGrid";
@@ -79,7 +79,7 @@ function CatalogPage() {
           aria-label="Abrir filtros"
           aria-expanded={filtersOpen}
         >
-          <Funnel size={23} strokeWidth={2.2} />
+          <Funnel size={28} strokeWidth={2.2} />
         </button>
       )}
 
@@ -97,17 +97,30 @@ function CatalogPage() {
             <span>Filtros</span>
           </div>
 
-          <button
-            className="mobile-filters-close"
-            onClick={() => setFiltersOpen(false)}
-            aria-label="Cerrar filtros"
-          >
-            <X size={21} />
-          </button>
+          <div className="mobile-filters-actions">
+            <ClearRefinements
+              translations={{
+                resetButtonText: "Limpiar",
+              }}
+              classNames={{
+                button: "mobile-clear-filters",
+                disabledButton:
+                  "mobile-clear-filters mobile-clear-filters--disabled",
+              }}
+            />
+
+            <button
+              className="mobile-filters-close"
+              onClick={() => setFiltersOpen(false)}
+              aria-label="Cerrar filtros"
+            >
+              <X size={21} />
+            </button>
+          </div>
         </div>
 
         <div className="mobile-filters-content">
-          <Filters />
+          <Filters showHeader={false} />
         </div>
       </aside>
     </div>

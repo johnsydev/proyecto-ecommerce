@@ -1,44 +1,39 @@
 .rating {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
-
-
 .star {
-    position: relative;
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .star-empty {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    color: #d1d5db;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: #d1d5db;
 }
 
-
-
 .star-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  overflow: hidden;
 }
 
 .star-full {
-    width: 20px;
-    height: 20px;
-    color: #f5b301;
-    fill: #f5b301;
+  width: 20px;
+  height: 20px;
+  color: #f5b301;
+  fill: #f5b301;
 }
 
-
 .rating span {
-    margin-left: 5px;
+  margin-left: 5px;
 }

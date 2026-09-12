@@ -27,7 +27,6 @@
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
 }
 
-
 .product-img-container {
   width: 100%;
   height: 200px;
@@ -36,7 +35,7 @@
   align-items: center;
   justify-content: center;
 
-  background: #ffffff; 
+  background: #ffffff;
 
   padding: 0;
   box-sizing: border-box;
@@ -51,15 +50,12 @@
   transition: transform 0.25s ease;
 }
 
-
 @media (max-width: 600px) {
-
   .product-img-container {
     width: 100%;
     height: 125px;
-    padding: 0; 
+    padding: 0;
   }
-
 }
 
 .product-info {
@@ -185,54 +181,52 @@
   display: block;
 }
 
-
 /* sin stock */
 
 .pc-without-stock {
-    width: 100%;
-    min-width: 0;
-    height: 46px;
-    flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  flex-shrink: 0;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-    padding: 10px 12px;
+  padding: 10px 12px;
 
-    border: 1px solid #2f2e2e;
-    border-radius: 8px;
+  border: 1px solid #2f2e2e;
+  border-radius: 8px;
 
-    background: #ffffff;
-    color: #a21a10 ;
+  background: #ffffff;
+  color: #a21a10;
 
-    font-size: 14px;
-    font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
 
-    cursor: not-allowed;
+  cursor: not-allowed;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .pc-without-stock:hover {
-    background: #8b8b8b;
-    color: white;
+  background: #8b8b8b;
+  color: white;
 }
 
 .pc-without-stock svg {
-    flex-shrink: 0;
-    display: block;
+  flex-shrink: 0;
+  display: block;
 }
 
-
 .product-img-disabled {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 /* Tablet */
@@ -258,107 +252,106 @@
 /* Celular */
 
 @media (max-width: 600px) {
+  .product-card {
+    width: 100%;
+    min-width: 0;
 
-    .product-card {
-        width: 100%;
-        min-width: 0;
+    min-height: 270px;
 
-        min-height: 270px;
+    border-radius: 9px;
+  }
 
-        border-radius: 9px;
-    }
+  .product-img-container {
+    width: 100%;
+    height: 125px;
 
-    .product-img-container {
-        width: 100%;
-        height: 125px;
+    padding: 5px;
+  }
 
-        padding: 5px;
-    }
+  .product-info {
+    min-width: 0;
 
-    .product-info {
-        min-width: 0;
+    padding: 8px;
+  }
 
-        padding: 8px;
-    }
+  .product-title {
+    min-height: 34px;
+    max-height: 34px;
 
-    .product-title {
-        min-height: 34px;
-        max-height: 34px;
+    margin: 0 0 4px;
 
-        margin: 0 0 4px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
 
-        font-size: 12px;
-        line-height: 1.35;
-    }
+  .product-model {
+    margin: 0 0 4px;
 
-    .product-model {
-        margin: 0 0 4px;
+    font-size: 9px;
+    line-height: 1.2;
+  }
 
-        font-size: 9px;
-        line-height: 1.2;
-    }
+  .product-price {
+    margin: auto 0 8px;
 
-    .product-price {
-        margin: auto 0 8px;
+    font-size: 16px;
+    line-height: 1.2;
+  }
 
-        font-size: 16px;
-        line-height: 1.2;
-    }
+  .product-discount {
+    font-size: 16px;
+  }
 
-    .product-discount {
-        font-size: 16px;
-    }
+  .product-regular-price {
+    font-size: 16px;
+  }
 
-    .product-regular-price {
-        font-size: 16px;
-    }
+  .product-regular-price-discount {
+    margin-left: 4px;
 
-    .product-regular-price-discount {
-        margin-left: 4px;
+    font-size: 10px;
+  }
 
-        font-size: 10px;
-    }
+  .product-button {
+    width: 100%;
 
-    .product-button {
-        width: 100%;
+    min-height: 36px;
 
-        min-height: 36px;
+    margin-top: auto;
 
-        margin-top: auto;
+    gap: 4px;
 
-        gap: 4px;
+    padding: 5px 3px;
 
-        padding: 5px 3px;
+    font-size: 10px;
 
-        font-size: 10px;
+    white-space: nowrap;
+  }
 
-        white-space: nowrap;
-    }
+  .product-button svg {
+    width: 14px;
+    height: 14px;
+  }
 
-    .product-button svg {
-        width: 14px;
-        height: 14px;
-    }
+  .pc-without-stock {
+    width: 100%;
 
-    .pc-without-stock {
-        width: 100%;
+    min-height: 36px;
+    height: 36px;
 
-        min-height: 36px;
-        height: 36px;
+    margin-top: auto;
 
-        margin-top: auto;
+    gap: 4px;
 
-        gap: 4px;
+    padding: 5px 3px;
 
-        padding: 5px 3px;
+    font-size: 10px;
 
-        font-size: 10px;
+    white-space: nowrap;
+  }
 
-        white-space: nowrap;
-    }
-
-    .pc-without-stock svg {
-        width: 14px;
-        height: 14px;
-    }
+  .pc-without-stock svg {
+    width: 14px;
+    height: 14px;
+  }
 }

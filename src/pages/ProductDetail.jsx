@@ -1,5 +1,5 @@
-import React from 'react';
-import ProductDetails from '../features/product-detail/components/ProductDetails';
+import React from "react";
+import ProductDetails from "../features/product-detail/components/ProductDetails";
 
 /*
  * Objetivo:
@@ -21,9 +21,7 @@ import ProductDetails from '../features/product-detail/components/ProductDetails
  */
 
 function ProductDetail() {
-    return (
-        <ProductDetails /> 
-    );
+  return <ProductDetails />;
 }
 
 export default ProductDetail;
