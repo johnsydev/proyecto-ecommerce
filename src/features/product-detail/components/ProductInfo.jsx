@@ -6,6 +6,47 @@ import translations from "../../../locales/es.json";
 import Rating from "./Rating";
 import StoresStock from "./StoresStock";
 
+/*
+ * Objetivo:
+ * Mostrar toda la información detallada de un producto, incluyendo categorías,
+ * imagen, características, precio, descuento, disponibilidad, cantidad a comprar,
+ * descripción y existencias por sucursal.
+ *
+ * Entrada:
+ * - Recibe mediante la propiedad product el objeto con la información completa
+ *   del producto.
+ * - Utiliza datos como categorías, imagen, modelo, marca, precio, descuento,
+ *   garantía, tiempo de entrega, características, disponibilidad y stock.
+ * - Utiliza el archivo de traducciones para mostrar los nombres de las
+ *   características del producto.
+ *
+ * Salida:
+ * - Muestra la información completa del producto seleccionado.
+ * - Permite navegar al catálogo utilizando una categoría del producto.
+ * - Muestra la calificación mediante el componente Rating.
+ * - Muestra el precio normal o el precio con descuento cuando corresponde.
+ * - Indica si el producto tiene envío gratis.
+ * - Permite aumentar o disminuir la cantidad que se desea comprar.
+ * - Muestra si el producto está agotado o no disponible.
+ * - Muestra la descripción y las existencias por sucursal mediante StoresStock.
+ *
+ * Restricciones:
+ * - El objeto product debe contener la información necesaria para mostrar
+ *   correctamente los detalles del producto.
+ * - El componente debe ejecutarse dentro de un Router para utilizar useNavigate.
+ * - La cantidad seleccionada no puede ser menor que 1.
+ * - La cantidad seleccionada no puede superar el stock disponible del producto.
+ * - El producto solo permite seleccionar cantidad si tiene existencias y está
+ *   habilitado para la venta.
+ * - El objeto facets debe contener datos válidos y sus nombres deben existir
+ *   en el archivo de traducciones.
+ * - Los componentes Rating y StoresStock deben estar correctamente importados.
+ * - Mientras product no tenga información, se muestra un mensaje indicando
+ *   que no se encontraron detalles del producto.
+ * - El botón "Agregar al carrito" actualmente es visual y todavía no tiene
+ *   una función asociada para guardar el producto en un carrito.
+ */
+
 export default function ProductInfo({ product }) {
     const [cantidadCarrito, setCantidadCarrito] = useState(1);
 

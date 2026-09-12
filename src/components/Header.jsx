@@ -2,6 +2,34 @@ import SearchBar from "../features/catalog/components/SearchBar";
 import "../styles/Header.css";
 import robotLogo from "../assets/ElectroLogo.png";
 
+/*
+ * Objetivo:
+ * Mostrar el encabezado principal de la aplicación con el logo, el nombre
+ * de la tienda, la barra de búsqueda y accesos relacionados con la cuenta
+ * y el carrito de compras.
+ *
+ * Entrada:
+ * - El componente SearchBar utilizado para realizar búsquedas de productos.
+ * - El archivo ElectroLogo.png utilizado como logo de la aplicación.
+ * - Los enlaces y textos definidos directamente dentro del componente.
+ *
+ * Salida:
+ * - Muestra el encabezado principal de la aplicación.
+ * - Permite acceder a la página de búsqueda mediante el logo y el nombre
+ *   de la tienda.
+ * - Muestra la barra de búsqueda de productos.
+ * - Presenta accesos visuales para inicio de sesión, registro y carrito.
+ *
+ * Restricciones:
+ * - El componente SearchBar debe existir y estar correctamente importado.
+ * - El archivo ElectroLogo.png debe encontrarse en la ruta indicada.
+ * - El archivo Header.css debe existir para aplicar los estilos del componente.
+ * - Los enlaces de acceso y registro no están conectados a rutas funcionales, ya que 
+ *   no se definieron en el alcance del proyecto.
+ * - El contador del carrito está definido actualmente con el valor 0,
+ *   por lo que todavía no refleja una cantidad dinámica de productos.
+ */
+
 export default function Header() {
     return (
         <header className="site-header">

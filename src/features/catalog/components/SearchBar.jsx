@@ -9,6 +9,39 @@ import { useSearchBox } from "react-instantsearch";
 import searchClient from "../services/algolia";
 import "../styles/SearchBar.css";
 
+/*
+ * Objetivo:
+ * Permitir al usuario buscar productos mediante una barra de búsqueda
+ * con autocompletado, sugerencias y almacenamiento de búsquedas recientes.
+ *
+ * Entrada:
+ * - El texto ingresado por el usuario en la barra de búsqueda.
+ * - Los productos obtenidos desde el índice de Algolia.
+ * - La variable VITE_ALGOLIA_INDEX_NAME con el nombre del índice utilizado.
+ * - Las búsquedas recientes almacenadas en el localStorage del navegador.
+ *
+ * Salida:
+ * - Actualiza los resultados del catálogo de acuerdo con el texto buscado.
+ * - Muestra hasta cinco productos como sugerencias de autocompletado.
+ * - Permite abrir el detalle de un producto seleccionado.
+ * - Guarda y muestra hasta cinco búsquedas recientes.
+ * - Permite borrar todas las búsquedas recientes.
+ * - Muestra información básica de los productos sugeridos, como imagen,
+ *   nombre, modelo, precio, descuento y disponibilidad.
+ *
+ * Restricciones:
+ * - El componente debe utilizarse dentro de InstantSearch para poder usar useSearchBox.
+ * - Debe ejecutarse dentro de un Router para poder utilizar useNavigate.
+ * - El cliente de Algolia debe estar correctamente configurado.
+ * - La variable VITE_ALGOLIA_INDEX_NAME debe estar definida.
+ * - Los productos deben contener los datos necesarios para mostrar las sugerencias,
+ *   como objectID, title, image_url, b2c y precios.
+ * - El navegador debe permitir el uso de localStorage para guardar las búsquedas recientes.
+ * - La búsqueda se actualiza con un retraso de 300 milisegundos para evitar
+ *   realizar una consulta por cada tecla presionada.
+ * - Solo se muestran cinco productos como máximo en el autocompletado.
+ */
+
 export default function SearchBar() {
     const containerRef = useRef(null);
     const panelRootRef = useRef(null);
