@@ -56,7 +56,7 @@ Crear el archivo `.env` con las variables necesarias para Algolia.
 Para cargar los productos de `data/products.json` al índice de Algolia se puede ejecutar:
 
 ```bash
-npm run algolia-seed
+npm run seed-algolia
 ```
 
 Finalmente, iniciar el proyecto:
@@ -72,7 +72,7 @@ Para utilizar Algolia es necesario crear un archivo `.env` con las siguientes va
 ```env
 VITE_ALGOLIA_APP_ID=tu_app_id
 VITE_ALGOLIA_SEARCH_API_KEY=tu_search_api_key
-VITE_ALGOLIA_INDEX_NAME=tu_index_name
+VITE_ALGOLIA_INDEX_NAME=grupo-05_products
 ```
 
 También se utilizan las siguientes variables para cargar los productos al índice:
