@@ -3,6 +3,35 @@ import { ShoppingCart, XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+/*
+ * Objetivo:
+ * Mostrar la información principal de un producto dentro del catálogo,
+ * incluyendo su imagen, nombre, modelo, precio, descuento y disponibilidad.
+ *
+ * Entrada:
+ * - Recibe mediante la propiedad hit la información del producto obtenida
+ *   desde Algolia.
+ * - Utiliza datos como imagen, título, modelo, precios, moneda, descuento,
+ *   disponibilidad y estado de venta del producto.
+ *
+ * Salida:
+ * - Muestra una tarjeta con la información principal del producto.
+ * - Muestra el precio regular o el precio con descuento cuando corresponde.
+ * - Permite acceder al detalle del producto al hacer clic en la imagen o el nombre.
+ * - Muestra un botón para agregar al carrito cuando el producto está disponible.
+ * - Muestra un mensaje de producto agotado o no disponible cuando no se puede comprar.
+ *
+ * Restricciones:
+ * - El objeto hit debe contener la información necesaria del producto,
+ *   incluyendo objectID, title, model, image_url, currency, in_stock y b2c.
+ * - Los precios y el porcentaje de descuento deben contener valores numéricos válidos.
+ * - El producto solo se considera disponible si tiene existencia y además
+ *   está habilitado para venta.
+ * - El componente debe ejecutarse dentro de un Router para poder utilizar useNavigate.
+ * - El botón "Agregar al carrito" actualmente solo se muestra visualmente
+ *   y todavía no tiene una función asociada para agregar productos al carrito.
+ */
+
 export default function ProductCard({ hit }) {
   
     const [tieneDescuento, setTieneDescuento] = useState(false);

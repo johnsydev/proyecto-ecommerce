@@ -2,6 +2,37 @@ import { useRange } from "react-instantsearch";
 import { useState, useEffect } from "react";
 import "../styles/PriceSlider.css";
 
+/*
+ * Objetivo:
+ * Permitir al usuario filtrar los productos según un rango de precios,
+ * utilizando controles deslizantes y campos numéricos para establecer
+ * un precio mínimo y máximo.
+ *
+ * Entrada:
+ * - Recibe mediante props el atributo numérico de Algolia que se desea filtrar.
+ * - Obtiene desde useRange el rango disponible de precios, el rango seleccionado
+ *   actualmente y la función refine para aplicar el filtro.
+ * - Recibe los valores ingresados por el usuario en los campos de precio
+ *   mínimo y máximo.
+ *
+ * Salida:
+ * - Muestra dos campos numéricos para establecer el precio mínimo y máximo.
+ * - Muestra dos controles deslizantes para modificar visualmente el rango de precios.
+ * - Actualiza los resultados del catálogo cuando el usuario modifica el rango.
+ * - Muestra los valores mínimo y máximo disponibles con formato de moneda.
+ * - No muestra el componente si Algolia no devuelve un rango de precios válido.
+ *
+ * Restricciones:
+ * - El componente debe utilizarse dentro de InstantSearch.
+ * - El atributo recibido mediante props debe ser numérico y permitir filtros por rango.
+ * - El precio mínimo seleccionado no puede ser mayor que el precio máximo.
+ * - El precio máximo seleccionado no puede ser menor que el precio mínimo.
+ * - Los valores ingresados fuera del rango permitido se ajustan automáticamente
+ *   al mínimo o máximo disponible.
+ * - Si el usuario ingresa un valor no válido, se utiliza un valor válido
+ *   dentro del rango permitido.
+ */
+
 export default function PriceSlider(props) {
     const { range, refine, start } = useRange(props);
     const { min, max } = range;
