@@ -17,14 +17,14 @@
  * - La redirección se realiza al cargar el componente.
  */
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate('/search', { replace: true });
+    navigate("/search", { replace: true });
   }, [navigate]);
 
   return null;
