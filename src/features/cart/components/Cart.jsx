@@ -1,4 +1,4 @@
-import "../styles/ProductInfo.css";
+import "../styles/Cart.css";
 
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,7 @@ export default function Cart() {
 
   return (
     <div className="cart-page">
-        
+        <h1>Carrito de compras</h1>
     </div>
   );
 }

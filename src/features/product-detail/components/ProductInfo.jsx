@@ -8,6 +8,7 @@ import {
   BadgePercent,
   Clock8,
 } from "lucide-react";
+import cart from "../../cart/services/cartService";
 import translations from "../../../locales/es.json";
 import Rating from "./Rating";
 import StoresStock from "./StoresStock";
@@ -61,6 +62,10 @@ export default function ProductInfo({ product }) {
   const tieneDescuento = product?.b2c?.discount_percentage > 0;
 
   const currency = product?.currency != "CRC" ? "$" : "₡";
+
+  const handleAddToCart = () => {
+    cart.addToCart(product, cantidadCarrito);
+  };
 
   return (
     <div className="pi-page">
@@ -193,7 +198,7 @@ export default function ProductInfo({ product }) {
                     </button>
                   </div>
 
-                  <button className="pi-add-to-cart">
+                  <button className="pi-add-to-cart" onClick={handleAddToCart}>
                     <ShoppingCart /> Agregar al carrito
                   </button>
                 </div>
