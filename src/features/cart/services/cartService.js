@@ -1,5 +1,9 @@
 const CART_KEY = "cart";
 
+function getProductId(product) {
+  return product.id ?? product.objectID;
+}
+
 export function getCart() {
   const cart = localStorage.getItem(CART_KEY);
 
@@ -10,7 +14,7 @@ export function getProductCartQuantity(productId) {
   const cart = getCart();
 
   const producto = cart.find(
-    (item) => item.id === productId,
+    (item) => getProductId(item) === productId,
   );
 
   return producto ? producto.order_quantity : 0;
@@ -18,9 +22,10 @@ export function getProductCartQuantity(productId) {
 
 export function addToCart(product, quantity) {
   const cart = getCart();
+  const productId = getProductId(product);
 
   const productoExistente = cart.find(
-    (item) => item.id === product.id,
+    (item) => getProductId(item) === productId,
   );
 
   if (productoExistente) {
@@ -32,6 +37,7 @@ export function addToCart(product, quantity) {
   } else {
     cart.push({
       ...product,
+      id: productId,
       order_quantity: quantity,
     });
   }
@@ -43,7 +49,7 @@ export function removeFromCart(productId) {
   const cart = getCart();
 
   const nuevoCart = cart.filter(
-    (item) => item.id !== productId,
+    (item) => getProductId(item) !== productId,
   );
 
   localStorage.setItem(CART_KEY, JSON.stringify(nuevoCart));
@@ -53,7 +59,7 @@ export function addUnit(productId) {
   const cart = getCart();
 
   const producto = cart.find(
-    (item) => item.id === productId,
+    (item) => getProductId(item) === productId,
   );
 
   if (!producto) {
@@ -72,7 +78,7 @@ export function removeUnit(productId) {
   const cart = getCart();
 
   const producto = cart.find(
-    (item) => item.id === productId,
+    (item) => getProductId(item) === productId,
   );
 
   if (!producto) {
@@ -90,7 +96,7 @@ export function updateCartQuantity(productId, quantity) {
   const cart = getCart();
 
   const producto = cart.find(
-    (item) => item.id === productId,
+    (item) => getProductId(item) === productId,
   );
 
   if (!producto) {
