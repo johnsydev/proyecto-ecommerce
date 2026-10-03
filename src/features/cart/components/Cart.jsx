@@ -1,7 +1,12 @@
 import "../styles/Cart.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addUnit, getCart, removeFromCart, removeUnit } from "../services/cartService";
+import {
+  addUnit,
+  getCart,
+  removeFromCart,
+  removeUnit
+} from "../services/cartService";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 
@@ -17,29 +22,73 @@ export default function Cart() {
 
   return (
     <div className="cart-page">
+
+     
       <div className="cart-header">
-        <h1>Carrito</h1>
+
+        <div className="cart-heading">
+
+
+          <h1>Mi carrito</h1>
+
+          <p>
+            Revisa tus productos antes de continuar con la compra.
+          </p>
+        </div>
+
         
-        <div className="cart-stepper">
-          <span className="step active">1. Carrito</span>
+        <div className="cart-stepper" aria-label="Progreso de compra">
+
+          <div className="step active" aria-current="step">
+            <span className="step-number">1</span>
+            <span className="step-label">Carrito</span>
+          </div>
+
           <span className="step-line"></span>
-          <span className="step">2. Pago</span>
+
+          <div className="step">
+            <span className="step-number">2</span>
+            <span className="step-label">Pago</span>
+          </div>
+
           <span className="step-line"></span>
-          <span className="step">3. Confirmación</span>
+
+          <div className="step">
+            <span className="step-number">3</span>
+            <span className="step-label">Confirmación</span>
+          </div>
+
         </div>
       </div>
 
+      
       {cart.length === 0 ? (
+
         <div className="cart-empty">
           <h2>Tu carrito está vacío</h2>
-          <p>Explora nuestro catálogo para añadir componentes.</p>
-          <button type="button" className="cart-continue-button" onClick={() => navigate("/search")}>
+
+          <p>
+            Explora nuestro catálogo para añadir componentes.
+          </p>
+
+          <button
+            type="button"
+            className="cart-continue-button"
+            onClick={() => navigate("/search")}
+          >
             Ver Catálogo
           </button>
         </div>
+
       ) : (
+
         <div className="cart-layout">
-          <section className="cart-items-container" aria-label="Productos en el carrito">
+
+         
+          <section
+            className="cart-items-container"
+            aria-label="Productos en el carrito"
+          >
             {cart.map((product) => (
               <CartItem
                 key={getProductId(product)}
@@ -59,10 +108,13 @@ export default function Cart() {
               />
             ))}
           </section>
+
           
           <CartSummary cart={cart} />
+
         </div>
       )}
+
     </div>
   );
 }

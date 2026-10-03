@@ -1,3 +1,8 @@
+
+/* ========================================
+   PÁGINA PRINCIPAL DEL CARRITO
+======================================== */
+
 .cart-page {
   margin: 0 auto;
   max-width: 1200px;
@@ -6,43 +11,134 @@
   width: 100%;
   font-family: var(--sans, sans-serif);
   color: #1f2937;
+  box-sizing: border-box;
 }
 
+/* ========================================
+   ENCABEZADO
+======================================== */
+
 .cart-header {
-  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-bottom: 40px;
+}
+
+/* Título y descripción */
+
+.cart-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cart-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #64748b;
 }
 
 .cart-header h1 {
-  font-size: 3rem;
-  font-weight: 500;
-  letter-spacing: -0.5px;
-  margin: 0 0 20px;
+  font-size: 2.4rem;
+  font-weight: 650;
+  letter-spacing: -1px;
+  margin: 0;
   color: #1f2937;
+  line-height: 1.2;
 }
 
+.cart-heading p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ========================================
+   FLUJO DE COMPRA
+======================================== */
 
 .cart-stepper {
   display: flex;
   align-items: center;
-  gap: 16px;
-}
-
-.cart-stepper .step {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #9ca3af; 
-}
-
-.cart-stepper .step.active {
-  color: #1f2937; 
-  font-weight: 600;
+  width: 100%;
+  max-width: none;
+  gap: 14px;
 }
 
 .cart-stepper .step-line {
   height: 1px;
-  width: 80px;
+  flex: 1;
+  min-width: 15px;
   background-color: #e5e7eb;
 }
+
+/* Cada paso */
+
+.cart-stepper .step {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+/* Círculos numerados */
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9ca3af;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+/* Texto de cada paso */
+
+.step-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Paso activo */
+
+.cart-stepper .step.active {
+  color: #345499;
+}
+
+.cart-stepper .step.active .step-number {
+  background: #345499;
+  border-color: #345499;
+  color: #ffffff;
+}
+
+.cart-stepper .step.active .step-label {
+  color: #1f2937;
+  font-weight: 650;
+}
+
+/* Líneas entre los pasos */
+
+.cart-stepper .step-line {
+  height: 1px;
+  flex: 1;
+  min-width: 15px;
+  background-color: #e5e7eb;
+}
+
+/* ========================================
+   DISTRIBUCIÓN DEL CARRITO
+======================================== */
 
 .cart-layout {
   display: grid;
@@ -51,10 +147,17 @@
   align-items: start;
 }
 
+/* Lista de productos */
+
 .cart-items-container {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
+
+/* ========================================
+   CARRITO VACÍO
+======================================== */
 
 .cart-empty {
   background: #fdfdfd;
@@ -64,8 +167,23 @@
   border: 1px dashed #cbd5e1;
 }
 
+.cart-empty h2 {
+  color: #1f2937;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.cart-empty p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Botón para continuar comprando */
+
 .cart-continue-button {
-  background: #345499; 
+  background: #345499;
   border: 0;
   border-radius: 8px;
   color: white;
@@ -81,17 +199,116 @@
   background: #2a437a;
 }
 
+/* ========================================
+   RESPONSIVE - TABLETS
+======================================== */
+
 @media (max-width: 900px) {
   .cart-layout {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  .cart-stepper .step-line {
-    width: 40px;
+
+  .cart-stepper {
+    max-width: 100%;
   }
 }
+
+/* ========================================
+   RESPONSIVE - MÓVILES
+======================================== */
+
 @media (max-width: 600px) {
+  .cart-page {
+    padding: 25px 16px 60px;
+  }
+
+  /* Encabezado */
+
+  .cart-header {
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+
+  .cart-header h1 {
+    font-size: 2rem;
+  }
+
+  .cart-heading p {
+    font-size: 0.88rem;
+  }
+
+  /* Flujo de compra */
+
   .cart-stepper {
-    display: none;
+    gap: 7px;
+    justify-content: space-between;
+  }
+
+  .cart-stepper .step {
+    gap: 5px;
+  }
+
+  .step-number {
+    width: 27px;
+    height: 27px;
+    font-size: 0.75rem;
+  }
+
+  .step-label {
+    font-size: 0.72rem;
+  }
+
+  .cart-stepper .step-line {
+    min-width: 8px;
+  }
+
+  /* Carrito vacío */
+
+  .cart-empty {
+    padding: 55px 16px;
+  }
+
+  .cart-empty h2 {
+    font-size: 1.2rem;
+  }
+
+  .cart-empty p {
+    font-size: 0.88rem;
+  }
+
+  .cart-continue-button {
+    font-size: 0.9rem;
+    padding: 11px 20px;
+  }
+
+  /* Distribución */
+
+  .cart-layout {
+    gap: 30px;
+  }
+}
+
+/* ========================================
+   PANTALLAS MUY PEQUEÑAS
+======================================== */
+
+@media (max-width: 360px) {
+  .cart-stepper {
+    gap: 5px;
+  }
+
+  .cart-stepper .step {
+    gap: 4px;
+  }
+
+  .step-label {
+    font-size: 0.65rem;
+  }
+
+  .step-number {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
   }
 }

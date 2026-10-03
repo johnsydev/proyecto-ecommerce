@@ -61,9 +61,6 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
       </div>
 
      
-      <div className="cart-item-divider"></div>
-
-     
       <div className="cart-item-bottom-section">
         <div className="qty-selector">
           <button
@@ -94,6 +91,8 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
           <Trash2 size={18} strokeWidth={2} />
         </button>
       </div>
+
+      <div className="cart-item-divider"></div>
 
     </article>
   );
