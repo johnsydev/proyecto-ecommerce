@@ -9,6 +9,7 @@ import {
   removeUnit,
 } from "../services/cartService";
 import CartItem from "./CartItem";
+import CartSummary from "./CartSummary";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -37,26 +38,29 @@ export default function Cart() {
           </button>
         </div>
       ) : (
-        <section className="cart-items" aria-label="Productos en el carrito">
-          {cart.map((product) => (
-            <CartItem
-              key={getProductId(product)}
-              product={product}
-              onAddUnit={() => {
-                addUnit(getProductId(product));
-                refreshCart();
-              }}
-              onRemoveUnit={() => {
-                removeUnit(getProductId(product));
-                refreshCart();
-              }}
-              onRemove={() => {
-                removeFromCart(getProductId(product));
-                refreshCart();
-              }}
-            />
-          ))}
-        </section>
+        <div className="cart-layout">
+          <section className="cart-items" aria-label="Productos en el carrito">
+            {cart.map((product) => (
+              <CartItem
+                key={getProductId(product)}
+                product={product}
+                onAddUnit={() => {
+                  addUnit(getProductId(product));
+                  refreshCart();
+                }}
+                onRemoveUnit={() => {
+                  removeUnit(getProductId(product));
+                  refreshCart();
+                }}
+                onRemove={() => {
+                  removeFromCart(getProductId(product));
+                  refreshCart();
+                }}
+              />
+            ))}
+          </section>
+          <CartSummary cart={cart} />
+        </div>
       )}
     </div>
   );
