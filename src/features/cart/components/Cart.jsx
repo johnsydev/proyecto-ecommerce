@@ -4,25 +4,20 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
 import emptyCartImage from "../../../assets/electro_carrito_vacio.png";
-import {
-  addUnit,
-  getCart,
-  removeFromCart,
-  removeUnit
-} from "../services/cartService";
+import { useCart } from "../../../context/CartContext";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 
 export default function Cart() {
   const navigate = useNavigate();
-  const [cart, setCart] = useState(() => getCart());
+  const { cart, addUnit, removeUnit, removeFromCart } = useCart();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const getProductId = (product) => product.id ?? product.objectID;
 
-  const refreshCart = () => {
-    setCart(getCart());
-  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,15 +119,12 @@ export default function Cart() {
                 product={product}
                 onAddUnit={() => {
                   addUnit(getProductId(product));
-                  refreshCart();
                 }}
                 onRemoveUnit={() => {
                   removeUnit(getProductId(product));
-                  refreshCart();
                 }}
                 onRemove={() => {
                   removeFromCart(getProductId(product));
-                  refreshCart();
                 }}
               />
             ))}

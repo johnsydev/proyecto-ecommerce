@@ -2,7 +2,7 @@ import "../styles/ProductCard.css";
 import { ShoppingCart, XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { addToCart } from "../../cart/services/cartService";
+import { useCart } from "../../../context/CartContext";
 
 /*
  * Objetivo:
@@ -35,16 +35,46 @@ import { addToCart } from "../../cart/services/cartService";
 export default function ProductCard({ hit }) {
   const [tieneDescuento, setTieneDescuento] = useState(false);
   const navigate = useNavigate();
-  const isAvailable = hit.in_stock && hit.b2c.enabled;
-  const notAvailableText = !hit.b2c.enabled
+  const { cart, addToCart } = useCart();
+
+  const isAvailable = hit.in_stock && hit.b2c?.enabled;
+  const notAvailableText = !hit.b2c?.enabled
     ? "Producto no disponible"
     : "Producto agotado";
 
+  const productId = hit.objectID || hit.id;
+  const stockTotal = hit.stock_quantity ?? (hit.in_stock ? 999 : 0);
+
+  const productoEnCarrito = cart.find(
+    (item) => (item.id ?? item.objectID) === productId
+  );
+  const cantidadEnCarrito = productoEnCarrito ? productoEnCarrito.order_quantity : 0;
+  const stockDisponibleParaAgregar = stockTotal - cantidadEnCarrito;
+
   useEffect(() => {
-    if (hit.b2c.discount_percentage > 0) {
+    if (hit.b2c?.discount_percentage > 0) {
       setTieneDescuento(true);
     }
-  }, []);
+  }, [hit]);
+
+  const handleAddToCart = () => {
+    if (stockDisponibleParaAgregar <= 0) return;
+
+    const precioFinal = tieneDescuento
+      ? Number(hit.b2c.sale_price)
+      : Number(hit.b2c.regular_price);
+
+    const productoAEnviar = {
+      ...hit,
+      id: productId,
+      name: hit.title || hit.name,
+      price: precioFinal,
+      image: hit.image_url || hit.image,
+      stock_quantity: stockTotal,
+    };
+
+    addToCart(productoAEnviar, 1);
+  };
 
   return (
     <div className="product-card">
@@ -53,7 +83,7 @@ export default function ProductCard({ hit }) {
           src={hit.image_url}
           alt={hit.title}
           className={
-            hit.in_stock && hit.b2c.enabled
+            isAvailable
               ? "product-img"
               : "product-img product-img-disabled"
           }
@@ -94,13 +124,24 @@ export default function ProductCard({ hit }) {
         </p>
 
         {isAvailable ? (
-          <button
-            type="button"
-            className="product-button"
-            onClick={() => addToCart(hit, 1)}
-          >
-            <ShoppingCart size={22} strokeWidth={2} /> Agregar al carrito
-          </button>
+          stockDisponibleParaAgregar <= 0 ? (
+            <button
+              type="button"
+              className="pc-without-stock"
+              title={`Ya alcanzaste el límite disponible para este producto (${stockTotal} unidades en carrito).`}
+            >
+              <XCircle size={22} strokeWidth={2} />
+              Límite alcanzado
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="product-button"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart size={22} strokeWidth={2} /> Agregar al carrito
+            </button>
+          )
         ) : (
           <button className="pc-without-stock">
             <XCircle size={22} strokeWidth={2} />

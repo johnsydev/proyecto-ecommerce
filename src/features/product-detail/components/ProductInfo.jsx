@@ -7,8 +7,9 @@ import {
   Truck,
   BadgePercent,
   Clock8,
+  XCircle
 } from "lucide-react";
-import cart from "../../cart/services/cartService";
+import { useCart } from "../../../context/CartContext";
 import translations from "../../../locales/es.json";
 import Rating from "./Rating";
 import StoresStock from "./StoresStock";
@@ -56,15 +57,45 @@ import StoresStock from "./StoresStock";
 
 export default function ProductInfo({ product }) {
   const [cantidadCarrito, setCantidadCarrito] = useState(1);
-
   const navigate = useNavigate();
+  const { cart, addToCart } = useCart();
 
   const tieneDescuento = product?.b2c?.discount_percentage > 0;
+  const currency = product?.currency !== "CRC" ? "$" : "₡";
 
-  const currency = product?.currency != "CRC" ? "$" : "₡";
+  // Identificador único
+  const productId = product?.objectID || product?.id;
+
+  // Stock total disponible
+  const stockTotal = product?.stock_quantity ?? (product?.in_stock ? 999 : 0);
+
+  // Buscar cuántas unidades de este producto ya están en el carrito
+  const productoEnCarrito = cart.find(
+    (item) => (item.id ?? item.objectID) === productId
+  );
+  const cantidadEnCarrito = productoEnCarrito ? productoEnCarrito.order_quantity : 0;
+
+  // Unidades restantes que se pueden agregar
+  const stockDisponibleParaAgregar = stockTotal - cantidadEnCarrito;
 
   const handleAddToCart = () => {
-    cart.addToCart(product, cantidadCarrito);
+    if (!product || stockDisponibleParaAgregar <= 0) return;
+
+    const precioFinal = tieneDescuento
+      ? Number(product.b2c.sale_price)
+      : Number(product.b2c.regular_price);
+
+    const productoAEnviar = {
+      ...product,
+      id: productId,
+      name: product.title || product.name,
+      price: precioFinal,
+      image: product.image_url || product.image,
+      stock_quantity: stockTotal,
+    };
+
+    addToCart(productoAEnviar, cantidadCarrito);
+    setCantidadCarrito(1);
   };
 
   return (
@@ -102,12 +133,12 @@ export default function ProductInfo({ product }) {
 
               <div className="pi-product-badges">
                 <span className="pi-product-warranty pi-product-badge">
-                  <ShieldCheck /> Garantía de {product.b2c.warranty_months}{" "}
+                  <ShieldCheck /> Garantía de {product.b2c?.warranty_months}{" "}
                   meses
                 </span>
                 <span className="pi-product-estimated-delivery pi-product-badge">
                   <Clock8 /> Tiempo de entrega estimado de{" "}
-                  {product.b2c.estimated_delivery_days} días
+                  {product.b2c?.estimated_delivery_days} días
                 </span>
               </div>
 
@@ -124,14 +155,15 @@ export default function ProductInfo({ product }) {
                   <li>
                     <span className="pi-bold">Modelo:</span> {product.model}
                   </li>
-                  {Object.entries(product.facets).map(([name, value]) => (
-                    <li key={name}>
-                      <span className="pi-bold">
-                        {translations.facets[name]}:
-                      </span>{" "}
-                      {value}
-                    </li>
-                  ))}
+                  {product.facets &&
+                    Object.entries(product.facets).map(([name, value]) => (
+                      <li key={name}>
+                        <span className="pi-bold">
+                          {translations.facets?.[name] || name}:
+                        </span>{" "}
+                        {value}
+                      </li>
+                    ))}
                 </ul>
               </div>
 
@@ -145,7 +177,7 @@ export default function ProductInfo({ product }) {
                     <span className="pi-product-regular-price-discount">
                       {currency}
                       {Number(product.b2c.regular_price).toLocaleString(
-                        "en-US",
+                        "en-US"
                       )}
                     </span>
 
@@ -164,9 +196,11 @@ export default function ProductInfo({ product }) {
                   <>
                     <span className="pi-product-price">
                       {currency}
-                      {Number(product.b2c.sale_price).toLocaleString("en-US")}
+                      {Number(
+                        product.b2c?.sale_price || product.b2c?.regular_price
+                      ).toLocaleString("en-US")}
                     </span>
-                    {product.b2c.free_shipping && (
+                    {product.b2c?.free_shipping && (
                       <span className="pi-product-discount-badge">
                         <Truck />
                         ¡Envío gratis!
@@ -176,37 +210,51 @@ export default function ProductInfo({ product }) {
                 )}
               </div>
 
-              {product.in_stock && product.b2c.enabled ? (
+              {product.in_stock && product.b2c?.enabled ? (
                 <div className="pi-shipping-container">
-                  <div className="pi-shipping-quantity-container">
+                  {stockDisponibleParaAgregar <= 0 ? (
                     <button
-                      className="pi-shipping-button-del"
-                      onClick={() => setCantidadCarrito(cantidadCarrito - 1)}
-                      disabled={cantidadCarrito === 1}
+                      className="pi-without-stock"
+                      title={`Ya alcanzaste el límite disponible para este producto (${stockTotal} unidades en carrito).`}
                     >
-                      -
+                      <XCircle size={22} strokeWidth={2} /> Límite alcanzado
                     </button>
-                    <span className="pi-shipping-quantity">
-                      {cantidadCarrito}
-                    </span>
-                    <button
-                      className="pi-shipping-button-add"
-                      onClick={() => setCantidadCarrito(cantidadCarrito + 1)}
-                      disabled={cantidadCarrito >= product.stock_quantity}
-                    >
-                      +
-                    </button>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="pi-shipping-quantity-container">
+                        <button
+                          className="pi-shipping-button-del"
+                          onClick={() => setCantidadCarrito(cantidadCarrito - 1)}
+                          disabled={cantidadCarrito === 1}
+                        >
+                          -
+                        </button>
+                        <span className="pi-shipping-quantity">
+                          {cantidadCarrito}
+                        </span>
+                        <button
+                          className="pi-shipping-button-add"
+                          onClick={() => setCantidadCarrito(cantidadCarrito + 1)}
+                          disabled={cantidadCarrito >= stockDisponibleParaAgregar}
+                        >
+                          +
+                        </button>
+                      </div>
 
-                  <button className="pi-add-to-cart" onClick={handleAddToCart}>
-                    <ShoppingCart /> Agregar al carrito
-                  </button>
+                      <button
+                        className="pi-add-to-cart"
+                        onClick={handleAddToCart}
+                      >
+                        <ShoppingCart /> Agregar al carrito
+                      </button>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div className="pi-shipping-container">
                   <span className="pi-without-stock">
-                    Producto{" "}
-                    {!product.b2c.enabled ? "no disponible" : "agotado"}
+                    <XCircle size={22} strokeWidth={2} /> Producto{" "}
+                    {!product.b2c?.enabled ? "no disponible" : "agotado"}
                   </span>
                 </div>
               )}

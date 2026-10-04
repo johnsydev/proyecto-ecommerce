@@ -1,8 +1,11 @@
 
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "../styles/CartItem.css";
 
 export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove }) {
+  const navigate = useNavigate();
+
   const salePrice = Number(product.b2c?.sale_price ?? 0);
   const regularPrice = Number(product.b2c?.regular_price ?? 0);
   const currency = product.currency === "CRC" ? "₡" : "$";
@@ -17,7 +20,7 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
       <div className="cart-item-main">
 
        
-        <div className="cart-item-image-wrapper">
+        <div className="cart-item-image-wrapper" onClick={() => navigate(`/producto/${product.id}`)}>
           <img src={product.image_url} alt={product.title} />
         </div>
 
@@ -66,7 +69,7 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
           <button
             type="button"
             onClick={onRemoveUnit}
-            disabled={product.order_quantity <= 1}
+            disabled={product.order_quantity <= 0}
           >
             -
           </button>
