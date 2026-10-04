@@ -8,6 +8,9 @@ Electro-Commerce CR es una aplicación web de comercio electrónico desarrollada
 
 El proyecto permite buscar productos electrónicos, aplicar filtros, consultar información detallada y revisar la disponibilidad de los productos en diferentes sucursales.
 
+> [!IMPORTANT]
+> Para ver las notas de la versión reciente, **[ir aquí](#carrito-de-compras)**.
+
 ## Funcionalidades
 
 * Búsqueda de productos.
@@ -19,6 +22,7 @@ El proyecto permite buscar productos electrónicos, aplicar filtros, consultar i
 * Visualización de descuentos y disponibilidad.
 * Consulta de stock por sucursal.
 * Diseño adaptable para computadora y dispositivos móviles.
+* Carrito de Compras
 
 ## Tecnologías utilizadas
 
@@ -89,6 +93,8 @@ El proyecto está dividido principalmente en:
 ```text
 src/
 ├── components/
+├── context/
+├── locales/
 ├── features/
 │   ├── catalog/
 │   └── product-detail/
@@ -113,7 +119,28 @@ El proyecto permite buscar productos por texto y aplicar filtros según:
 
 También se utiliza para obtener la información detallada de cada producto.
 
+## Carrito de Compras
+
+El módulo del carrito se utiliza para gestionar y almacenar temporalmente los productos que el usuario desea adquirir.
+
+El proyecto administra la información del carrito mediante los siguientes mecanismos:
+
+* Estado global: Se implementó utilizando Context API y useReducer para permitir que diferentes partes de la aplicación consulten o modifiquen el carrito sin depender de la transmisión manual de propiedades (props).   
+* Persistencia de datos: Se utiliza localStorage para asegurar que el carrito y sus cantidades se recuperen intactos incluso si el usuario recarga la ventana del navegador.   
+
+Para mejorar la experiencia de usuario y la lógica de compra, se definieron los siguientes comportamientos:
+
+* Eliminación automática: Se estableció como regla de negocio que, si el usuario disminuye la cantidad de un producto en el selector y esta llega a 0, el artículo se elimina automáticamente del carrito.   
+* Cálculos dinámicos: La interfaz actualiza instantáneamente el subtotal de cada línea, el subtotal de la orden, el IVA (13%) y los costos de envío ante cualquier modificación.   
+* Navegación ágil: Se incluyó un botón flotante de "volver arriba" en la vista detallada del carrito para facilitar la navegación cuando se han agregado múltiples productos y se hace un desplazamiento largo hacia abajo.
+* Estados vacíos (Empty State): Si el carrito no tiene productos, se oculta el resumen de compra y se muestra una interfaz amigable invitando al usuario a volver al catálogo
+
 ## Estado del proyecto
+
+**Versión 1.1 (Actual)**
+
+Esta versión incluye la implementación de un carrito de compras completamente funcional. Se integró el manejo de estado global de la aplicación, el cálculo automático y en tiempo real de los montos (subtotales, IVA y envío), y la persistencia de datos en el navegador para que el usuario no pierda sus productos al recargar la página. 
+
 
 **Versión 1.0**
 

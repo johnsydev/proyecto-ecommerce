@@ -1,6 +1,10 @@
 import SearchBar from "../features/catalog/components/SearchBar";
 import "../styles/Header.css";
 import robotLogo from "../assets/ElectroLogo.png";
+import CartPreview from "../features/cart/components/CartPreview";
+import { useCart } from "../context/CartContext";
+import { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
 /*
  * Objetivo:
@@ -26,11 +30,40 @@ import robotLogo from "../assets/ElectroLogo.png";
  * - El archivo Header.css debe existir para aplicar los estilos del componente.
  * - Los enlaces de acceso y registro no están conectados a rutas funcionales, ya que
  *   no se definieron en el alcance del proyecto.
- * - El contador del carrito está definido actualmente con el valor 0,
- *   por lo que todavía no refleja una cantidad dinámica de productos.
+ * - El contador del carrito refleja la cantidad total de unidades agregadas.
  */
 
 export default function Header() {
+  const { cart, totalItems } = useCart();
+  const [previewProduct, setPreviewProduct] = useState(null);
+  const [showCartPreview, setShowCartPreview] = useState(false);
+  
+  const location = useLocation();
+  const previousTotalItems = useRef(totalItems);
+
+  useEffect(() => {
+    let timeoutId;
+
+    const isCartPage = location.pathname.includes("/cart") || window.location.hash.includes("/cart");
+
+    if (totalItems > previousTotalItems.current && !isCartPage) {
+      const ultimoProducto = cart[cart.length - 1];
+      
+      if (ultimoProducto) {
+        setPreviewProduct(ultimoProducto);
+        setShowCartPreview(true);
+
+        timeoutId = setTimeout(() => {
+          setShowCartPreview(false);
+        }, 4000);
+      }
+    }
+
+    previousTotalItems.current = totalItems;
+
+    return () => clearTimeout(timeoutId);
+  }, [totalItems, cart]);
+
   return (
     <header className="site-header">
       <div className="header-container">
@@ -71,19 +104,34 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="header-cart-btn">
-            <svg
-              className="cart-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+          <div className="header-cart-wrapper">
+            <a
+              href="#/cart"
+              className="header-cart-btn"
+              aria-label="Ver carrito"
+              onClick={() => setShowCartPreview(false)}
             >
-              <circle cx="9" cy="21" r="1"></circle>
-              <circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span className="cart-badge">0</span>
+              <svg
+                className="cart-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span className="cart-badge">{totalItems}</span>
+            </a>
+            
+            {showCartPreview && previewProduct && (
+              <CartPreview
+                product={previewProduct}
+                cartItemCount={totalItems}
+                onClose={() => setShowCartPreview(false)}
+              />
+            )}
           </div>
         </div>
       </div>
