@@ -1,6 +1,7 @@
 import "../styles/Cart.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import emptyCartImage from "../../../assets/electro_carrito_vacio.png";
 import {
   addUnit,
   getCart,
@@ -65,6 +66,11 @@ export default function Cart() {
       {cart.length === 0 ? (
 
         <div className="cart-empty">
+          <img
+            className="cart-empty-image"
+            src={emptyCartImage}
+            alt="Carrito vacío"
+          />
           <h2>Tu carrito está vacío</h2>
 
           <p>
