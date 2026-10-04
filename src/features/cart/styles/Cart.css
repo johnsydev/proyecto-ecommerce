@@ -1,7 +1,4 @@
 
-/* ========================================
-   PÁGINA PRINCIPAL DEL CARRITO
-======================================== */
 
 .cart-page {
   margin: 0 auto;
@@ -14,9 +11,7 @@
   box-sizing: border-box;
 }
 
-/* ========================================
-   ENCABEZADO
-======================================== */
+
 
 .cart-header {
   display: flex;
@@ -24,8 +19,6 @@
   gap: 28px;
   margin-bottom: 40px;
 }
-
-/* Título y descripción */
 
 .cart-heading {
   display: flex;
@@ -56,9 +49,7 @@
   line-height: 1.5;
 }
 
-/* ========================================
-   FLUJO DE COMPRA
-======================================== */
+
 
 .cart-stepper {
   display: flex;
@@ -75,8 +66,6 @@
   background-color: #e5e7eb;
 }
 
-/* Cada paso */
-
 .cart-stepper .step {
   display: flex;
   align-items: center;
@@ -84,8 +73,6 @@
   flex-shrink: 0;
   color: #9ca3af;
 }
-
-/* Círculos numerados */
 
 .step-number {
   width: 32px;
@@ -100,17 +87,14 @@
   color: #9ca3af;
   background: #ffffff;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
-
-/* Texto de cada paso */
 
 .step-label {
   font-size: 0.9rem;
   font-weight: 500;
   white-space: nowrap;
 }
-
-/* Paso activo */
 
 .cart-stepper .step.active {
   color: #345499;
@@ -127,18 +111,7 @@
   font-weight: 650;
 }
 
-/* Líneas entre los pasos */
 
-.cart-stepper .step-line {
-  height: 1px;
-  flex: 1;
-  min-width: 15px;
-  background-color: #e5e7eb;
-}
-
-/* ========================================
-   DISTRIBUCIÓN DEL CARRITO
-======================================== */
 
 .cart-layout {
   display: grid;
@@ -147,17 +120,13 @@
   align-items: start;
 }
 
-/* Lista de productos */
-
 .cart-items-container {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-/* ========================================
-   CARRITO VACÍO
-======================================== */
+
 
 .cart-empty {
   background: #fdfdfd;
@@ -165,6 +134,7 @@
   padding: 80px 20px;
   text-align: center;
   border: 1px dashed #cbd5e1;
+  box-sizing: border-box;
 }
 
 .cart-empty-image {
@@ -190,8 +160,6 @@
   margin: 0;
 }
 
-/* Botón para continuar comprando */
-
 .cart-continue-button {
   background: #345499;
   border: 0;
@@ -209,105 +177,6 @@
   background: #2a437a;
 }
 
-/* ========================================
-   RESPONSIVE - TABLETS
-======================================== */
-
-@media (max-width: 900px) {
-  .cart-layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .cart-stepper {
-    max-width: 100%;
-  }
-}
-
-/* ========================================
-   RESPONSIVE - MÓVILES
-======================================== */
-
-@media (max-width: 600px) {
-  .cart-page {
-    padding: 25px 16px 60px;
-  }
-
-  /* Encabezado */
-
-  .cart-header {
-    gap: 22px;
-    margin-bottom: 28px;
-  }
-
-  .cart-header h1 {
-    font-size: 2rem;
-  }
-
-  .cart-heading p {
-    font-size: 0.88rem;
-  }
-
-  /* Flujo de compra */
-
-  .cart-stepper {
-    gap: 7px;
-    justify-content: space-between;
-  }
-
-  .cart-stepper .step {
-    gap: 5px;
-  }
-
-  .step-number {
-    width: 27px;
-    height: 27px;
-    font-size: 0.75rem;
-  }
-
-  .step-label {
-    font-size: 0.72rem;
-  }
-
-  .cart-stepper .step-line {
-    min-width: 8px;
-  }
-
-  /* Carrito vacío */
-
-  .cart-empty {
-    padding: 55px 16px;
-  }
-
-  .cart-empty-image {
-    width: 150px;
-    max-width: 55%;
-  }
-
-  .cart-empty h2 {
-    font-size: 1.2rem;
-  }
-
-  .cart-empty p {
-    font-size: 0.88rem;
-  }
-
-  .cart-continue-button {
-    font-size: 0.9rem;
-    padding: 11px 20px;
-  }
-
-  /* Distribución */
-
-  .cart-layout {
-    gap: 30px;
-  }
-}
-
-
-/* ========================================
-   BOTÓN FLOTANTE VOLVER ARRIBA
-======================================== */
 
 
 .scroll-to-top {
@@ -318,7 +187,7 @@
   width: 56px;
   height: 56px;
   border: none;
-  border-radius: 16px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,7 +195,9 @@
   color: #fff;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-  transition: background-color 0.2s ease, transform 0.2s ease,
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
     box-shadow 0.2s ease;
   animation: scrollTopAppear 0.25s ease;
 }
@@ -351,18 +222,112 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+
+
+@media (max-width: 900px) {
+  .cart-page {
+    max-width: 850px;
+    padding: 35px 24px 70px;
+  }
+
+  .cart-header {
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .cart-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 35px;
+  }
+
+  .cart-stepper {
+    max-width: 100%;
+  }
+}
+
+/* ========================================
+   RESPONSIVE - CELULAR
+======================================== */
+
 @media (max-width: 600px) {
+  .cart-page {
+    padding: 25px 16px 60px;
+  }
+
+  .cart-header {
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+
+  .cart-header h1 {
+    font-size: 2rem;
+  }
+
+  .cart-heading p {
+    font-size: 0.88rem;
+  }
+
+  .cart-stepper {
+    gap: 7px;
+    justify-content: space-between;
+  }
+
+  .cart-stepper .step {
+    gap: 5px;
+  }
+
+  .step-number {
+    width: 27px;
+    height: 27px;
+    font-size: 0.75rem;
+  }
+
+  .step-label {
+    font-size: 0.72rem;
+  }
+
+  .cart-stepper .step-line {
+    min-width: 8px;
+  }
+
+  .cart-layout {
+    gap: 28px;
+  }
+
+  .cart-empty {
+    padding: 55px 16px;
+  }
+
+  .cart-empty-image {
+    width: 150px;
+    max-width: 55%;
+  }
+
+  .cart-empty h2 {
+    font-size: 1.2rem;
+  }
+
+  .cart-empty p {
+    font-size: 0.88rem;
+  }
+
+  .cart-continue-button {
+    font-size: 0.9rem;
+    padding: 11px 20px;
+  }
+
   .scroll-to-top {
     width: 44px;
     height: 44px;
-    right: 18px;
-    bottom: 20px;
+    right: 16px;
+    bottom: 18px;
   }
 
   .scroll-to-top svg {
@@ -371,20 +336,22 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .scroll-to-top {
-    animation: none;
-    transition: none;
-  }
-}
 
-
-
-/* ========================================
-   PANTALLAS MUY PEQUEÑAS
-======================================== */
 
 @media (max-width: 360px) {
+  .cart-page {
+    padding: 22px 12px 50px;
+  }
+
+  .cart-header {
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .cart-header h1 {
+    font-size: 1.75rem;
+  }
+
   .cart-stepper {
     gap: 5px;
   }
@@ -401,5 +368,46 @@
     width: 24px;
     height: 24px;
     font-size: 0.7rem;
+  }
+
+  .cart-stepper .step-line {
+    min-width: 5px;
+  }
+
+  .cart-empty {
+    padding: 40px 12px;
+  }
+
+  .cart-empty-image {
+    width: 125px;
+  }
+
+  .cart-empty h2 {
+    font-size: 1.05rem;
+  }
+
+  .cart-empty p {
+    font-size: 0.8rem;
+  }
+
+  .cart-continue-button {
+    font-size: 0.85rem;
+    padding: 10px 16px;
+  }
+
+  .scroll-to-top {
+    width: 40px;
+    height: 40px;
+    right: 12px;
+    bottom: 14px;
+  }
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-to-top {
+    animation: none;
+    transition: none;
   }
 }
