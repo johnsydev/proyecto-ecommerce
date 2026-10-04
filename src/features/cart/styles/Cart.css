@@ -304,6 +304,82 @@
   }
 }
 
+
+/* ========================================
+   BOTÓN FLOTANTE VOLVER ARRIBA
+======================================== */
+
+
+.scroll-to-top {
+  position: fixed;
+  right: 18px;
+  bottom: 22px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #345499;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transition: background-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+  animation: scrollTopAppear 0.25s ease;
+}
+
+.scroll-to-top:hover {
+  background-color: #2a437a;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+}
+
+.scroll-to-top:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.scroll-to-top:focus-visible {
+  outline: 3px solid #93b4f5;
+  outline-offset: 3px;
+}
+
+@keyframes scrollTopAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .scroll-to-top {
+    width: 44px;
+    height: 44px;
+    right: 18px;
+    bottom: 20px;
+  }
+
+  .scroll-to-top svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-to-top {
+    animation: none;
+    transition: none;
+  }
+}
+
+
+
 /* ========================================
    PANTALLAS MUY PEQUEÑAS
 ======================================== */

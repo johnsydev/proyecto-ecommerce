@@ -1,6 +1,7 @@
 import SearchBar from "../features/catalog/components/SearchBar";
 import "../styles/Header.css";
 import robotLogo from "../assets/ElectroLogo.png";
+import CartPreview from "../features/cart/components/CartPreview";
 import { getCartItemCount } from "../features/cart/services/cartService";
 import { useEffect, useState } from "react";
 
@@ -33,18 +34,39 @@ import { useEffect, useState } from "react";
 
 export default function Header() {
   const [cartItemCount, setCartItemCount] = useState(() => getCartItemCount());
+  const [previewProduct, setPreviewProduct] = useState(null);
+  const [showCartPreview, setShowCartPreview] = useState(false);
 
   useEffect(() => {
-    const updateCartItemCount = () => {
+    let timeoutId;
+
+    const handleCartUpdated = (event) => {
+      setCartItemCount(getCartItemCount());
+
+      if (event.detail?.product) {
+        setPreviewProduct(event.detail.product);
+        setShowCartPreview(true);
+
+        clearTimeout(timeoutId);
+
+        timeoutId = setTimeout(() => {
+          setShowCartPreview(false);
+        }, 4000);
+      }
+    };
+
+    const handleStorage = () => {
       setCartItemCount(getCartItemCount());
     };
 
-    window.addEventListener("cart-updated", updateCartItemCount);
-    window.addEventListener("storage", updateCartItemCount);
+    window.addEventListener("cart-updated", handleCartUpdated);
+    window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener("cart-updated", updateCartItemCount);
-      window.removeEventListener("storage", updateCartItemCount);
+      clearTimeout(timeoutId);
+
+      window.removeEventListener("cart-updated", handleCartUpdated);
+      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 
@@ -88,7 +110,13 @@ export default function Header() {
             </div>
           </div>
 
-          <a href="#/cart" className="header-cart-btn">
+          <div className="header-cart-wrapper">
+            <a
+              href="#/cart"
+              className="header-cart-btn"
+              aria-label="Ver carrito"
+              onClick={() => setShowCartPreview(false)}
+            >
             <svg
               className="cart-icon"
               viewBox="0 0 24 24"
@@ -101,7 +129,15 @@ export default function Header() {
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
             <span className="cart-badge">{cartItemCount}</span>
-          </a>
+            </a>
+            {showCartPreview && previewProduct && (
+              <CartPreview
+                product={previewProduct}
+                cartItemCount={cartItemCount}
+                onClose={() => setShowCartPreview(false)}
+              />
+            )}
+          </div>
         </div>
       </div>
     </header>
