@@ -1,6 +1,8 @@
 import SearchBar from "../features/catalog/components/SearchBar";
 import "../styles/Header.css";
 import robotLogo from "../assets/ElectroLogo.png";
+import { getCartItemCount } from "../features/cart/services/cartService";
+import { useEffect, useState } from "react";
 
 /*
  * Objetivo:
@@ -26,11 +28,26 @@ import robotLogo from "../assets/ElectroLogo.png";
  * - El archivo Header.css debe existir para aplicar los estilos del componente.
  * - Los enlaces de acceso y registro no están conectados a rutas funcionales, ya que
  *   no se definieron en el alcance del proyecto.
- * - El contador del carrito está definido actualmente con el valor 0,
- *   por lo que todavía no refleja una cantidad dinámica de productos.
+ * - El contador del carrito refleja la cantidad total de unidades agregadas.
  */
 
 export default function Header() {
+  const [cartItemCount, setCartItemCount] = useState(() => getCartItemCount());
+
+  useEffect(() => {
+    const updateCartItemCount = () => {
+      setCartItemCount(getCartItemCount());
+    };
+
+    window.addEventListener("cart-updated", updateCartItemCount);
+    window.addEventListener("storage", updateCartItemCount);
+
+    return () => {
+      window.removeEventListener("cart-updated", updateCartItemCount);
+      window.removeEventListener("storage", updateCartItemCount);
+    };
+  }, []);
+
   return (
     <header className="site-header">
       <div className="header-container">
@@ -83,7 +100,7 @@ export default function Header() {
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            <span className="cart-badge">0</span>
+            <span className="cart-badge">{cartItemCount}</span>
           </a>
         </div>
       </div>

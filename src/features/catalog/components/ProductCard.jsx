@@ -2,6 +2,7 @@ import "../styles/ProductCard.css";
 import { ShoppingCart, XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { addToCart } from "../../cart/services/cartService";
 
 /*
  * Objetivo:
@@ -28,8 +29,7 @@ import { useNavigate } from "react-router-dom";
  * - El producto solo se considera disponible si tiene existencia y además
  *   está habilitado para venta.
  * - El componente debe ejecutarse dentro de un Router para poder utilizar useNavigate.
- * - El botón "Agregar al carrito" actualmente solo se muestra visualmente
- *   y todavía no tiene una función asociada para agregar productos al carrito.
+ * - El botón "Agregar al carrito" guarda una unidad del producto en el carrito.
  */
 
 export default function ProductCard({ hit }) {
@@ -94,7 +94,11 @@ export default function ProductCard({ hit }) {
         </p>
 
         {isAvailable ? (
-          <button className="product-button">
+          <button
+            type="button"
+            className="product-button"
+            onClick={() => addToCart(hit, 1)}
+          >
             <ShoppingCart size={22} strokeWidth={2} /> Agregar al carrito
           </button>
         ) : (
