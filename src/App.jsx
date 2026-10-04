@@ -3,6 +3,7 @@ import { InstantSearch } from "react-instantsearch";
 import Home from "./Home";
 import CatalogPage from "./pages/CatalogPage";
 import ProductDetail from "./pages/ProductDetail";
+import CartPage from "./pages/CartPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import searchClient from "./features/catalog/services/algolia";
@@ -58,6 +59,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<CatalogPage />} />
           <Route path="/producto/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<CartPage />} />
         </Routes>
       </main>
       <Footer />
