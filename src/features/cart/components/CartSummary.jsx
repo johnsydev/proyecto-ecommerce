@@ -1,6 +1,8 @@
 import "../styles/CartSummary.css";
+import { useNavigate } from "react-router-dom";
 
 export default function CartSummary({ cart }) {
+  const navigate = useNavigate();
   const currency = cart[0]?.currency === "CRC" ? "₡" : "$";
 
   // Cálculos
@@ -72,7 +74,7 @@ export default function CartSummary({ cart }) {
           <strong>{currency}{total.toLocaleString("en-US")}</strong>
         </div>
 
-        <button type="button" className="checkout-button">
+        <button type="button" className="checkout-button" onClick={() => navigate("/checkout")}>
           Proceder al Pago
         </button>
 
