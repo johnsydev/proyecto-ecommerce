@@ -38,31 +38,71 @@ export default function Header() {
   const [previewProduct, setPreviewProduct] = useState(null);
   const [showCartPreview, setShowCartPreview] = useState(false);
   
+  // estado para controlar qué vista mostrar 
+  const [previewMode, setPreviewMode] = useState("single"); 
+  
   const location = useLocation();
   const previousTotalItems = useRef(totalItems);
+  
+  // referencia del carrito anterior para comparar
+  const previousCart = useRef(cart);
 
+  // 1. Animación al agregar un producto 
   useEffect(() => {
     let timeoutId;
-
     const isCartPage = location.pathname.includes("/cart") || window.location.hash.includes("/cart");
 
     if (totalItems > previousTotalItems.current && !isCartPage) {
-      const ultimoProducto = cart[cart.length - 1];
       
-      if (ultimoProducto) {
-        setPreviewProduct(ultimoProducto);
+      const productoAgregado = cart.find(item => {
+        const idActual = item.id ?? item.objectID;
+        const prevItem = previousCart.current.find(p => (p.id ?? p.objectID) === idActual);
+        
+        
+        return !prevItem || item.order_quantity > prevItem.order_quantity;
+      }) || cart[cart.length - 1]; 
+      
+      if (productoAgregado) {
+        setPreviewProduct(productoAgregado);
+        setPreviewMode("single");
         setShowCartPreview(true);
 
         timeoutId = setTimeout(() => {
           setShowCartPreview(false);
-        }, 4000);
+        }, 2000);
       }
     }
 
+    
     previousTotalItems.current = totalItems;
-
+    previousCart.current = cart;
+    
     return () => clearTimeout(timeoutId);
-  }, [totalItems, cart]);
+  }, [totalItems, cart, location]);
+
+  // 2. Al darle al botón del carrito 
+  const handleCartClick = (e) => {
+    e.preventDefault();
+    const isCartPage = location.pathname.includes("/cart") || window.location.hash.includes("/cart");
+    if (isCartPage) return; // Si ya estamos en el carrito, no lo abre
+
+    if (cart.length > 0) {
+      setPreviewMode("drawer");
+      setShowCartPreview(true);
+    } else {
+      window.location.hash = "/cart"; 
+    }
+  };
+
+  // Bloquear el scroll de fondo cuando el menú lateral está abierto
+  useEffect(() => {
+    if (showCartPreview && previewMode === "drawer") {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [showCartPreview, previewMode]);
 
   return (
     <header className="site-header">
@@ -83,13 +123,7 @@ export default function Header() {
         <div className="header-actions">
           <div className="header-account">
             <div className="account-icon-wrapper">
-              <svg
-                className="account-svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+              <svg className="account-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
@@ -109,15 +143,9 @@ export default function Header() {
               href="#/cart"
               className="header-cart-btn"
               aria-label="Ver carrito"
-              onClick={() => setShowCartPreview(false)}
+              onClick={handleCartClick}
             >
-              <svg
-                className="cart-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+              <svg className="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="9" cy="21" r="1"></circle>
                 <circle cx="20" cy="21" r="1"></circle>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -125,9 +153,11 @@ export default function Header() {
               <span className="cart-badge">{totalItems}</span>
             </a>
             
-            {showCartPreview && previewProduct && (
+            {showCartPreview && (
               <CartPreview
+                mode={previewMode}
                 product={previewProduct}
+                cart={cart}
                 cartItemCount={totalItems}
                 onClose={() => setShowCartPreview(false)}
               />
