@@ -38,11 +38,14 @@ export default function Header() {
   const [previewProduct, setPreviewProduct] = useState(null);
   const [showCartPreview, setShowCartPreview] = useState(false);
   
-  // Nuevo estado para controlar qué vista mostrar (burbuja o menú lateral)
+  // estado para controlar qué vista mostrar 
   const [previewMode, setPreviewMode] = useState("single"); 
   
   const location = useLocation();
   const previousTotalItems = useRef(totalItems);
+  
+  // referencia del carrito anterior para comparar
+  const previousCart = useRef(cart);
 
   // 1. Animación al agregar un producto 
   useEffect(() => {
@@ -50,10 +53,17 @@ export default function Header() {
     const isCartPage = location.pathname.includes("/cart") || window.location.hash.includes("/cart");
 
     if (totalItems > previousTotalItems.current && !isCartPage) {
-      const ultimoProducto = cart[cart.length - 1];
       
-      if (ultimoProducto) {
-        setPreviewProduct(ultimoProducto);
+      const productoAgregado = cart.find(item => {
+        const idActual = item.id ?? item.objectID;
+        const prevItem = previousCart.current.find(p => (p.id ?? p.objectID) === idActual);
+        
+        
+        return !prevItem || item.order_quantity > prevItem.order_quantity;
+      }) || cart[cart.length - 1]; 
+      
+      if (productoAgregado) {
+        setPreviewProduct(productoAgregado);
         setPreviewMode("single");
         setShowCartPreview(true);
 
@@ -63,7 +73,10 @@ export default function Header() {
       }
     }
 
+    
     previousTotalItems.current = totalItems;
+    previousCart.current = cart;
+    
     return () => clearTimeout(timeoutId);
   }, [totalItems, cart, location]);
 
@@ -77,7 +90,7 @@ export default function Header() {
       setPreviewMode("drawer");
       setShowCartPreview(true);
     } else {
-      window.location.hash = "/cart"; // Si está vacío, te manda directo a la página
+      window.location.hash = "/cart"; 
     }
   };
 

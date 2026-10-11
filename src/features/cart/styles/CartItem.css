@@ -1,6 +1,4 @@
 
-
-
 .cart-item {
   display: flex;
   flex-direction: column;
@@ -229,6 +227,115 @@
   background-color: #e5e7eb;
   margin: 20px 0 0;
   flex-shrink: 0;
+}
+
+/* ========================================
+   MODAL DE CONFIRMACIÓN 
+======================================== */
+.custom-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  animation: fadeInModal 0.2s ease;
+}
+
+.custom-confirm-modal {
+  background: #ffffff;
+  width: 90%;
+  max-width: 420px;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: popInModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.custom-confirm-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+  border: 4px solid #cbd5e1; 
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.custom-confirm-modal h3 {
+  color: #1e293b;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.custom-confirm-modal p {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 25px;
+}
+
+.custom-confirm-modal p strong {
+  color: #334155;
+}
+
+.custom-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.custom-confirm-actions button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #ffffff;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.custom-confirm-actions button:active {
+  transform: scale(0.96);
+}
+
+.btn-confirm {
+  background-color: #ef4444;
+}
+
+.btn-confirm:hover {
+  background-color: #dc2626;
+}
+
+.btn-cancel {
+  background-color: #345499; 
+}
+
+.btn-cancel:hover {
+  background-color: #2a437a;
+}
+
+/* Animaciones fluidas */
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popInModal {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 
