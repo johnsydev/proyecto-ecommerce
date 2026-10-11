@@ -1,5 +1,5 @@
 import "../styles/Checkout.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
@@ -11,8 +11,9 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { cart } = useCart();
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [formHeight, setFormHeight] = useState(0);
+  const checkoutFormRef = useRef(null);
 
-  //si el carrito está vacío, redirigir al usuario a la página del carrito
   useEffect(() => {
     if (cart.length === 0) {
       navigate("/cart");
@@ -29,42 +30,51 @@ export default function Checkout() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
     handleScroll();
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const form = checkoutFormRef.current;
+
+    if (!form) return;
+
+    const updateFormHeight = () => {
+      setFormHeight(form.getBoundingClientRect().height);
+    };
+
+    updateFormHeight();
+
+    const observer = new ResizeObserver(updateFormHeight);
+    observer.observe(form);
+
+    return () => observer.disconnect();
+  }, [cart.length]);
+
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="checkout-page">
-
-      {/* Encabezado y pasos */}
       <PurchaseStepper currentStep={2} />
 
-      {/* Contenido del carrito */}
       {cart.length > 0 && (
-
         <div className="checkout-layout">
+          <div className="checkout-form-wrapper" ref={checkoutFormRef}>
+            <CheckoutForm />
+          </div>
 
-          {/* Formulario */}
-          <CheckoutForm />
-
-          {/* Resumen de compra */}
-          <PurchaseSummary cart={cart} />
-
+          <div
+            className="purchase-summary-wrapper"
+            style={{ "--form-height": `${formHeight}px` }}
+          >
+            <PurchaseSummary cart={cart} />
+          </div>
         </div>
       )}
 
-      {/* Botón flotante para volver arriba */}
       {cart.length > 0 && showScrollTop && (
         <button
           type="button"
@@ -76,7 +86,6 @@ export default function Checkout() {
           <ArrowUp size={22} strokeWidth={2.5} />
         </button>
       )}
-
     </div>
   );
 }
