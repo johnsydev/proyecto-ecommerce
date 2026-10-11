@@ -1,19 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import "../styles/CartItem.css";
 
 export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove }) {
-  
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const salePrice = Number(product.b2c?.sale_price ?? 0);
   const regularPrice = Number(product.b2c?.regular_price ?? 0);
   const currency = product.currency === "CRC" ? "₡" : "$";
   const tieneDescuento = product.b2c?.discount_percentage > 0;
-
-  const subtotal = salePrice * product.order_quantity;
-
   
+  const subtotal = salePrice * product.order_quantity;
+  const keyId = product.id ?? product.objectID;
+
   const handleDecrease = () => {
     if (product.order_quantity <= 1) {
       setShowModal(true);
@@ -31,7 +32,12 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
     <>
       <article className="cart-item">
         <div className="cart-item-main">
-          <div className="cart-item-image-wrapper">
+          
+          <div 
+            className="cart-item-image-wrapper"
+            onClick={() => navigate(`/producto/${keyId}`)}
+            style={{ cursor: "pointer" }}
+          >
             <img src={product.image_url} alt={product.title} />
           </div>
 
@@ -58,22 +64,30 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
                 <span className="subtotal-price">{currency}{subtotal.toLocaleString("en-US")}</span>
               </div>
             </div>
-
-            <div className="cart-item-bottom-section">
-              <div className="qty-selector">
-                <button type="button" onClick={handleDecrease}>-</button>
-                <span>{product.order_quantity}</span>
-                <button type="button" onClick={onAddUnit} disabled={product.order_quantity >= product.stock_quantity}>+</button>
-              </div>
-
-              <button type="button" className="delete-btn" onClick={() => setShowModal(true)} title="Eliminar producto">
-                <Trash2 size={18} strokeWidth={2} />
-              </button>
-            </div>
-
-            <div className="cart-item-divider"></div>
           </div>
         </div>
+        
+        
+        <div className="cart-item-bottom-section">
+          <div className="qty-selector">
+            <button type="button" onClick={handleDecrease}>-</button>
+            <span>{product.order_quantity}</span>
+            <button type="button" onClick={onAddUnit} disabled={product.order_quantity >= product.stock_quantity}>+</button>
+          </div>
+
+          <button 
+            type="button" 
+            className="delete-btn" 
+            onClick = {onRemove}
+            //7*onClick={() => setShowModal(true)} 
+            title="Eliminar producto"
+          >
+            <Trash2 size={18} strokeWidth={2} />
+          </button>
+        </div>
+
+        
+        <div className="cart-item-divider"></div>
       </article>
 
       
