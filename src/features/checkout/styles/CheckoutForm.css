@@ -1,0 +1,255 @@
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  padding: 28px;
+  background: #ffffff;
+  color: #1f2937;
+  color-scheme: light;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.checkout-form h2 {
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 650;
+  margin: 0;
+}
+
+.checkout-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.checkout-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.checkout-form .form-group > label {
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Campos de texto */
+.checkout-form .form-group input:not([type="checkbox"]),
+.checkout-form .form-group textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1f2937;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.checkout-form .form-group input:not([type="checkbox"]) {
+  min-height: 46px;
+}
+
+.checkout-form .form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.checkout-form .form-group input::placeholder,
+.checkout-form .form-group textarea::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+/* Autocompletado del navegador */
+.checkout-form .form-group input:-webkit-autofill,
+.checkout-form .form-group input:-webkit-autofill:hover,
+.checkout-form .form-group input:-webkit-autofill:focus,
+.checkout-form .form-group input:-webkit-autofill:active {
+  -webkit-text-fill-color: #1f2937;
+  caret-color: #1f2937;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+}
+
+/* Selectores de provincia, cantón y distrito */
+.checkout-form .form-group select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1f2937;
+  color-scheme: light;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.checkout-form .form-group select:focus {
+  outline: 2px solid #345499;
+  outline-offset: 1px;
+  border-color: #345499;
+  box-shadow: none;
+}
+
+.checkout-form .form-group select:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* Enfoque de campos de texto */
+.checkout-form .form-group input:not([type="checkbox"]):focus,
+.checkout-form .form-group textarea:focus {
+  outline: none;
+  border-color: #345499;
+  box-shadow: 0 0 0 3px rgba(52, 84, 153, 0.12);
+}
+
+.checkout-form .form-group input:not([type="checkbox"]):focus-visible,
+.checkout-form .form-group textarea:focus-visible {
+  outline: 2px solid #345499;
+  outline-offset: 2px;
+}
+
+/* Checkbox de factura electrónica */
+.checkout-form .checkbox-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+.checkout-form .checkbox-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.checkout-form .checkbox-group input[type="checkbox"] {
+  appearance: auto;
+  -webkit-appearance: auto;
+  display: inline-block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  accent-color: #345499;
+  cursor: pointer;
+}
+
+.checkout-form .checkbox-group input[type="checkbox"]:focus-visible {
+  outline: 2px solid #345499;
+  outline-offset: 3px;
+}
+
+/* Botón para continuar */
+.checkout-form .checkout-continue-button {
+  width: 100%;
+  padding: 14px 24px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: #345499;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.checkout-form .checkout-continue-button:hover {
+  background: #2a437a;
+}
+
+.checkout-form .checkout-continue-button:focus-visible {
+  outline: 3px solid #93b4f5;
+  outline-offset: 3px;
+}
+
+.checkout-form .checkout-continue-button:active {
+  background: #233965;
+}
+
+/* Selección de texto */
+.checkout-form ::selection {
+  background: #cbdaf5;
+  color: #1f2937;
+}
+
+/* Pantallas pequeñas */
+@media (max-width: 600px) {
+  .checkout-form {
+    padding: 22px 18px;
+    gap: 20px;
+  }
+
+  .checkout-form h2 {
+    font-size: 1.15rem;
+  }
+
+  .checkout-form form {
+    gap: 17px;
+  }
+
+  .checkout-form .form-group > label,
+  .checkout-form .checkbox-group label {
+    font-size: 0.88rem;
+  }
+
+  .checkout-form .form-group input:not([type="checkbox"]),
+  .checkout-form .form-group select,
+  .checkout-form .form-group textarea {
+    font-size: 16px;
+  }
+
+  .checkout-form .checkout-continue-button {
+    padding: 13px 20px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .checkout-form {
+    padding: 18px 14px;
+  }
+
+  .checkout-form h2 {
+    font-size: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkout-form .form-group input,
+  .checkout-form .form-group select,
+  .checkout-form .form-group textarea,
+  .checkout-form .checkout-continue-button {
+    transition: none;
+  }
+}
