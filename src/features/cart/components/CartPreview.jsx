@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
+import { calculateCartSummary } from "../../../utils/cartCalculations";
 
 export default function CartPreview({ mode = "single", product, cart = [], cartItemCount, onClose }) {
   const navigate = useNavigate();
@@ -8,12 +9,7 @@ export default function CartPreview({ mode = "single", product, cart = [], cartI
 
   // --- MODO 1: MENÚ LATERAL---
   if (mode === "drawer") {
-    const subtotal = cart.reduce((tot, p) => {
-      const pPrice = Number(p.b2c?.sale_price ?? p.b2c?.regular_price ?? 0);
-      return tot + (pPrice * (p.order_quantity || 1));
-    }, 0);
-    
-    const currency = cart[0]?.currency === "CRC" ? "₡" : "$";
+    const {subtotal, currency } = calculateCartSummary(cart);
 
     return (
       <>

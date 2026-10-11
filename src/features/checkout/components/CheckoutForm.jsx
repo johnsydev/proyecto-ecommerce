@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import "../styles/CheckoutForm.css";
 import ubicacionesCR from "../../../data/ubicacionesCR.json";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ acceptedTerms, onTermsError }) {
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -22,9 +21,7 @@ export default function CheckoutForm() {
     const provincias = Object.entries(ubicacionesCR.provincias);
 
     const cantones = provincia
-        ? Object.entries(
-            ubicacionesCR.provincias[provincia].cantones
-        )
+        ? Object.entries(ubicacionesCR.provincias[provincia].cantones)
         : [];
 
     const distritos = provincia && canton
@@ -45,12 +42,18 @@ export default function CheckoutForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        if (!acceptedTerms) {
+            onTermsError();
+            return;
+        }
+
         const checkoutData = {
             ...formData,
             province: ubicacionesCR.provincias[provincia].nombre,
             canton: ubicacionesCR.provincias[provincia].cantones[canton].nombre,
-            district: ubicacionesCR.provincias[provincia]
-                .cantones[canton].distritos[distrito],
+            district:
+                ubicacionesCR.provincias[provincia].cantones[canton]
+                    .distritos[distrito],
         };
 
         console.log("Datos del checkout:", checkoutData);
@@ -60,7 +63,7 @@ export default function CheckoutForm() {
         <div className="checkout-form">
             <h2>Información de contacto</h2>
 
-            <form onSubmit={handleSubmit}>
+            <form id="checkout-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="fullName">Nombre completo</label>
                     <input
@@ -237,13 +240,6 @@ export default function CheckoutForm() {
                         rows={2}
                     />
                 </div>
-
-                <button
-                    type="submit"
-                    className="checkout-continue-button"
-                >
-                    Continuar al pago
-                </button>
             </form>
         </div>
     );

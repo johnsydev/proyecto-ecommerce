@@ -170,7 +170,7 @@
 
 /* Botón para continuar */
 .checkout-form .checkout-continue-button {
-  width: 100%;
+ width: 100%;
   padding: 14px 24px;
   margin-top: 4px;
   border: 0;
@@ -181,7 +181,7 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease; 
 }
 
 .checkout-form .checkout-continue-button:hover {

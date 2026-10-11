@@ -1,82 +1,43 @@
-
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+    calculateCartSummary,
+    formatPrice,
+} from "../../../utils/cartCalculations";
 import "../styles/PurchaseSummary.css";
+import { Info } from "lucide-react";
 
 export default function PurchaseSummary({
     cart = [],
-    termsAccepted,
-    onTermsChange,
+    acceptedTerms,
+    setAcceptedTerms,
+    termsError,
+    setTermsError,
+    onTermsError,
 }) {
-    const [localTermsAccepted, setLocalTermsAccepted] = useState(false);
-
-    const isControlled = typeof termsAccepted === "boolean";
-    const accepted = isControlled ? termsAccepted : localTermsAccepted;
-
-    const currency = cart[0]?.currency === "CRC" ? "₡" : "$";
-
-    // Cálculos del pedido
-    const subtotal = cart.reduce((total, product) => {
-        const price = Number(
-            product.b2c?.sale_price ??
-            product.b2c?.regular_price ??
-            0
-        );
-
-        return total + price * (product.order_quantity || 1);
-    }, 0);
-
-    const discount = cart.reduce((total, product) => {
-        const regularPrice = Number(product.b2c?.regular_price ?? 0);
-        const salePrice = Number(
-            product.b2c?.sale_price ?? regularPrice
-        );
-
-        return total +
-            Math.max(0, regularPrice - salePrice) *
-            (product.order_quantity || 1);
-    }, 0);
-
-    const iva = subtotal * 0.13;
-
-    const requiereEnvioPagado = cart.some(
-        (product) => product.b2c?.free_shipping === false
-    );
-
-    const costoEnvio =
-        requiereEnvioPagado && cart.length > 0 ? 3000 : 0;
-
-    const total = subtotal + iva + costoEnvio;
-
-    // Fecha estimada de entrega
-    const maxDeliveryDays = cart.reduce((max, product) => {
-        const days = Number(product.b2c?.estimated_delivery_days || 0);
-        return Math.max(max, days);
-    }, 0);
-
-    const deliveryDate = new Date();
-    deliveryDate.setDate(deliveryDate.getDate() + maxDeliveryDays);
-
-    const formattedDate = deliveryDate.toLocaleDateString("es-CR", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
-
-    const formatPrice = (amount) => amount.toLocaleString("en-US");
+    const {
+        currency,
+        subtotal,
+        discount,
+        iva,
+        costoEnvio,
+        total,
+        maxDeliveryDays,
+        deliveryDate,
+        formattedDate,
+    } = calculateCartSummary(cart);
 
     const handleTermsChange = (e) => {
         const checked = e.target.checked;
 
-        if (!isControlled) {
-            setLocalTermsAccepted(checked);
-        }
+        setAcceptedTerms(checked);
 
-        onTermsChange?.(checked);
+        if (checked) {
+            setTermsError(false);
+        }
     };
 
     return (
         <aside className="purchase-summary">
-            {/* Resumen de la compra */}
             <section className="purchase-summary-overview">
                 <h2>Resumen de la compra</h2>
 
@@ -115,19 +76,23 @@ export default function PurchaseSummary({
 
                 {cart.length > 0 && (
                     <p className="purchase-summary-delivery">
-                        Entrega estimada para el <strong>{formattedDate}</strong>
+                        Entrega estimada para el{" "}
+                        <strong>{formattedDate}</strong>
                     </p>
                 )}
             </section>
 
-            {/* Aceptación de términos */}
-            <section className="purchase-summary-terms">
+            <section
+                className={`purchase-summary-terms ${
+                    termsError ? "terms-error" : ""
+                }`}
+            >
                 <h3>Términos y condiciones</h3>
 
                 <label className="purchase-summary-terms-label">
                     <input
                         type="checkbox"
-                        checked={accepted}
+                        checked={acceptedTerms}
                         onChange={handleTermsChange}
                     />
 
@@ -149,10 +114,29 @@ export default function PurchaseSummary({
                         </a>
                         .
                     </span>
-                    </label>
+                </label>
+
+                {termsError && (
+                    <p className="purchase-summary-terms-error">
+                        <Info size={16} />
+                        Debes aceptar los términos y condiciones para continuar.
+                    </p>
+                )}
             </section>
 
-            {/* Lista de productos */}
+            <button
+                type="submit"
+                form="checkout-form"
+                className="checkout-continue-button"
+                onClick={() => {
+                    if (!acceptedTerms) {
+                        onTermsError();
+                    }
+                }}
+            >
+                Continuar al pago
+            </button>
+
             <section className="purchase-summary-products">
                 <div className="purchase-summary-products-header">
                     <h3>Productos de tu pedido</h3>

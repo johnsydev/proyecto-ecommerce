@@ -59,6 +59,22 @@
   outline-offset: 3px;
 }
 
+.go-back-to-cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  text-underline-offset: 2px;
+  color: #345499;
+  font-weight: 600;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.go-back-to-cart:hover {
+  text-decoration: underline;
+}
+
 @keyframes scrollTopAppear {
   from {
     opacity: 0;
