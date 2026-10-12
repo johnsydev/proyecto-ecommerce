@@ -1,4 +1,5 @@
 import { HashRouter, Route, Routes, Link, useLocation } from "react-router-dom";
+import Pay from "./features/pay/components/Pay";
 import { InstantSearch } from "react-instantsearch";
 import Home from "./Home";
 import CatalogPage from "./pages/CatalogPage";
@@ -62,6 +63,7 @@ function App() {
           <Route path="/producto/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pay" element={<Pay />} />
         </Routes>
       </main>
       <Footer />
