@@ -36,6 +36,15 @@ export default function PurchaseSummary({
         }
     };
 
+    const handleSubmit = () => {
+        if (!acceptedTerms) {
+            onTermsError();
+            return;
+        }
+
+
+    };
+
     return (
         <aside className="purchase-summary">
             <section className="purchase-summary-overview">
@@ -87,7 +96,7 @@ export default function PurchaseSummary({
                     termsError ? "terms-error" : ""
                 }`}
             >
-                <h3>Términos y condiciones</h3>
+                <h3>Términos y condiciones <span className="field-required">*</span></h3>
 
                 <label className="purchase-summary-terms-label">
                     <input
@@ -131,6 +140,9 @@ export default function PurchaseSummary({
                 onClick={() => {
                     if (!acceptedTerms) {
                         onTermsError();
+                    }
+                    else {
+                        handleSubmit();
                     }
                 }}
             >

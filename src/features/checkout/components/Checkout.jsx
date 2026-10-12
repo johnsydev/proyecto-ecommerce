@@ -6,6 +6,8 @@ import { useCart } from "../../../context/CartContext";
 import PurchaseStepper from "../../../components/PurchaseStepper";
 import CheckoutForm from "./CheckoutForm";
 import PurchaseSummary from "./PurchaseSummary";
+import { generateOrder } from "../../../utils/orderUtils";
+import ubicacionesCR from "../../../data/ubicacionesCR.json";
 
 export default function Checkout() {
     const navigate = useNavigate();
@@ -20,6 +22,36 @@ export default function Checkout() {
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [termsError, setTermsError] = useState(false);
 
+    const [clientInfo, setClientInfo] = useState({
+        fullName: "",
+        email: "",
+        cedula: "",
+        phone: "",
+        requiresElectronicInvoice: false,
+    });
+
+    const [deliveryInfo, setDeliveryInfo] = useState({
+        province: "",
+        canton: "",
+        district: "",
+        address: "",
+        recipients: "",
+        additionalNotes: "",
+    });
+
+    const provincia = ubicacionesCR.provincias[deliveryInfo.province];
+    const canton = provincia?.cantones[deliveryInfo.canton];
+    const distrito = canton?.distritos[deliveryInfo.district];
+
+    const delivery = {
+        ...deliveryInfo,
+        province: provincia?.nombre ?? deliveryInfo.province,
+        canton: canton?.nombre ?? deliveryInfo.canton,
+        district: typeof distrito === "string"
+            ? distrito
+            : distrito?.nombre ?? deliveryInfo.district,
+    };
+
     const handleTermsError = () => {
         setTermsError(true);
 
@@ -29,6 +61,18 @@ export default function Checkout() {
         errorTimeout.current = setTimeout(() => {
             setTermsError(false);
         }, 3000);*/
+    };
+
+    const handleCheckoutSubmit = () => {
+        let orderData = generateOrder({
+            cart,
+            client: clientInfo,
+            delivery: delivery,
+        });
+
+        localStorage.setItem("order", JSON.stringify(orderData));
+        console.log(orderData);
+        navigate("/pay");
     };
 
     useEffect(() => {
@@ -98,6 +142,11 @@ export default function Checkout() {
                         <CheckoutForm
                             acceptedTerms={acceptedTerms}
                             onTermsError={handleTermsError}
+                            clientInfo={clientInfo}
+                            setClientInfo={setClientInfo}
+                            deliveryInfo={deliveryInfo}
+                            setDeliveryInfo={setDeliveryInfo}
+                            onCheckoutSubmit={handleCheckoutSubmit}
                         />
                     </div>
 

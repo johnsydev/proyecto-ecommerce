@@ -1,134 +1,278 @@
 import { useState } from "react";
 import "../styles/CheckoutForm.css";
 import ubicacionesCR from "../../../data/ubicacionesCR.json";
+import {
+    isValidCedulaCR,
+    isValidPhoneCR,
+} from "../../../utils/validations";
 
-export default function CheckoutForm({ acceptedTerms, onTermsError }) {
-    const [formData, setFormData] = useState({
-        fullName: "",
-        email: "",
-        cedula: "",
-        phone: "",
-        requiereFactura: false,
-        address: "",
-        recipients: "",
-        notes: "",
-    });
+export default function CheckoutForm({
+    acceptedTerms,
+    onTermsError,
+    clientInfo,
+    setClientInfo,
+    deliveryInfo,
+    setDeliveryInfo,
+    onCheckoutSubmit,
+}) {
+    const {
+        fullName,
+        email,
+        cedula,
+        phone,
+        requiresElectronicInvoice,
+    } = clientInfo;
 
-    const [provincia, setProvincia] = useState("");
-    const [canton, setCanton] = useState("");
-    const [distrito, setDistrito] = useState("");
+    const {
+        province,
+        canton,
+        district,
+        address,
+        recipients,
+        additionalNotes,
+    } = deliveryInfo;
+
+    const [validationErrors, setValidationErrors] = useState({});
+
+    const provinciaSeleccionada = ubicacionesCR.provincias[province];
+
+    const cantones = provinciaSeleccionada
+        ? Object.entries(provinciaSeleccionada.cantones)
+        : [];
+
+    const cantonSeleccionado = provinciaSeleccionada?.cantones[canton];
+
+    const distritos = cantonSeleccionado
+        ? Object.entries(cantonSeleccionado.distritos)
+        : [];
 
     const provincias = Object.entries(ubicacionesCR.provincias);
 
-    const cantones = provincia
-        ? Object.entries(ubicacionesCR.provincias[provincia].cantones)
-        : [];
-
-    const distritos = provincia && canton
-        ? Object.entries(
-            ubicacionesCR.provincias[provincia].cantones[canton].distritos
-        )
-        : [];
-
-    const handleChange = (e) => {
+    const handleChangeClientData = (e) => {
         const { name, value, type, checked } = e.target;
+        const newValue = type === "checkbox" ? checked : value;
 
-        setFormData((prev) => ({
+        setClientInfo((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: newValue,
         }));
+
+        if (validationErrors[name]) {
+            setValidationErrors((prev) => ({
+                ...prev,
+                [name]: "",
+            }));
+        }
+    };
+
+    const handleChangeDeliveryData = (e) => {
+        const { name, value } = e.target;
+
+        setDeliveryInfo((prev) => {
+            if (name === "province") {
+                return {
+                    ...prev,
+                    province: value,
+                    canton: "",
+                    district: "",
+                };
+            }
+
+            if (name === "canton") {
+                return {
+                    ...prev,
+                    canton: value,
+                    district: "",
+                };
+            }
+
+            return {
+                ...prev,
+                [name]: value,
+            };
+        });
+
+        setValidationErrors((prev) => {
+            const updatedErrors = {
+                ...prev,
+                [name]: "",
+            };
+
+            if (name === "province") {
+                updatedErrors.canton = "";
+                updatedErrors.district = "";
+            }
+
+            if (name === "canton") {
+                updatedErrors.district = "";
+            }
+
+            return updatedErrors;
+        });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const errors = {};
+
+        if (!fullName.trim()) {
+            errors.fullName = "Ingresa tu nombre completo.";
+        }
+
+        if (!email.trim()) {
+            errors.email = "Ingresa tu correo electrónico.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            errors.email =
+                "Ingresa un correo válido. Ejemplo: usuario@correo.com.";
+        }
+
+        if (!isValidCedulaCR(cedula)) {
+            errors.cedula =
+                "Ingresa una cédula costarricense de 9 dígitos. Ejemplo: 1-2345-6789.";
+        }
+
+        if (!isValidPhoneCR(phone)) {
+            errors.phone =
+                "Ingresa un teléfono de Costa Rica de 8 dígitos. Ejemplos: 8888-8888 o +506 8888-8888.";
+        }
+
+        if (!province) {
+            errors.province = "Selecciona una provincia.";
+        }
+
+        if (!canton) {
+            errors.canton = "Selecciona un cantón.";
+        }
+
+        if (!district) {
+            errors.district = "Selecciona un distrito.";
+        }
+
+        if (!address.trim()) {
+            errors.address =
+                "Ingresa la dirección exacta para entregar tu pedido.";
+        }
+
+        setValidationErrors(errors);
+
+        if (Object.keys(errors).length > 0) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+        }
 
         if (!acceptedTerms) {
             onTermsError();
             return;
         }
 
-        const checkoutData = {
-            ...formData,
-            province: ubicacionesCR.provincias[provincia].nombre,
-            canton: ubicacionesCR.provincias[provincia].cantones[canton].nombre,
-            district:
-                ubicacionesCR.provincias[provincia].cantones[canton]
-                    .distritos[distrito],
-        };
-
-        console.log("Datos del checkout:", checkoutData);
+        onCheckoutSubmit();
     };
+
+    const getErrorProps = (name) => ({
+        "aria-invalid": Boolean(validationErrors[name]),
+        "aria-describedby": validationErrors[name]
+            ? `${name}-error`
+            : undefined,
+    });
+
+    const renderError = (name) =>
+        validationErrors[name] ? (
+            <p className="field-error" id={`${name}-error`} role="alert">
+                {validationErrors[name]}
+            </p>
+        ) : null;
 
     return (
         <div className="checkout-form">
             <h2>Información de contacto</h2>
 
-            <form id="checkout-form" onSubmit={handleSubmit}>
+            <form
+                id="checkout-form"
+                onSubmit={handleSubmit}
+                noValidate
+            >
                 <div className="form-group">
-                    <label htmlFor="fullName">Nombre completo</label>
+                    <label htmlFor="fullName">
+                        Nombre completo <span className="field-required">*</span>
+                    </label>
                     <input
                         type="text"
                         id="fullName"
                         name="fullName"
-                        value={formData.fullName}
-                        onChange={handleChange}
+                        value={fullName}
+                        onChange={handleChangeClientData}
                         autoComplete="name"
+                        placeholder="Ej. Juan Pérez Rodríguez"
+                        {...getErrorProps("fullName")}
                         required
                     />
+                    {renderError("fullName")}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="email">Correo electrónico</label>
+                    <label htmlFor="email">
+                        Correo electrónico <span className="field-required">*</span>
+                    </label>
                     <input
                         type="email"
                         id="email"
                         name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        value={email}
+                        onChange={handleChangeClientData}
                         autoComplete="email"
+                        placeholder="Ej. usuario@correo.com"
+                        {...getErrorProps("email")}
                         required
                     />
+                    {renderError("email")}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="cedula">Cédula de identidad</label>
+                    <label htmlFor="cedula">
+                        Cédula de identidad <span className="field-required">*</span>
+                    </label>
                     <input
                         type="text"
                         id="cedula"
                         name="cedula"
-                        value={formData.cedula}
-                        onChange={handleChange}
-                        autoComplete="off"
+                        value={cedula}
+                        onChange={handleChangeClientData}
                         inputMode="numeric"
-                        pattern="[0-9]{9}"
-                        maxLength={9}
-                        placeholder="Ingrese los 9 dígitos de su cédula"
-                        title="Ingrese los 9 dígitos de su cédula"
+                        autoComplete="off"
+                        placeholder="Ej. 1-2345-6789"
+                        {...getErrorProps("cedula")}
                         required
                     />
+                    {renderError("cedula")}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="phone">Teléfono</label>
+                    <label htmlFor="phone">
+                        Teléfono <span className="field-required">*</span>
+                    </label>
                     <input
                         type="tel"
                         id="phone"
                         name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
+                        value={phone}
+                        onChange={handleChangeClientData}
                         autoComplete="tel"
+                        placeholder="Ej. 8888-8888 o +506 8888-8888"
+                        {...getErrorProps("phone")}
                         required
                     />
+                    {renderError("phone")}
                 </div>
 
                 <div className="form-group checkbox-group">
-                    <label htmlFor="requiereFactura">
+                    <label htmlFor="requiresElectronicInvoice">
                         <input
                             type="checkbox"
-                            id="requiereFactura"
-                            name="requiereFactura"
-                            checked={formData.requiereFactura}
-                            onChange={handleChange}
+                            id="requiresElectronicInvoice"
+                            name="requiresElectronicInvoice"
+                            checked={requiresElectronicInvoice}
+                            onChange={handleChangeClientData}
                         />
                         Requiere factura electrónica
                     </label>
@@ -137,80 +281,92 @@ export default function CheckoutForm({ acceptedTerms, onTermsError }) {
                 <h2>Dirección de entrega</h2>
 
                 <div className="form-group">
-                    <label htmlFor="province">Provincia</label>
+                    <label htmlFor="province">
+                        Provincia <span className="field-required">*</span>
+                    </label>
                     <select
                         id="province"
                         name="province"
-                        value={provincia}
-                        onChange={(e) => {
-                            setProvincia(e.target.value);
-                            setCanton("");
-                            setDistrito("");
-                        }}
+                        value={province}
+                        onChange={handleChangeDeliveryData}
+                        {...getErrorProps("province")}
                         required
                     >
                         <option value="">Seleccione una provincia</option>
+
                         {provincias.map(([codigo, datos]) => (
                             <option key={codigo} value={codigo}>
                                 {datos.nombre}
                             </option>
                         ))}
                     </select>
+                    {renderError("province")}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="canton">Cantón</label>
+                    <label htmlFor="canton">
+                        Cantón <span className="field-required">*</span>
+                    </label>
                     <select
                         id="canton"
                         name="canton"
                         value={canton}
-                        onChange={(e) => {
-                            setCanton(e.target.value);
-                            setDistrito("");
-                        }}
-                        disabled={!provincia}
+                        onChange={handleChangeDeliveryData}
+                        disabled={!province || cantones.length === 0}
+                        {...getErrorProps("canton")}
                         required
                     >
                         <option value="">Seleccione un cantón</option>
+
                         {cantones.map(([codigo, datos]) => (
                             <option key={codigo} value={codigo}>
                                 {datos.nombre}
                             </option>
                         ))}
                     </select>
+                    {renderError("canton")}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="district">Distrito</label>
+                    <label htmlFor="district">
+                        Distrito <span className="field-required">*</span>
+                    </label>
                     <select
                         id="district"
                         name="district"
-                        value={distrito}
-                        onChange={(e) => setDistrito(e.target.value)}
-                        disabled={!canton}
+                        value={district}
+                        onChange={handleChangeDeliveryData}
+                        disabled={!canton || distritos.length === 0}
+                        {...getErrorProps("district")}
                         required
                     >
                         <option value="">Seleccione un distrito</option>
+
                         {distritos.map(([codigo, nombre]) => (
                             <option key={codigo} value={codigo}>
                                 {nombre}
                             </option>
                         ))}
                     </select>
+                    {renderError("district")}
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="address">Dirección exacta</label>
+                    <label htmlFor="address">
+                        Dirección exacta <span className="field-required">*</span>
+                    </label>
                     <textarea
                         id="address"
                         name="address"
-                        value={formData.address}
-                        onChange={handleChange}
+                        value={address}
+                        onChange={handleChangeDeliveryData}
                         autoComplete="street-address"
-                        placeholder="Señas para encontrar la dirección de entrega"
+                        placeholder="Ej. 200 m norte de la iglesia, casa de portón negro"
                         rows={3}
+                        {...getErrorProps("address")}
                         required
                     />
+                    {renderError("address")}
                 </div>
 
                 <div className="form-group">
@@ -220,22 +376,22 @@ export default function CheckoutForm({ acceptedTerms, onTermsError }) {
                     <textarea
                         id="recipients"
                         name="recipients"
-                        value={formData.recipients}
-                        onChange={handleChange}
+                        value={recipients}
+                        onChange={handleChangeDeliveryData}
                         placeholder="Ejemplo: Juan Pérez - 8888-8888, María López - 8888-8888"
                         rows={2}
                     />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="notes">
+                    <label htmlFor="additionalNotes">
                         Indicaciones adicionales (opcional)
                     </label>
                     <textarea
-                        id="notes"
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
+                        id="additionalNotes"
+                        name="additionalNotes"
+                        value={additionalNotes}
+                        onChange={handleChangeDeliveryData}
                         placeholder="Referencias, horario preferido, etc."
                         rows={2}
                     />
