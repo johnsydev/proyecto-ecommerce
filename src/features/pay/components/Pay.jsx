@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowUp, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
 import PurchaseStepper from "../../../components/PurchaseStepper";
@@ -20,6 +20,7 @@ const formatMoney = (currency, value) => `${currency}${Number(value).toLocaleStr
  
 export default function Pay() {
     const navigate = useNavigate();
+    const location = useLocation();
     const { cart, clearCart } = useCart();
  
     const [showScrollTop, setShowScrollTop] = useState(false);
@@ -58,7 +59,7 @@ export default function Pay() {
  
     const handleGoBack = () => {
         if (isProcessing) return;
-        navigate("/checkout");
+        navigate("/checkout", { state: location.state });
     };
  
    
@@ -97,7 +98,7 @@ export default function Pay() {
     if (!orderInfo) return null;
  
     const firstItem = orderInfo.products?.[0] || cart?.[0];
-    const currency = firstItem?.currency === "CRC" ? "₡" : "$";
+    const currency = "₡";
     const fullName = orderInfo.client?.fullName || "Cliente";
     const total = orderInfo.total || 0;
     const orderId = orderInfo.orderNumber;
@@ -181,7 +182,7 @@ export default function Pay() {
                 onKeyDown={(e) => e.key === "Enter" && handleGoBack()}
             >
                 <ArrowLeft size={16} />
-                <small>Volver a información de envío</small>
+                <small>Volver a información de checkout</small>
             </div>
  
             {showScrollTop && (

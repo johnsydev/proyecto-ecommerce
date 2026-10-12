@@ -1,6 +1,6 @@
 import "../styles/Checkout.css";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowUp, ArrowLeft } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
 import PurchaseStepper from "../../../components/PurchaseStepper";
@@ -11,6 +11,9 @@ import ubicacionesCR from "../../../data/ubicacionesCR.json";
 
 export default function Checkout() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const checkoutData = location.state;
+
     const { cart } = useCart();
 
     const [showScrollTop, setShowScrollTop] = useState(false);
@@ -22,22 +25,26 @@ export default function Checkout() {
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [termsError, setTermsError] = useState(false);
 
-    const [clientInfo, setClientInfo] = useState({
-        fullName: "",
-        email: "",
-        cedula: "",
-        phone: "",
-        requiresElectronicInvoice: false,
-    });
+    const [clientInfo, setClientInfo] = useState(() =>
+        checkoutData?.clientInfo ?? {
+            fullName: "",
+            email: "",
+            cedula: "",
+            phone: "",
+            requiresElectronicInvoice: false,
+        }
+    );
 
-    const [deliveryInfo, setDeliveryInfo] = useState({
-        province: "",
-        canton: "",
-        district: "",
-        address: "",
-        recipients: "",
-        additionalNotes: "",
-    });
+    const [deliveryInfo, setDeliveryInfo] = useState(() =>
+        checkoutData?.deliveryInfo ?? {
+            province: "",
+            canton: "",
+            district: "",
+            address: "",
+            recipients: "",
+            additionalNotes: "",
+        }
+    );
 
     const provincia = ubicacionesCR.provincias[deliveryInfo.province];
     const canton = provincia?.cantones[deliveryInfo.canton];
@@ -72,7 +79,14 @@ export default function Checkout() {
 
         localStorage.setItem("order", JSON.stringify(orderData));
         console.log(orderData);
-        navigate("/pay");
+        navigate("/pay", { 
+                state: {
+                    clientInfo,
+                    deliveryInfo,
+                    from: location.pathname,
+                }
+            },
+        );
     };
 
     useEffect(() => {
@@ -125,7 +139,7 @@ export default function Checkout() {
     };
 
     const handleGoBack = () => {
-        if (window.history.state?.idx > 0) {
+        if (location.state?.from === "/cart") {
             navigate(-1);
         } else {
             navigate("/cart");
