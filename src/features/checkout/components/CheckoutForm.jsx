@@ -5,6 +5,7 @@ import {
     isValidCedulaCR,
     isValidPhoneCR,
 } from "../../../utils/validations";
+import CustomSelect from "./CustomSelect";
 
 export default function CheckoutForm({
     acceptedTerms,
@@ -187,14 +188,11 @@ export default function CheckoutForm({
         <div className="checkout-form">
             <h2>Información de contacto</h2>
 
-            <form
-                id="checkout-form"
-                onSubmit={handleSubmit}
-                noValidate
-            >
+            <form id="checkout-form" onSubmit={handleSubmit} noValidate>
                 <div className="form-group">
                     <label htmlFor="fullName">
-                        Nombre completo <span className="field-required">*</span>
+                        Nombre completo{" "}
+                        <span className="field-required">*</span>
                     </label>
                     <input
                         type="text"
@@ -212,7 +210,8 @@ export default function CheckoutForm({
 
                 <div className="form-group">
                     <label htmlFor="email">
-                        Correo electrónico <span className="field-required">*</span>
+                        Correo electrónico{" "}
+                        <span className="field-required">*</span>
                     </label>
                     <input
                         type="email"
@@ -230,7 +229,8 @@ export default function CheckoutForm({
 
                 <div className="form-group">
                     <label htmlFor="cedula">
-                        Cédula de identidad <span className="field-required">*</span>
+                        Cédula de identidad{" "}
+                        <span className="field-required">*</span>
                     </label>
                     <input
                         type="text"
@@ -284,22 +284,22 @@ export default function CheckoutForm({
                     <label htmlFor="province">
                         Provincia <span className="field-required">*</span>
                     </label>
-                    <select
+
+                    <CustomSelect
                         id="province"
                         name="province"
                         value={province}
                         onChange={handleChangeDeliveryData}
-                        {...getErrorProps("province")}
+                        options={provincias.map(([codigo, datos]) => [
+                            codigo,
+                            datos.nombre,
+                        ])}
+                        placeholder="Seleccione una provincia"
+                        invalid={Boolean(validationErrors.province)}
+                        errorProps={getErrorProps("province")}
                         required
-                    >
-                        <option value="">Seleccione una provincia</option>
+                    />
 
-                        {provincias.map(([codigo, datos]) => (
-                            <option key={codigo} value={codigo}>
-                                {datos.nombre}
-                            </option>
-                        ))}
-                    </select>
                     {renderError("province")}
                 </div>
 
@@ -307,23 +307,23 @@ export default function CheckoutForm({
                     <label htmlFor="canton">
                         Cantón <span className="field-required">*</span>
                     </label>
-                    <select
+
+                    <CustomSelect
                         id="canton"
                         name="canton"
                         value={canton}
                         onChange={handleChangeDeliveryData}
+                        options={cantones.map(([codigo, datos]) => [
+                            codigo,
+                            datos.nombre,
+                        ])}
+                        placeholder="Seleccione un cantón"
                         disabled={!province || cantones.length === 0}
-                        {...getErrorProps("canton")}
+                        invalid={Boolean(validationErrors.canton)}
+                        errorProps={getErrorProps("canton")}
                         required
-                    >
-                        <option value="">Seleccione un cantón</option>
+                    />
 
-                        {cantones.map(([codigo, datos]) => (
-                            <option key={codigo} value={codigo}>
-                                {datos.nombre}
-                            </option>
-                        ))}
-                    </select>
                     {renderError("canton")}
                 </div>
 
@@ -331,29 +331,27 @@ export default function CheckoutForm({
                     <label htmlFor="district">
                         Distrito <span className="field-required">*</span>
                     </label>
-                    <select
+
+                    <CustomSelect
                         id="district"
                         name="district"
                         value={district}
                         onChange={handleChangeDeliveryData}
+                        options={distritos}
+                        placeholder="Seleccione un distrito"
                         disabled={!canton || distritos.length === 0}
-                        {...getErrorProps("district")}
+                        invalid={Boolean(validationErrors.district)}
+                        errorProps={getErrorProps("district")}
                         required
-                    >
-                        <option value="">Seleccione un distrito</option>
+                    />
 
-                        {distritos.map(([codigo, nombre]) => (
-                            <option key={codigo} value={codigo}>
-                                {nombre}
-                            </option>
-                        ))}
-                    </select>
                     {renderError("district")}
                 </div>
 
                 <div className="form-group">
                     <label htmlFor="address">
-                        Dirección exacta <span className="field-required">*</span>
+                        Dirección exacta{" "}
+                        <span className="field-required">*</span>
                     </label>
                     <textarea
                         id="address"
