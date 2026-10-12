@@ -49,8 +49,9 @@ export default function Header() {
 
   // 1. Animación al agregar un producto 
   useEffect(() => {
+    const cartPagesList = ["/cart", "/checkout", "/pay"];
     let timeoutId;
-    const isCartPage = location.pathname.includes("/cart") || window.location.hash.includes("/cart");
+    const isCartPage = cartPagesList.some(page => location.pathname.includes(page) || window.location.hash.includes(page));
 
     if (totalItems > previousTotalItems.current && !isCartPage) {
       
@@ -83,7 +84,8 @@ export default function Header() {
   // 2. Al darle al botón del carrito 
   const handleCartClick = (e) => {
     e.preventDefault();
-    const isCartPage = location.pathname.includes("/cart") || window.location.hash.includes("/cart");
+    const cartPagesList = ["/cart", "/checkout", "/pay"];
+    const isCartPage = cartPagesList.some(page => location.pathname.includes(page) || window.location.hash.includes(page));
     if (isCartPage) return; // Si ya estamos en el carrito, no lo abre
 
     if (cart.length > 0) {

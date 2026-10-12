@@ -1,40 +1,23 @@
 import "../styles/CartSummary.css";
+import { useNavigate } from "react-router-dom";
+import {
+    calculateCartSummary,
+    formatPrice,
+} from "../../../utils/cartCalculations";
 
 export default function CartSummary({ cart }) {
-  const currency = cart[0]?.currency === "CRC" ? "₡" : "$";
-
-  // Cálculos
-  const subtotal = cart.reduce((total, product) => {
-    const price = Number(product.b2c?.sale_price ?? product.b2c?.regular_price ?? 0);
-    return total + (price * product.order_quantity);
-  }, 0);
-
-  const discount = cart.reduce((total, product) => {
-    const regPrice = Number(product.b2c?.regular_price ?? 0);
-    const salePrice = Number(product.b2c?.sale_price ?? regPrice);
-    return total + ((regPrice - salePrice) * product.order_quantity);
-  }, 0);
-
-  const iva = subtotal * 0.13;
-  const requiereEnvioPagado = cart.some(product => product.b2c?.free_shipping === false);
-  const costoEnvio = requiereEnvioPagado && cart.length > 0 ? 3000 : 0; 
-  
-  const total = subtotal + iva + costoEnvio;
-
-  // Fecha Estimada
-  const maxDeliveryDays = cart.reduce((max, product) => {
-    const days = product.b2c?.estimated_delivery_days || 0;
-    return days > max ? days : max;
-  }, 0);
-
-  const deliveryDate = new Date();
-  deliveryDate.setDate(deliveryDate.getDate() + maxDeliveryDays);
-  
-  const formattedDate = deliveryDate.toLocaleDateString('es-ES', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
+  const navigate = useNavigate();
+  const {
+    currency,
+    subtotal,
+    discount,
+    iva,
+    costoEnvio,
+    total,
+    maxDeliveryDays,
+    deliveryDate,
+    formattedDate,
+  } = calculateCartSummary(cart);
 
   return (
     <div className="cart-summary-wrapper">
@@ -72,7 +55,7 @@ export default function CartSummary({ cart }) {
           <strong>{currency}{total.toLocaleString("en-US")}</strong>
         </div>
 
-        <button type="button" className="checkout-button">
+        <button type="button" className="checkout-button" onClick={() => navigate("/checkout")}>
           Proceder al Pago
         </button>
 

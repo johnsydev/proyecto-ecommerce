@@ -4,6 +4,7 @@ import Home from "./Home";
 import CatalogPage from "./pages/CatalogPage";
 import ProductDetail from "./pages/ProductDetail";
 import CartPage from "./pages/CartPage";
+import Checkout from "./features/checkout/components/Checkout";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import searchClient from "./features/catalog/services/algolia";
@@ -60,6 +61,7 @@ function App() {
           <Route path="/search" element={<CatalogPage />} />
           <Route path="/producto/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </main>
       <Footer />
