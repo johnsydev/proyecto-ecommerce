@@ -140,10 +140,6 @@ export default function OrderConfirmation() {
                             <ShoppingBag size={18} />
                             Seguir comprando
                         </button>
-                        <button type="button" className="confirmation-secondary-btn" onClick={() => window.print()}>
-                            <Printer size={18} />
-                            Imprimir comprobante
-                        </button>
                     </div>
                 </section>
 
@@ -155,21 +151,33 @@ export default function OrderConfirmation() {
                         {products.map((product) => {
                             const lineTotal = product.saleUnitPrice * product.quantity;
                             const hasDiscount = product.originalUnitPrice > product.saleUnitPrice;
+                            
+                            
+                            const productImage = product.imageUrl || product.image_url;
 
                             return (
                                 <li key={product.productId} className="receipt-item">
-                                    <div className="receipt-item-info">
-                                        <span className="receipt-item-name">{product.name}</span>
-                                        <span className="receipt-item-detail">
-                                            {product.quantity} × {formatMoney(symbol, product.saleUnitPrice)}
-                                            {hasDiscount && (
-                                                <s className="receipt-old-price">
-                                                    {formatMoney(symbol, product.originalUnitPrice)}
-                                                </s>
-                                            )}
-                                        </span>
+                                    
+                                    {productImage && (
+                                        <div className="receipt-item-image">
+                                            <img src={productImage} alt={product.name || "Producto"} />
+                                        </div>
+                                    )}
+                                    
+                                    <div className="receipt-item-body">
+                                        <div className="receipt-item-info">
+                                            <span className="receipt-item-name">{product.name}</span>
+                                            <span className="receipt-item-detail">
+                                                {product.quantity} × {formatMoney(symbol, product.saleUnitPrice)}
+                                                {hasDiscount && (
+                                                    <s className="receipt-old-price">
+                                                        {formatMoney(symbol, product.originalUnitPrice)}
+                                                    </s>
+                                                )}
+                                            </span>
+                                        </div>
+                                        <span className="receipt-item-total">{formatMoney(symbol, lineTotal)}</span>
                                     </div>
-                                    <span className="receipt-item-total">{formatMoney(symbol, lineTotal)}</span>
                                 </li>
                             );
                         })}

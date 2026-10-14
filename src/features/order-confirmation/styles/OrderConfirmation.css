@@ -1,4 +1,3 @@
-
 .confirmation-page {
   margin: 0 auto;
   max-width: 1200px;
@@ -221,10 +220,9 @@
 
 .receipt-item {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center; 
   gap: 16px;
-  padding: 12px 0;
+  padding: 16px 0;
   border-bottom: 1px solid #ece7df;
 }
 
@@ -232,10 +230,44 @@
   border-bottom: 0;
 }
 
+
+.receipt-item-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 76px; 
+  width: 76px;
+  height: 76px;
+  padding: 6px;
+  background: #f1eee8;
+  border: 1px solid #e5e0d8;
+  border-radius: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.receipt-item-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+
+.receipt-item-body {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
 .receipt-item-info {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -245,11 +277,16 @@
   font-weight: 600;
   line-height: 1.35;
   overflow-wrap: anywhere;
+  
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .receipt-item-detail {
   color: #64748b;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
 }
 
 .receipt-old-price {
@@ -260,7 +297,7 @@
 .receipt-item-total {
   flex-shrink: 0;
   color: #1f2937;
-  font-size: 0.93rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
@@ -300,7 +337,7 @@
   font-weight: 700;
 }
 
-/* ---------- Responsive ---------- */
+
 @media (max-width: 900px) {
   .confirmation-page {
     max-width: 850px;

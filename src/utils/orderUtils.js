@@ -46,6 +46,7 @@ export function generateOrder({ cart, client, delivery }) {
             ),
             discount_percentage: Number(product.b2c?.discount_percentage || 0),
             iva_percentage: 13,
+            image_url: product.image_url || product.imageUrl, 
         })),
 
         subtotal,
