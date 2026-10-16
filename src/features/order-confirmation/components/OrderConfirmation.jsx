@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle2, Printer, ShoppingBag } from "lucide-react";
 import PurchaseStepper from "../../../components/PurchaseStepper";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../../utils/constants";
+import { getLastConfirmedOrder } from "../../../utils/orderStorage";
 import "../styles/OrderConfirmation.css";
 
 const formatMoney = (symbol, value) =>
@@ -29,24 +30,27 @@ export default function OrderConfirmation() {
     useEffect(() => {
         window.scrollTo(0, 0);
         try {
-            const saved = localStorage.getItem("finalOrder");
-            const parsed = saved ? JSON.parse(saved) : null;
+            const confirmed = getLastConfirmedOrder();
 
             if (
-                !parsed ||
-                parsed.orderStatus !== ORDER_STATUS.CONFIRMED ||
-                parsed.paymentStatus !== PAYMENT_STATUS.APPROVED
+                !confirmed ||
+                confirmed.orderStatus !== ORDER_STATUS.CONFIRMED ||
+                confirmed.paymentStatus !== PAYMENT_STATUS.APPROVED
             ) {
                 navigate("/cart", { replace: true });
                 return;
             }
-            setOrder(parsed);
+            setOrder(confirmed);
         } catch {
             navigate("/cart", { replace: true });
+            return;
         }
+        //setOrder(confirmed);
     }, [navigate]);
 
-    if (!order) return null;
+    if (!order) {
+        return null;
+    }
 
     const symbol = order.currencySymbol ?? "$";
     const { client = {}, delivery = {}, products = [] } = order;

@@ -7,6 +7,7 @@ import PurchaseStepper from "../../../components/PurchaseStepper";
 import CheckoutForm from "./CheckoutForm";
 import PurchaseSummary from "./PurchaseSummary";
 import { generateOrder } from "../../../utils/orderUtils";
+import { createOrReuseOrder } from "../../../utils/orderStorage";
 import ubicacionesCR from "../../../data/ubicacionesCR.json";
 
 export default function Checkout() {
@@ -70,24 +71,19 @@ export default function Checkout() {
         }, 3000);*/
     };
 
-    const handleCheckoutSubmit = () => {
-        let orderData = generateOrder({
-            cart,
-            client: clientInfo,
-            delivery: delivery,
-        });
-
-        localStorage.setItem("order", JSON.stringify(orderData));
-        console.log(orderData);
-        navigate("/pay", { 
-                state: {
-                    clientInfo,
-                    deliveryInfo,
-                    from: location.pathname,
-                }
-            },
-        );
-    };
+   const handleCheckoutSubmit = () => {
+       const orderData = generateOrder({ 
+        cart, 
+        client: clientInfo, 
+        delivery });
+       createOrReuseOrder(orderData); 
+       navigate("/pay", {
+           state: { 
+            clientInfo, 
+            deliveryInfo, 
+            from: location.pathname },
+       });
+   };
 
     useEffect(() => {
         if (cart.length === 0) {

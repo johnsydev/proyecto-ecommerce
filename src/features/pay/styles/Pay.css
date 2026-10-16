@@ -10,7 +10,7 @@
   min-width: 0;
 }
 
-/* Resumen del pedido */
+
 .pay-summary-sidebar {
   position: sticky;
   top: 24px;
@@ -84,6 +84,9 @@
 .status-pill.status-declined { background: #fee2e2; color: #991b1b; }
 .status-pill.status-error { background: #fef3c7; color: #92400e; }
 .status-pill.status-approved { background: #dcfce7; color: #166534; }
+.status-pill.status-confirmed { background: #dcfce7; color: #166534; }
+.status-pill.status-delivered { background: #dcfce7; color: #166534; }
+.status-pill.status-failed { background: #fee2e2; color: #991b1b; }
 
 .pay-security-note {
   display: flex;
@@ -110,14 +113,14 @@
   pointer-events: none;
 }
 
-/* Responsive */
+
 @media (max-width: 900px) {
   .pay-layout {
     grid-template-columns: minmax(0, 1fr);
     gap: 30px;
   }
 
-  
+
   .pay-summary-sidebar {
     position: static;
     order: -1;
@@ -127,5 +130,101 @@
 @media (max-width: 600px) {
   .pay-summary-sidebar {
     padding: 20px;
+  }
+}
+
+
+.pay-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pay-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #eef3fb;
+  border: 1px solid #c9d7ef;
+  color: #2a437a;
+}
+
+.pay-notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pay-notice p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+
+.pay-failed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.pay-failed-icon {
+  color: #dc2626;
+}
+
+.pay-failed h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #1f2937;
+}
+
+.pay-failed p {
+  margin: 0;
+  max-width: 52ch;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.pay-failed-order strong {
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.pay-failed-btn {
+  margin-top: 8px;
+  padding: 13px 24px;
+  border: 0;
+  border-radius: 8px;
+  background: #345499;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pay-failed-btn:hover { background: #2a437a; }
+
+.pay-failed-btn:focus-visible {
+  outline: 3px solid #93b4f5;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .pay-failed {
+    padding: 22px 18px;
+  }
+
+  .pay-failed-btn {
+    width: 100%;
   }
 }

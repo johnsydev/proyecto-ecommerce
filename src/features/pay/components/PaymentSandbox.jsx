@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { AlertCircle, XCircle, CreditCard, Lock } from "lucide-react";
+import { AlertCircle, XCircle, CreditCard, Lock, WifiOff } from "lucide-react";
 import "../styles/PaymentSandbox.css";
 
 
 const FIXED_CARDS = {
-    "4000123456780000": "PAYMENT_APPROVED",
-    "4000123456780001": "PAYMENT_DECLINED",
-    "4000123456780002": "PAYMENT_ERROR",
+    "4242424242424242": "PAYMENT_APPROVED",
+    "4000000000000002": "PAYMENT_DECLINED",
+    "4000000000000119": "PAYMENT_ERROR",
+    "5555555555554444": "PAYMENT_APPROVED",
+    "5105105105105100": "PAYMENT_DECLINED",
+    "5200828282828210": "PAYMENT_ERROR",
 };
 
 const SCENARIO_BAG_KEY = "sandboxScenarioBag";
@@ -21,6 +24,7 @@ const shuffle = (list) => {
     return copy;
 };
 
+
 function nextBalancedScenario() {
     const all = ["PAYMENT_APPROVED", "PAYMENT_DECLINED", "PAYMENT_ERROR"];
     try {
@@ -30,13 +34,17 @@ function nextBalancedScenario() {
         localStorage.setItem(SCENARIO_BAG_KEY, JSON.stringify(bag));
         return next;
     } catch {
-        return shuffle(all)[0]; 
+        return shuffle(all)[0];
     }
 }
 
 function simulatePaymentGateway({ orderId, amount, currency, card }) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
+            if (typeof navigator !== "undefined" && navigator.onLine === false) {
+                return reject(new Error("NETWORK_OFFLINE"));
+            }
+
             const base = { orderId, amount, currency, processedAt: new Date().toISOString() };
             const cardNumber = card.number.replace(/\s/g, "");
             const scenario = FIXED_CARDS[cardNumber] ?? nextBalancedScenario();
@@ -57,15 +65,59 @@ function simulatePaymentGateway({ orderId, amount, currency, card }) {
                     message: "Fondos insuficientes o tarjeta declinada por el banco emisor.",
                 });
             }
-           
+            
             return reject(new Error("SERVICE_UNAVAILABLE"));
         }, SANDBOX_DELAY_MS);
     });
 }
 
 
-const formatCardNumber = (value) =>
-    value.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
+
+const CARD_BRANDS = {
+    visa: { name: "Visa", pattern: /^4/, length: 16, cvvLength: 3, gaps: [4, 8, 12] },
+    mastercard: {
+        name: "Mastercard",
+        
+        pattern: /^(5[1-5]|2(22[1-9]|2[3-9]\d|[3-6]\d\d|7[01]\d|720))/,
+        length: 16,
+        cvvLength: 3,
+        gaps: [4, 8, 12],
+    },
+    amex: { name: "American Express", pattern: /^3[47]/, length: 15, cvvLength: 4, gaps: [4, 10] },
+};
+
+function detectBrand(number) {
+    const digits = number.replace(/\D/g, "");
+    return Object.values(CARD_BRANDS).find((brand) => brand.pattern.test(digits)) ?? null;
+}
+
+
+function passesLuhn(digits) {
+    let sum = 0;
+    for (let i = 0; i < digits.length; i++) {
+        let digit = Number(digits[digits.length - 1 - i]);
+        if (i % 2 === 1) {
+            digit *= 2;
+            if (digit > 9) {
+                digit -= 9;
+            }
+        }
+        sum += digit;
+    }
+    return sum % 10 === 0;
+}
+
+function formatCardNumber(value) {
+    const digits = value.replace(/\D/g, "");
+    const brand = detectBrand(digits);
+    const trimmed = digits.slice(0, brand?.length ?? 16);
+    const gaps = brand?.gaps ?? [4, 8, 12];
+
+    return trimmed
+        .split("")
+        .map((digit, i) => (gaps.includes(i) ? ` ${digit}` : digit))
+        .join("");
+}
 
 const formatExpiry = (value) => {
     const digits = value.replace(/\D/g, "").slice(0, 4);
@@ -74,11 +126,20 @@ const formatExpiry = (value) => {
 
 function validateCard({ number, name, expiry, cvv }) {
     const errors = {};
+    const digits = number.replace(/\s/g, "");
+    const brand = detectBrand(digits);
 
-    if (number.replace(/\s/g, "").length !== 16) {
-        errors.number = "Ingrese los 16 dígitos de la tarjeta.";
+    if (!digits) {
+        errors.number = "Ingrese el número de tarjeta.";
+    } else if (!brand) {
+        errors.number = "Solo aceptamos tarjetas Visa, Mastercard o American Express.";
+    } else if (digits.length !== brand.length) {
+        errors.number = `Las tarjetas ${brand.name} tienen ${brand.length} dígitos.`;
+    } else if (!passesLuhn(digits)) {
+        errors.number = "El número de tarjeta no es válido. Revise que esté bien escrito.";
     }
-    if (name.trim().length < 3) {
+
+    if (!/^[\p{L}][\p{L}\s.'-]{2,}$/u.test(name.trim())) {
         errors.name = "Ingrese el nombre tal como aparece en la tarjeta.";
     }
 
@@ -91,32 +152,88 @@ function validateCard({ number, name, expiry, cvv }) {
         const now = new Date();
         const isExpired =
             year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1);
-        if (month < 1 || month > 12) errors.expiry = "El mes debe estar entre 01 y 12.";
-        else if (isExpired) errors.expiry = "La tarjeta está vencida.";
+
+        if (month < 1 || month > 12) {
+            errors.expiry = "El mes debe estar entre 01 y 12.";
+        } else if (isExpired) {
+            errors.expiry = "La tarjeta está vencida.";
+        } else if (year > now.getFullYear() + 10) {
+            errors.expiry = "La fecha de vencimiento no es válida.";
+        }
     }
 
-    if (!/^\d{3,4}$/.test(cvv)) {
-        errors.cvv = "Ingrese 3 o 4 dígitos.";
+    const cvvLength = brand?.cvvLength;
+    const cvvOk = cvvLength ? cvv.length === cvvLength : /^\d{3,4}$/.test(cvv);
+    if (!cvvOk) {
+        errors.cvv = cvvLength ? `Ingrese los ${cvvLength} dígitos del código.` : "Ingrese 3 o 4 dígitos.";
     }
 
     return errors;
 }
 
+/* ---------- Logos de marca (SVG propio, sin recursos externos) ---------- */
 
-export default function PaymentSandbox({ orderId, total, currency, onResult, onProcessingChange }) {
+function CardBrandLogo({ brand }) {
+    if (!brand) return null;
+
+    if (brand.name === "Visa") {
+        return (
+            <svg viewBox="0 0 48 30" role="img" aria-label="Visa" className="card-brand-logo">
+                <rect width="48" height="30" rx="4" fill="#1a1f71" />
+                <text x="24" y="21" textAnchor="middle" fontSize="15" fontWeight="800" fontStyle="italic" fill="#fff" fontFamily="Arial, sans-serif">
+                    VISA
+                </text>
+            </svg>
+        );
+    }
+
+    if (brand.name === "Mastercard") {
+        return (
+            <svg viewBox="0 0 48 30" role="img" aria-label="Mastercard" className="card-brand-logo">
+                <rect width="48" height="30" rx="4" fill="#ffffff" stroke="#e5e7eb" />
+                <circle cx="19" cy="15" r="9" fill="#eb001b" />
+                <circle cx="29" cy="15" r="9" fill="#f79e1b" />
+                <path d="M24 7.8a9 9 0 0 1 0 14.4 9 9 0 0 1 0-14.4z" fill="#ff5f00" />
+            </svg>
+        );
+    }
+
+    return (
+        <svg viewBox="0 0 48 30" role="img" aria-label="American Express" className="card-brand-logo">
+            <rect width="48" height="30" rx="4" fill="#2e77bc" />
+            <text x="24" y="19" textAnchor="middle" fontSize="10" fontWeight="800" fill="#fff" fontFamily="Arial, sans-serif">
+                AMEX
+            </text>
+        </svg>
+    );
+}
+
+/* ==========================================================================
+   Componente
+   Props:
+     orderId, total, currency    -> datos de la transacción
+     attemptsLeft                -> intentos de pago que le quedan a la orden
+     onResult(response)          -> recibe la respuesta de la pasarela
+                                    (Pay.jsx registra el intento en la orden)
+     onProcessingChange(bool)    -> avisa a Pay.jsx cuando hay un pago en curso
+   ========================================================================== */
+
+export default function PaymentSandbox({ orderId, total, currency, attemptsLeft, onResult, onProcessingChange }) {
     const [status, setStatus] = useState("IDLE"); 
-    const [declineMessage, setDeclineMessage] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
+    const [offline, setOffline] = useState(false);
     const [errors, setErrors] = useState({});
     const [cardData, setCardData] = useState({ number: "", name: "", expiry: "", cvv: "" });
 
     const isProcessing = status === "PROCESSING";
+    const brand = detectBrand(cardData.number);
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
         let formatted = value;
         if (name === "number") formatted = formatCardNumber(value);
         if (name === "expiry") formatted = formatExpiry(value);
-        if (name === "cvv") formatted = value.replace(/\D/g, "").slice(0, 4);
+        if (name === "cvv") formatted = value.replace(/\D/g, "").slice(0, brand?.cvvLength ?? 4);
 
         setCardData((prev) => ({ ...prev, [name]: formatted }));
         if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
@@ -144,17 +261,21 @@ export default function PaymentSandbox({ orderId, total, currency, onResult, onP
             });
 
             if (response.status === "PAYMENT_DECLINED") {
-                setDeclineMessage(response.message);
+                setAlertMessage(response.message);
                 setStatus("DECLINED");
             }
-            onResult(response); 
-        } catch {
+            onResult(response);
+        } catch (error) {
+            const isOffline = error?.message === "NETWORK_OFFLINE";
+            setOffline(isOffline);
             setStatus("ERROR");
             onResult({
                 status: "PAYMENT_ERROR",
                 orderId,
-                reason: "SERVICE_UNAVAILABLE",
-                message: "No pudimos conectar con la red de procesamiento.",
+                reason: isOffline ? "NETWORK_OFFLINE" : "SERVICE_UNAVAILABLE",
+                message: isOffline
+                    ? "Parece que no tiene conexión a internet."
+                    : "No pudimos conectar con la red de procesamiento.",
                 processedAt: new Date().toISOString(),
             });
         } finally {
@@ -162,8 +283,11 @@ export default function PaymentSandbox({ orderId, total, currency, onResult, onP
         }
     };
 
+    const attemptsText =
+        attemptsLeft === 1 ? "Le queda 1 intento." : `Le quedan ${attemptsLeft} intentos.`;
+
     return (
-        
+       
         <section className="checkout-form payment-form" aria-labelledby="payment-title">
             <h2 id="payment-title">Pago con tarjeta</h2>
 
@@ -173,17 +297,24 @@ export default function PaymentSandbox({ orderId, total, currency, onResult, onP
                         <XCircle size={22} />
                         <div>
                             <strong>Pago rechazado</strong>
-                            <p>{declineMessage} Su pedido sigue pendiente: puede intentarlo de nuevo.</p>
+                            <p>
+                                {alertMessage} Su pedido sigue pendiente. {attemptsText}
+                            </p>
                         </div>
                     </div>
                 )}
 
                 {status === "ERROR" && (
                     <div className="payment-alert alert-error" role="alert">
-                        <AlertCircle size={22} />
+                        {offline ? <WifiOff size={22} /> : <AlertCircle size={22} />}
                         <div>
                             <strong>No se pudo procesar el pago</strong>
-                            <p>Ocurrió un problema de comunicación y no se realizó ningún cobro. Intente de nuevo.</p>
+                            <p>
+                                {offline
+                                    ? "Parece que no tiene conexión a internet."
+                                    : "Ocurrió un problema de comunicación."}{" "}
+                                No se realizó ningún cobro. {attemptsText}
+                            </p>
                         </div>
                     </div>
                 )}
@@ -208,6 +339,7 @@ export default function PaymentSandbox({ orderId, total, currency, onResult, onP
                             aria-invalid={!!errors.number}
                             disabled={isProcessing}
                         />
+                        <CardBrandLogo brand={brand} />
                     </div>
                     {errors.number && <p className="field-error">{errors.number}</p>}
                 </div>
@@ -262,7 +394,7 @@ export default function PaymentSandbox({ orderId, total, currency, onResult, onP
                             autoComplete="off"
                             value={cardData.cvv}
                             onChange={handleFormChange}
-                            placeholder="***"
+                            placeholder={brand?.cvvLength === 4 ? "****" : "***"}
                             aria-invalid={!!errors.cvv}
                             disabled={isProcessing}
                         />
