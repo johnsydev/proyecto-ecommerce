@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, Printer, ShoppingBag } from "lucide-react";
+import { CheckCircle2, ShoppingBag, ArrowUp } from "lucide-react";
 import PurchaseStepper from "../../../components/PurchaseStepper";
 import { ORDER_STATUS, PAYMENT_STATUS } from "../../../utils/constants";
 import { getLastConfirmedOrder } from "../../../utils/orderStorage";
@@ -8,7 +8,6 @@ import "../styles/OrderConfirmation.css";
 
 const formatMoney = (symbol, value) =>
     `${symbol}${Number(value ?? 0).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
-
 
 const formatDateTime = (value) => {
     const date = new Date(value);
@@ -25,8 +24,8 @@ const formatDate = (value) => {
 export default function OrderConfirmation() {
     const navigate = useNavigate();
     const [order, setOrder] = useState(null);
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
-    // Solo se puede ver esta página con una orden pagada y confirmada
     useEffect(() => {
         window.scrollTo(0, 0);
         try {
@@ -43,10 +42,17 @@ export default function OrderConfirmation() {
             setOrder(confirmed);
         } catch {
             navigate("/cart", { replace: true });
-            return;
         }
-        //setOrder(confirmed);
     }, [navigate]);
+
+    useEffect(() => {
+        const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (!order) {
         return null;
@@ -65,7 +71,6 @@ export default function OrderConfirmation() {
             <PurchaseStepper currentStep={4} />
 
             <div className="confirmation-layout">
-               
                 <section className="confirmation-main">
                     <div className="confirmation-hero">
                         <CheckCircle2 size={44} className="confirmation-check" aria-hidden="true" />
@@ -147,7 +152,6 @@ export default function OrderConfirmation() {
                     </div>
                 </section>
 
-                
                 <aside className="confirmation-receipt" aria-label="Resumen de la compra">
                     <h2>Resumen de la compra</h2>
 
@@ -155,19 +159,16 @@ export default function OrderConfirmation() {
                         {products.map((product) => {
                             const lineTotal = product.saleUnitPrice * product.quantity;
                             const hasDiscount = product.originalUnitPrice > product.saleUnitPrice;
-                            
-                            
                             const productImage = product.imageUrl || product.image_url;
 
                             return (
                                 <li key={product.productId} className="receipt-item">
-                                    
                                     {productImage && (
                                         <div className="receipt-item-image">
                                             <img src={productImage} alt={product.name || "Producto"} />
                                         </div>
                                     )}
-                                    
+
                                     <div className="receipt-item-body">
                                         <div className="receipt-item-info">
                                             <span className="receipt-item-name">{product.name}</span>
@@ -207,6 +208,18 @@ export default function OrderConfirmation() {
                     </div>
                 </aside>
             </div>
+
+            {showScrollTop && (
+                <button
+                    type="button"
+                    className="scroll-to-top"
+                    onClick={scrollToTop}
+                    aria-label="Volver al inicio de la página"
+                    title="Volver arriba"
+                >
+                    <ArrowUp size={22} strokeWidth={2.5} />
+                </button>
+            )}
         </div>
     );
 }

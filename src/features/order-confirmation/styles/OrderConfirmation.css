@@ -20,7 +20,6 @@
   min-width: 0;
 }
 
-
 .confirmation-main {
   display: flex;
   flex-direction: column;
@@ -63,7 +62,6 @@
   overflow-wrap: anywhere;
 }
 
-
 .confirmation-meta {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -105,7 +103,6 @@
   color: #166534;
 }
 
-
 .confirmation-blocks {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -143,7 +140,6 @@
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
-
 
 .confirmation-actions {
   display: flex;
@@ -192,7 +188,6 @@
   outline-offset: 3px;
 }
 
-
 .confirmation-receipt {
   position: sticky;
   top: 24px;
@@ -220,7 +215,7 @@
 
 .receipt-item {
   display: flex;
-  align-items: center; 
+  align-items: center;
   gap: 16px;
   padding: 16px 0;
   border-bottom: 1px solid #ece7df;
@@ -230,12 +225,11 @@
   border-bottom: 0;
 }
 
-
 .receipt-item-image {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 76px; 
+  flex: 0 0 76px;
   width: 76px;
   height: 76px;
   padding: 6px;
@@ -253,7 +247,6 @@
   object-fit: contain;
   mix-blend-mode: multiply;
 }
-
 
 .receipt-item-body {
   display: flex;
@@ -277,7 +270,6 @@
   font-weight: 600;
   line-height: 1.35;
   overflow-wrap: anywhere;
-  
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -337,6 +329,55 @@
   font-weight: 700;
 }
 
+.scroll-to-top {
+  position: fixed;
+  right: 18px;
+  bottom: 22px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #345499;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  animation: scrollTopAppear 0.25s ease;
+}
+
+.scroll-to-top:hover {
+  background-color: #2a437a;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+}
+
+.scroll-to-top:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.scroll-to-top:focus-visible {
+  outline: 3px solid #93b4f5;
+  outline-offset: 3px;
+}
+
+@keyframes scrollTopAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @media (max-width: 900px) {
   .confirmation-page {
@@ -384,6 +425,18 @@
   .confirmation-secondary-btn {
     width: 100%;
   }
+
+  .scroll-to-top {
+    width: 44px;
+    height: 44px;
+    right: 16px;
+    bottom: 18px;
+  }
+
+  .scroll-to-top svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 @media (max-width: 400px) {
@@ -392,16 +445,34 @@
   }
 }
 
+@media (max-width: 360px) {
+  .confirmation-page {
+    padding: 22px 12px 50px;
+  }
+
+  .scroll-to-top {
+    width: 40px;
+    height: 40px;
+    right: 12px;
+    bottom: 14px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .confirmation-primary-btn,
   .confirmation-secondary-btn {
     transition: none;
   }
+
+  .scroll-to-top {
+    animation: none;
+    transition: none;
+  }
 }
 
-
 @media print {
-  .confirmation-actions {
+  .confirmation-actions,
+  .scroll-to-top {
     display: none;
   }
 
