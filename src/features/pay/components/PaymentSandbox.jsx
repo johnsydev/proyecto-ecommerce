@@ -284,7 +284,7 @@ export default function PaymentSandbox({ orderId, total, currency, attemptsLeft,
     };
 
     return (
-        <section className="checkout-form payment-form" aria-labelledby="payment-title">
+        <section className="payment-form" aria-labelledby="payment-title">
             <h2 id="payment-title">Pago con tarjeta</h2>
 
             <div aria-live="polite">
@@ -395,7 +395,7 @@ export default function PaymentSandbox({ orderId, total, currency, attemptsLeft,
                     </div>
                 </div>
 
-                <button type="submit" className="checkout-continue-button payment-submit" disabled={isProcessing}>
+                <button type="submit" className="payment-submit" disabled={isProcessing}>
                     {isProcessing ? (
                         <>
                             <span className="spinner" aria-hidden="true" />

@@ -15,7 +15,6 @@ import {
     recordPaymentAttempt,
     clearCurrentOrder,
 } from "../../../utils/orderStorage";
-import "../../checkout/styles/Checkout.css";
 import "../styles/Pay.css";
 
 const PAYMENT_LABELS = {
