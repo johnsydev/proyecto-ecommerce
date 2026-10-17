@@ -7,6 +7,7 @@ export const FAILURE_REASON = {
     MAX_ATTEMPTS_REACHED: "MAX_ATTEMPTS_REACHED",
     ORDER_EXPIRED: "ORDER_EXPIRED",
     NETWORK_OFFLINE: "NETWORK_OFFLINE",
+    ORDER_ABANDONED: "ORDER_ABANDONED",
 };
 
 const ORDERS_KEY = "orders";
@@ -80,19 +81,28 @@ export function updateOrder(orderNumber, change) {
     return saveOrder(updated);
 }
 
-export function createOrReuseOrder(newOrder) {
+export function createOrReuseOrder(newOrder, reuse = false) {
     expireStaleOrders();
     const existing = getCurrentOrder();
 
     if (existing && existing.orderStatus === ORDER_STATUS.PENDING) {
-        return saveOrder({
-            ...newOrder,
-            orderNumber: existing.orderNumber,
-            createdAt: existing.createdAt,
-            paymentStatus: existing.paymentStatus,
-            paymentAttempts: existing.paymentAttempts ?? 0,
-            paymentHistory: existing.paymentHistory ?? [],
-            paymentInProgress: existing.paymentInProgress ?? false,
+        if (reuse) {
+            return saveOrder({
+                ...newOrder,
+                orderNumber: existing.orderNumber,
+                createdAt: existing.createdAt,
+                paymentStatus: existing.paymentStatus,
+                paymentAttempts: existing.paymentAttempts ?? 0,
+                paymentHistory: existing.paymentHistory ?? [],
+                paymentInProgress: existing.paymentInProgress ?? false,
+            });
+        }
+
+        updateOrder(existing.orderNumber, {
+            orderStatus: ORDER_STATUS.FAILED,
+            paymentInProgress: false,
+            failureReason: FAILURE_REASON.ORDER_ABANDONED,
+            failedAt: nowISO(),
         });
     }
 

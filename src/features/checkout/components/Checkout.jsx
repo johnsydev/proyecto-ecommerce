@@ -76,7 +76,7 @@ export default function Checkout() {
         cart, 
         client: clientInfo, 
         delivery });
-       createOrReuseOrder(orderData); 
+       createOrReuseOrder(orderData, location.state?.from === "/checkout");
        navigate("/pay", {
            state: { 
             clientInfo, 
