@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { AlertCircle, XCircle, CreditCard, Lock, WifiOff } from "lucide-react";
+import { AlertCircle, XCircle, CreditCard, Lock } from "lucide-react";
 import "../styles/PaymentSandbox.css";
-
 
 const FIXED_CARDS = {
     "4242424242424242": "PAYMENT_APPROVED",
@@ -24,12 +23,13 @@ const shuffle = (list) => {
     return copy;
 };
 
-
 function nextBalancedScenario() {
     const all = ["PAYMENT_APPROVED", "PAYMENT_DECLINED", "PAYMENT_ERROR"];
     try {
         let bag = JSON.parse(localStorage.getItem(SCENARIO_BAG_KEY) || "[]");
-        if (!Array.isArray(bag) || bag.length === 0) bag = shuffle(all);
+        if (!Array.isArray(bag) || bag.length === 0) {
+            bag = shuffle(all);
+        }
         const next = bag.pop();
         localStorage.setItem(SCENARIO_BAG_KEY, JSON.stringify(bag));
         return next;
@@ -41,10 +41,6 @@ function nextBalancedScenario() {
 function simulatePaymentGateway({ orderId, amount, currency, card }) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (typeof navigator !== "undefined" && navigator.onLine === false) {
-                return reject(new Error("NETWORK_OFFLINE"));
-            }
-
             const base = { orderId, amount, currency, processedAt: new Date().toISOString() };
             const cardNumber = card.number.replace(/\s/g, "");
             const scenario = FIXED_CARDS[cardNumber] ?? nextBalancedScenario();
@@ -57,6 +53,7 @@ function simulatePaymentGateway({ orderId, amount, currency, card }) {
                     message: "Pago aprobado.",
                 });
             }
+
             if (scenario === "PAYMENT_DECLINED") {
                 return resolve({
                     ...base,
@@ -65,19 +62,16 @@ function simulatePaymentGateway({ orderId, amount, currency, card }) {
                     message: "Fondos insuficientes o tarjeta declinada por el banco emisor.",
                 });
             }
-            
+
             return reject(new Error("SERVICE_UNAVAILABLE"));
         }, SANDBOX_DELAY_MS);
     });
 }
 
-
-
 const CARD_BRANDS = {
     visa: { name: "Visa", pattern: /^4/, length: 16, cvvLength: 3, gaps: [4, 8, 12] },
     mastercard: {
         name: "Mastercard",
-        
         pattern: /^(5[1-5]|2(22[1-9]|2[3-9]\d|[3-6]\d\d|7[01]\d|720))/,
         length: 16,
         cvvLength: 3,
@@ -90,7 +84,6 @@ function detectBrand(number) {
     const digits = number.replace(/\D/g, "");
     return Object.values(CARD_BRANDS).find((brand) => brand.pattern.test(digits)) ?? null;
 }
-
 
 function passesLuhn(digits) {
     let sum = 0;
@@ -119,10 +112,10 @@ function formatCardNumber(value) {
         .join("");
 }
 
-const formatExpiry = (value) => {
+function formatExpiry(value) {
     const digits = value.replace(/\D/g, "").slice(0, 4);
     return digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
-};
+}
 
 function validateCard({ number, name, expiry, cvv }) {
     const errors = {};
@@ -171,8 +164,6 @@ function validateCard({ number, name, expiry, cvv }) {
     return errors;
 }
 
-/* ---------- Logos de marca (SVG propio, sin recursos externos) ---------- */
-
 function CardBrandLogo({ brand }) {
     if (!brand) return null;
 
@@ -208,44 +199,57 @@ function CardBrandLogo({ brand }) {
     );
 }
 
-/* ==========================================================================
-   Componente
-   Props:
-     orderId, total, currency    -> datos de la transacción
-     attemptsLeft                -> intentos de pago que le quedan a la orden
-     onResult(response)          -> recibe la respuesta de la pasarela
-                                    (Pay.jsx registra el intento en la orden)
-     onProcessingChange(bool)    -> avisa a Pay.jsx cuando hay un pago en curso
-   ========================================================================== */
-
 export default function PaymentSandbox({ orderId, total, currency, attemptsLeft, onResult, onProcessingChange }) {
-    const [status, setStatus] = useState("IDLE"); 
+    const [status, setStatus] = useState("IDLE");
     const [alertMessage, setAlertMessage] = useState("");
-    const [offline, setOffline] = useState(false);
     const [errors, setErrors] = useState({});
     const [cardData, setCardData] = useState({ number: "", name: "", expiry: "", cvv: "" });
 
     const isProcessing = status === "PROCESSING";
     const brand = detectBrand(cardData.number);
 
+    const attemptsText =
+        attemptsLeft === 1 ? "Le queda 1 intento." : `Le quedan ${attemptsLeft} intentos.`;
+
     const handleFormChange = (e) => {
         const { name, value } = e.target;
         let formatted = value;
-        if (name === "number") formatted = formatCardNumber(value);
-        if (name === "expiry") formatted = formatExpiry(value);
-        if (name === "cvv") formatted = value.replace(/\D/g, "").slice(0, brand?.cvvLength ?? 4);
+
+        if (name === "number") {
+            formatted = formatCardNumber(value);
+        }
+        if (name === "expiry") {
+            formatted = formatExpiry(value);
+        }
+        if (name === "cvv") {
+            formatted = value.replace(/\D/g, "").slice(0, brand?.cvvLength ?? 4);
+        }
 
         setCardData((prev) => ({ ...prev, [name]: formatted }));
-        if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
+
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: undefined }));
+        }
     };
 
     const handlePaymentSubmit = async (e) => {
         e.preventDefault();
-        if (isProcessing) return; 
+        if (isProcessing) return;
 
         const validationErrors = validateCard(cardData);
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
+            return;
+        }
+
+        if (!navigator.onLine) {
+            onResult({
+                status: "PAYMENT_ERROR",
+                orderId,
+                reason: "NETWORK_OFFLINE",
+                message: "Sin conexión a internet.",
+                processedAt: new Date().toISOString(),
+            });
             return;
         }
 
@@ -265,17 +269,13 @@ export default function PaymentSandbox({ orderId, total, currency, attemptsLeft,
                 setStatus("DECLINED");
             }
             onResult(response);
-        } catch (error) {
-            const isOffline = error?.message === "NETWORK_OFFLINE";
-            setOffline(isOffline);
+        } catch {
             setStatus("ERROR");
             onResult({
                 status: "PAYMENT_ERROR",
                 orderId,
-                reason: isOffline ? "NETWORK_OFFLINE" : "SERVICE_UNAVAILABLE",
-                message: isOffline
-                    ? "Parece que no tiene conexión a internet."
-                    : "No pudimos conectar con la red de procesamiento.",
+                reason: "SERVICE_UNAVAILABLE",
+                message: "No pudimos conectar con la red de procesamiento.",
                 processedAt: new Date().toISOString(),
             });
         } finally {
@@ -283,11 +283,7 @@ export default function PaymentSandbox({ orderId, total, currency, attemptsLeft,
         }
     };
 
-    const attemptsText =
-        attemptsLeft === 1 ? "Le queda 1 intento." : `Le quedan ${attemptsLeft} intentos.`;
-
     return (
-       
         <section className="checkout-form payment-form" aria-labelledby="payment-title">
             <h2 id="payment-title">Pago con tarjeta</h2>
 
@@ -306,14 +302,11 @@ export default function PaymentSandbox({ orderId, total, currency, attemptsLeft,
 
                 {status === "ERROR" && (
                     <div className="payment-alert alert-error" role="alert">
-                        {offline ? <WifiOff size={22} /> : <AlertCircle size={22} />}
+                        <AlertCircle size={22} />
                         <div>
                             <strong>No se pudo procesar el pago</strong>
                             <p>
-                                {offline
-                                    ? "Parece que no tiene conexión a internet."
-                                    : "Ocurrió un problema de comunicación."}{" "}
-                                No se realizó ningún cobro. {attemptsText}
+                                Ocurrió un problema de comunicación. No se realizó ningún cobro. {attemptsText}
                             </p>
                         </div>
                     </div>
@@ -411,7 +404,7 @@ export default function PaymentSandbox({ orderId, total, currency, attemptsLeft,
                     ) : (
                         <>
                             <Lock size={16} />
-                            {status === "DECLINED" || status === "ERROR" ? "Reintentar pago de " : "Pagar "}
+                            {status === "IDLE" ? "Pagar " : "Reintentar pago de "}
                             {currency}{Number(total).toLocaleString("en-US")}
                         </>
                     )}

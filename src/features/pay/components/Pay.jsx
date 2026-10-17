@@ -15,10 +15,8 @@ import {
     recordPaymentAttempt,
     clearCurrentOrder,
 } from "../../../utils/orderStorage";
-import "../../checkout/styles/Checkout.css"; 
+import "../../checkout/styles/Checkout.css";
 import "../styles/Pay.css";
-
-
 
 const PAYMENT_LABELS = {
     [PAYMENT_STATUS.PENDING]: "Pendiente",
@@ -39,9 +37,11 @@ const FAILURE_MESSAGES = {
         "Se alcanzó el número máximo de intentos de pago. No se realizó ningún cobro.",
     [FAILURE_REASON.ORDER_EXPIRED]:
         "La orden expiró por inactividad antes de completarse el pago. No se realizó ningún cobro.",
+    [FAILURE_REASON.NETWORK_OFFLINE]:
+        "No se pudo procesar el pago porque no hay conexión a internet. No se realizó ningún cobro.",
 };
 
-const CURRENCY = "₡"; 
+const CURRENCY = "₡";
 
 const formatMoney = (currency, value) =>
     `${currency}${Number(value).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
@@ -56,16 +56,15 @@ export default function Pay() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [interruptedNotice, setInterruptedNotice] = useState(false);
 
-    // Carga la orden en proceso desde el historial; sin orden no hay nada que pagar
     useEffect(() => {
         expireStaleOrders();
         const current = getCurrentOrder();
+
         if (!current) {
             navigate("/cart", { replace: true });
             return;
         }
 
-       
         const { order, interrupted } = recoverInterruptedPayment(current.orderNumber);
         setOrderInfo(order);
         setInterruptedNotice(interrupted);
@@ -83,19 +82,19 @@ export default function Pay() {
 
     const handleGoBack = () => {
         if (isProcessing) return;
-        navigate("/checkout", { state: location.state }); 
+        navigate("/checkout", { state: location.state });
     };
 
- 
     const handleBackToCart = () => {
         clearCurrentOrder();
         navigate("/cart");
     };
 
-  
     const handleProcessingChange = (processing) => {
         setIsProcessing(processing);
-        if (processing && orderInfo) markPaymentStarted(orderInfo.orderNumber);
+        if (processing && orderInfo) {
+            markPaymentStarted(orderInfo.orderNumber);
+        }
     };
 
     const handlePaymentResult = (response) => {
