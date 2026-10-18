@@ -7,6 +7,25 @@ import emptyCartImage from "../../../assets/electro_carrito_vacio.png";
 import { useCart } from "../../../context/CartContext";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
+import PurchaseStepper from "../../../components/PurchaseStepper";
+
+
+/*
+   * Objetivo:
+   *   - Mostrar y gestionar el carrito de compras del usuario.
+   *   - Permitir la adición, eliminación y actualización de productos en el carrito.
+   *   - Proporcionar un resumen de la compra y un botón para volver al inicio de la página.
+   * 
+   * Entrada:
+   *   - Ninguna entrada directa, ya que el componente obtiene el estado del carrito desde el contexto.
+   * 
+   * Salida:
+   *   - Renderizado del carrito de compras con la lista de productos y el resumen de la compra.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+*/
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -43,41 +62,8 @@ export default function Cart() {
   return (
     <div className="cart-page">
 
-      {/* Encabezado */}
-      <div className="cart-header">
-
-        <div className="cart-heading">
-          <h1>Mi carrito</h1>
-
-          <p>
-            Revisa tus productos antes de continuar con la compra.
-          </p>
-        </div>
-
-        {/* Flujo de compra */}
-        <div className="cart-stepper" aria-label="Progreso de compra">
-
-          <div className="step active" aria-current="step">
-            <span className="step-number">1</span>
-            <span className="step-label">Carrito</span>
-          </div>
-
-          <span className="step-line"></span>
-
-          <div className="step">
-            <span className="step-number">2</span>
-            <span className="step-label">Pago</span>
-          </div>
-
-          <span className="step-line"></span>
-
-          <div className="step">
-            <span className="step-number">3</span>
-            <span className="step-label">Confirmación</span>
-          </div>
-
-        </div>
-      </div>
+      {/* Encabezado y pasos */}
+      <PurchaseStepper currentStep={1} />
 
       {/* Contenido del carrito */}
       {cart.length === 0 ? (

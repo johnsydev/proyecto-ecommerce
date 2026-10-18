@@ -2,16 +2,38 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
 const CART_KEY = 'cart';
 
-// Cargar estado inicial desde localStorage
+/*
+ * Contexto y lógica del carrito de compras.
+ * Proporciona un estado global para manejar los productos en el carrito,
+ * incluyendo la adición, eliminación, actualización de cantidades y limpieza del carrito.
+ * Sincroniza el estado con localStorage para persistencia entre sesiones.
+ */
 const getInitialState = () => {
   const localData = localStorage.getItem(CART_KEY);
   return localData ? JSON.parse(localData) : [];
 };
 
-// Auxiliar para obtener ID
+/**
+ * Obtiene el ID de un producto, utilizando `id` o `objectID` como fallback.
+ */
 const getProductId = (product) => product.id ?? product.objectID;
 
-// Reducer para manejar las acciones
+/**
+     * Objetivo:
+     * Manejar las acciones relacionadas con el carrito de compras, actualizando el estado según la acción recibida.
+     * 
+     * Entrada:
+     *   - state: Array de productos actualmente en el carrito.
+     *   - action: Objeto que describe la acción a realizar (tipo y payload).
+     * 
+     * Salida:
+     *   - newState: Nuevo estado del carrito después de aplicar la acción.
+     * 
+     * Restricciones:
+     *   - La cantidad de un producto no puede exceder su stock disponible.
+     *   - La cantidad de un producto no puede ser negativa.
+     *
+ */
 function cartReducer(state, action) {
   let newState;
 

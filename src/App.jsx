@@ -1,9 +1,12 @@
 import { HashRouter, Route, Routes, Link, useLocation } from "react-router-dom";
+import Pay from "./features/pay/components/Pay";
+import OrderConfirmation from "./features/order-confirmation/components/OrderConfirmation";
 import { InstantSearch } from "react-instantsearch";
 import Home from "./Home";
 import CatalogPage from "./pages/CatalogPage";
 import ProductDetail from "./pages/ProductDetail";
 import CartPage from "./pages/CartPage";
+import Checkout from "./features/checkout/components/Checkout";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import searchClient from "./features/catalog/services/algolia";
@@ -60,6 +63,9 @@ function App() {
           <Route path="/search" element={<CatalogPage />} />
           <Route path="/producto/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/pay" element={<Pay />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
         </Routes>
       </main>
       <Footer />
