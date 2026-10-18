@@ -1,6 +1,19 @@
 import { ORDER_STATUS, PAYMENT_STATUS, TERMS_AND_CONDITIONS_VERSION, PRIVACY_POLICY_VERSION } from "./constants";
 import { calculateCartSummary } from "./cartCalculations";
 
+/*
+   * Objetivo:
+   *   - Generar un objeto de orden basado en el carrito, cliente y detalles de entrega proporcionados.
+   * 
+   * Entrada:
+   *   - cart: Arreglo de productos en el carrito.
+   *   - client: Objeto con la información del cliente.
+   *   - delivery: Objeto con la información de entrega.
+   * 
+   * Salida:
+   *   - Objeto de la orden generada con detalles de productos, totales, estado de la orden y versiones de políticas.
+   */
+
 export function generateOrder({ cart, client, delivery }) {
     const {
         subtotal,
@@ -62,6 +75,17 @@ export function generateOrder({ cart, client, delivery }) {
     };
 }
 
+/*
+   * Objetivo:
+   *   - Generar un identificador único para una orden.
+   * 
+   * Entrada:
+   *   - Ninguna.
+   * 
+   * Salida:
+   *   - Cadena de texto que representa el identificador único de la orden.
+   */
+
 const generateOrderId = () => {
     const date = new Intl.DateTimeFormat("en-CA", {
         timeZone: "America/Costa_Rica",
@@ -78,6 +102,17 @@ const generateOrderId = () => {
     return `ORD-${date}-${random}`;
 };
 
+/*
+   * Objetivo:
+   *   - Formatear un número de teléfono de manera legible para Costa Rica.
+   * 
+   * Entrada:
+   *   - phone: Cadena de texto que representa el número de teléfono.
+   * 
+   * Salida:
+   *   - Cadena de texto con el número de teléfono formateado.
+   */
+  
 const getPrettyPhoneNumber = (phone) => {
     const cleaned = phone.replace(/[\s()-]/g, "");
 

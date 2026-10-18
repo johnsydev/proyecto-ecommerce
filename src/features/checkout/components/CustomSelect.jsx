@@ -1,6 +1,31 @@
 import { useState, useRef, useEffect } from "react";
 import "../styles/CustomSelect.css";
 
+
+/*
+   * Objetivo:
+   *   - Proporcionar un componente de selección personalizado con soporte para teclado y accesibilidad.
+   * 
+   * Entrada:
+   *   - id: Identificador único del select.
+   *   - name: Nombre del campo.
+   *   - value: Valor seleccionado.
+   *   - onChange: Función que se llama al cambiar la selección.
+   *   - options: Arreglo de opciones disponibles.
+   *   - placeholder: Texto a mostrar cuando no hay selección.
+   *   - disabled: Booleano que indica si el select está deshabilitado.
+   *   - required: Booleano que indica si el select es obligatorio.
+   *   - invalid: Booleano que indica si el select tiene un error de validación.
+   *   - errorProps: Propiedades adicionales para el manejo de errores.
+   * 
+   * Salida:
+   *   - Renderizado del select personalizado con opciones y manejo de selección.
+   * 
+   * Restricciones:
+   *   - No permite seleccionar opciones cuando está deshabilitado.
+   */
+
+
 export default function CustomSelect({
     id,
     name,

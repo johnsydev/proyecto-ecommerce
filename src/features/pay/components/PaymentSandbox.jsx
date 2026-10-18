@@ -2,6 +2,24 @@ import { useState } from "react";
 import { AlertCircle, XCircle, CreditCard, Lock } from "lucide-react";
 import "../styles/PaymentSandbox.css";
 
+/*
+   * Objetivo:
+   *   - Simular un entorno de pago para pruebas, incluyendo la validación de tarjetas, la detección de marcas y la simulación de respuestas del gateway de pago.
+   * 
+   * Entrada:
+   *   - orderId: Identificador de la orden.
+   *   - amount: Monto a pagar.
+   *   - currency: Moneda del pago.
+   *   - card: Información de la tarjeta de crédito (número, nombre, fecha de expiración, CVV).
+   * 
+   * Salida:
+   *   - Promesa que se resuelve con el resultado del pago simulado o se rechaza si hay un error.
+   * 
+   * Restricciones:
+   *   - Solo acepta tarjetas Visa, Mastercard y American Express.
+   */
+
+
 const FIXED_CARDS = {
     "4242424242424242": "PAYMENT_APPROVED",
     "4000000000000002": "PAYMENT_DECLINED",

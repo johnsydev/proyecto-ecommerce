@@ -3,6 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import "../styles/CartItem.css";
 
+/*
+   * Objetivo:
+   *   - Mostrar y gestionar un ítem individual en el carrito de compras.
+   *   - Permitir la adición, eliminación y actualización de la cantidad del producto.
+   * 
+   * Entrada:
+   *   - product: Objeto que representa el producto en el carrito.
+   *   - onAddUnit: Función para aumentar la cantidad del producto.
+   *   - onRemoveUnit: Función para disminuir la cantidad del producto.
+   *   - onRemove: Función para eliminar el producto del carrito.
+   * 
+   * Salida:
+   *   - Renderizado del ítem del carrito con la información del producto y controles de cantidad.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+   */
+
 export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove }) {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);

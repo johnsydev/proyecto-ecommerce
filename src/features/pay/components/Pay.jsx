@@ -17,6 +17,20 @@ import {
 } from "../../../utils/orderStorage";
 import "../styles/Pay.css";
 
+/*
+   * Objetivo:
+   *   - Gestionar el proceso de pago de una orden, incluyendo la recuperación de pagos interrumpidos, el manejo de intentos de pago y la navegación según el estado de la orden.
+   * 
+   * Entrada:
+   *   - Ninguna entrada directa; utiliza el estado de la orden actual almacenado en el contexto y en el almacenamiento local.
+   * 
+   * Salida:
+   *   - Renderizado de la página de pago con información de la orden y opciones de pago.
+   * 
+   * Restricciones:
+   *   - No permite continuar con el pago si la orden ha expirado o ha fallado.
+   */
+  
 const PAYMENT_LABELS = {
     [PAYMENT_STATUS.PENDING]: "Pendiente",
     [PAYMENT_STATUS.APPROVED]: "Aprobado",

@@ -6,6 +6,20 @@ import { ORDER_STATUS, PAYMENT_STATUS } from "../../../utils/constants";
 import { getLastConfirmedOrder } from "../../../utils/orderStorage";
 import "../styles/OrderConfirmation.css";
 
+/*
+   * Objetivo:
+   *   - Mostrar la confirmación de una orden de compra, incluyendo los detalles del comprador, la información de envío, el resumen de productos y el estado del pago.
+   * 
+   * Entrada:
+   *   - Ninguna entrada directa; utiliza la última orden confirmada almacenada en el almacenamiento local.
+   * 
+   * Salida:
+   *   - Renderizado de la página de confirmación de la orden.
+   * 
+   * Restricciones:
+   *   - Redirige al carrito si no hay una orden confirmada o si el pago no ha sido aprobado.
+   */
+  
 const formatMoney = (symbol, value) =>
     `${symbol}${Number(value ?? 0).toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
 

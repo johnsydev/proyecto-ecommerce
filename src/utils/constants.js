@@ -1,3 +1,9 @@
+
+/*
+   * Objetivo:
+   *   - Definir constantes utilizadas en la aplicación, incluyendo estados de órdenes, estados de pagos y versiones de políticas.
+   */
+
 export const ORDER_STATUS = Object.freeze({
     PENDING: "PENDING",
     CONFIRMED: "CONFIRMED",
