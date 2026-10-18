@@ -1,5 +1,5 @@
 import "../styles/CartSummary.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
     calculateCartSummary,
     formatPrice,
@@ -7,6 +7,7 @@ import {
 
 export default function CartSummary({ cart }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     currency,
     subtotal,
@@ -55,7 +56,7 @@ export default function CartSummary({ cart }) {
           <strong>{currency}{total.toLocaleString("en-US")}</strong>
         </div>
 
-        <button type="button" className="checkout-button" onClick={() => navigate("/checkout")}>
+        <button type="button" className="checkout-button" onClick={() => navigate("/checkout", { state: { from: location.pathname } })}>
           Proceder al Pago
         </button>
 

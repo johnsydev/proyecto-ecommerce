@@ -58,7 +58,7 @@ export default function PurchaseSummary({
 
                     {discount > 0 && (
                         <div className="purchase-summary-line discount-line">
-                            <span>Descuento aplicado</span>
+                            <span>Descuento</span>
                             <span>-{currency}{formatPrice(discount)}</span>
                         </div>
                     )}
