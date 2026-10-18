@@ -66,7 +66,9 @@ export default function Pay() {
 
         const { order, interrupted } = recoverInterruptedPayment(current.orderNumber);
         setOrderInfo(order);
-        setInterruptedNotice(interrupted);
+        if (interrupted) {
+            setInterruptedNotice(true);
+        }
     }, [navigate]);
 
     useEffect(() => {
