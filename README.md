@@ -23,7 +23,8 @@ El proyecto permite buscar productos electrónicos, aplicar filtros, consultar i
 * Consulta de stock por sucursal.
 * Diseño adaptable para computadora y dispositivos móviles.
 * Carrito de Compras
-* Checkout - Ordenes
+* Checkout 
+* Ordenes
 * Procesamiento de pago Sandbox
 
 ## Tecnologías utilizadas

@@ -3,13 +3,14 @@
   flex-direction: column;
   gap: 24px;
   min-width: 0;
-  padding: 28px;
+  padding: 32px; 
   background: #ffffff;
   color: #1f2937;
   color-scheme: light;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   box-sizing: border-box;
+  flex: 1;
 }
 
 .payment-form h2 {
@@ -23,6 +24,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1; 
 }
 
 .payment-form .form-group {
@@ -149,7 +151,7 @@
   gap: 8px;
   width: 100%;
   padding: 14px 24px;
-  margin-top: 4px;
+  margin-top: auto; 
   border: 0;
   border-radius: 8px;
   background: #345499;

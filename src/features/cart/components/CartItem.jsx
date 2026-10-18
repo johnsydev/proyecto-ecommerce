@@ -97,8 +97,8 @@ export default function CartItem({ product, onAddUnit, onRemoveUnit, onRemove })
           <button 
             type="button" 
             className="delete-btn" 
-            onClick = {onRemove}
-            //7*onClick={() => setShowModal(true)} 
+            // onClick = {onRemove}
+            onClick={() => setShowModal(true)} 
             title="Eliminar producto"
           >
             <Trash2 size={18} strokeWidth={2} />

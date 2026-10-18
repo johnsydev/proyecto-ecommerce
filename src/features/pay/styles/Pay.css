@@ -13,7 +13,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
   gap: 40px;
-  align-items: start;
+  align-items: stretch;  
 }
 
 .pay-layout > * {
@@ -24,6 +24,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%; 
 }
 
 .pay-notice {
@@ -110,9 +111,11 @@
   position: sticky;
   top: 24px;
   background: #faf8f5;
-  padding: 26px;
+  padding: 32px;  
   border-radius: 10px;
   border: 1px solid #e5e0d8;
+  display: flex;
+  flex-direction: column;
 }
 
 .pay-summary-sidebar h3 {
@@ -187,7 +190,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 24px;
+  margin-top: auto; 
   padding-top: 20px;
   border-top: 1px solid #e5e0d8;
   color: #4b5563;
@@ -261,15 +264,8 @@
 }
 
 @keyframes scrollTopAppear {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 900px) {
