@@ -6,6 +6,27 @@ import {
 import "../styles/PurchaseSummary.css";
 import { Info } from "lucide-react";
 
+
+/*
+   * Objetivo:
+   *   - Mostrar un resumen de la compra, incluyendo subtotal, descuentos, impuestos, costos de envío y total.
+   *   - Gestionar la aceptación de términos y condiciones.
+   * 
+   * Entrada:
+   *   - cart: Arreglo de productos en el carrito.
+   *   - acceptedTerms: Booleano que indica si el usuario ha aceptado los términos y condiciones.
+   *   - setAcceptedTerms: Función para actualizar el estado de aceptación de términos.
+   *   - termsError: Booleano que indica si hay un error relacionado con los términos y condiciones.
+   *   - setTermsError: Función para actualizar el estado de error de términos.
+   *   - onTermsError: Función que se llama cuando hay un error relacionado con los términos y condiciones.
+   * 
+   * Salida:
+   *   - Renderizado del resumen de la compra con detalles de precios y manejo de términos y condiciones.
+   * 
+   * Restricciones:
+   *   - No permite continuar con la compra si no se aceptan los términos y condiciones.
+   */
+  
 export default function PurchaseSummary({
     cart = [],
     acceptedTerms,

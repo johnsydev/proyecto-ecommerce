@@ -9,6 +9,24 @@ import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import PurchaseStepper from "../../../components/PurchaseStepper";
 
+
+/*
+   * Objetivo:
+   *   - Mostrar y gestionar el carrito de compras del usuario.
+   *   - Permitir la adición, eliminación y actualización de productos en el carrito.
+   *   - Proporcionar un resumen de la compra y un botón para volver al inicio de la página.
+   * 
+   * Entrada:
+   *   - Ninguna entrada directa, ya que el componente obtiene el estado del carrito desde el contexto.
+   * 
+   * Salida:
+   *   - Renderizado del carrito de compras con la lista de productos y el resumen de la compra.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+*/
+
 export default function Cart() {
   const navigate = useNavigate();
   const { cart, addUnit, removeUnit, removeFromCart } = useCart();

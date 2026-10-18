@@ -1,3 +1,17 @@
+
+/*
+   * Objetivo:
+   *   - Calcular el resumen del carrito de compras, incluyendo subtotal, descuentos, IVA, costos de envío y fecha estimada de entrega.
+   * 
+   * Entrada:
+   *   - cart: Arreglo de productos en el carrito, cada uno con información de precios, cantidad y detalles de envío.
+   * 
+   * Salida:
+   *   - Objeto con el resumen del carrito, incluyendo moneda, subtotal, descuento, IVA, costos de envío, total y fecha estimada de entrega.
+   * 
+   * Restricciones:
+   *   - Asume que los precios están en la moneda especificada en el primer producto del carrito.
+   */
 export function calculateCartSummary(cart = []) {
     const currency = cart[0]?.currency === "CRC" ? "₡" : "$";
 
@@ -64,10 +78,31 @@ export function calculateCartSummary(cart = []) {
     };
 }
 
+/*
+   * Objetivo:
+   *   - Formatear un monto como precio en la moneda local.
+   * 
+   * Entrada:
+   *   - amount: Monto a formatear.
+   * 
+   * Salida:
+   *   - Cadena con el monto formateado.
+   */
 export function formatPrice(amount) {
     return Number(amount).toLocaleString("en-US");
 }
 
+/*
+   * Objetivo:
+   *   - Formatear una fecha de entrega estimada.
+   * 
+   * Entrada:
+   *   - date: Objeto Date a formatear.
+   *   - locale: (Opcional) Configuración regional para el formato de fecha. Por defecto "es-CR".
+   * 
+   * Salida:
+   *   - Cadena con la fecha formateada.
+   */
 export function formatDeliveryDate(date, locale = "es-CR") {
     return date.toLocaleDateString(locale, {
         day: "numeric",

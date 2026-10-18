@@ -7,6 +7,28 @@ import {
 } from "../../../utils/validations";
 import CustomSelect from "./CustomSelect";
 
+
+/*
+   * Objetivo:
+   *   - Gestionar la recopilación de información del cliente y de entrega durante el proceso de checkout, incluyendo la validación de datos y términos y condiciones.
+   * 
+   * Entrada:
+   *   - acceptedTerms: Booleano que indica si el usuario ha aceptado los términos y condiciones.
+   *   - onTermsError: Función que se llama cuando hay un error relacionado con los términos y condiciones.
+   *   - clientInfo: Objeto con la información del cliente.
+   *   - setClientInfo: Función para actualizar la información del cliente.
+   *   - deliveryInfo: Objeto con la información de entrega.
+   *   - setDeliveryInfo: Función para actualizar la información de entrega.
+   *   - onCheckoutSubmit: Función que se llama al enviar el formulario de checkout.
+   * 
+   * Salida:
+   *   - Renderizado del formulario de checkout con campos para la información del cliente y de entrega.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+   */
+  
 export default function CheckoutForm({
     acceptedTerms,
     onTermsError,

@@ -9,7 +9,7 @@ Electro-Commerce CR es una aplicación web de comercio electrónico desarrollada
 El proyecto permite buscar productos electrónicos, aplicar filtros, consultar información detallada y revisar la disponibilidad de los productos en diferentes sucursales.
 
 > [!IMPORTANT]
-> Para ver las notas de la versión reciente, **[ir aquí](#carrito-de-compras)**.
+> Para ver las notas de la versión reciente, **[ir aquí](#checkout-ordenes-y-procesamiento-de-pago)**.
 
 ## Funcionalidades
 
@@ -23,6 +23,9 @@ El proyecto permite buscar productos electrónicos, aplicar filtros, consultar i
 * Consulta de stock por sucursal.
 * Diseño adaptable para computadora y dispositivos móviles.
 * Carrito de Compras
+* Checkout 
+* Ordenes
+* Procesamiento de pago Sandbox
 
 ## Tecnologías utilizadas
 
@@ -92,14 +95,21 @@ El proyecto está dividido principalmente en:
 
 ```text
 src/
+├── assets/
 ├── components/
 ├── context/
-├── locales/
+├── data/
 ├── features/
+│   └── cart/
 │   ├── catalog/
-│   └── product-detail/
+│   ├── product-detail/
+│   ├── checkout/
+│   ├── pay/
+│   └── orderconfirmation/
+├── locales/
 ├── pages/
 ├── styles/
+├── utils/
 ├── App.jsx
 ├── Home.jsx
 └── main.jsx
@@ -135,9 +145,70 @@ Para mejorar la experiencia de usuario y la lógica de compra, se definieron los
 * Navegación ágil: Se incluyó un botón flotante de "volver arriba" en la vista detallada del carrito para facilitar la navegación cuando se han agregado múltiples productos y se hace un desplazamiento largo hacia abajo.
 * Estados vacíos (Empty State): Si el carrito no tiene productos, se oculta el resumen de compra y se muestra una interfaz amigable invitando al usuario a volver al catálogo
 
+## Checkout, Ordenes y Procesamiento de Pago
+
+Este módulo completa el proceso de compra desde el carrito hasta la confirmación de la orden. El flujo es: Carrito → Checkout → Pago → Confirmación.
+
+### Checkout
+
+* Formulario con los datos del comprador y de entrega, con validaciones específicas para cada campo.
+* Selección de provincia, cantón y distrito a partir de un archivo JSON.
+* Aceptación de términos y condiciones como requisito para continuar.
+* Resumen de la compra con subtotal, IVA, costo de envío y total, calculados con las mismas funciones del carrito.
+* Si el carrito está vacío, se redirige de nuevo al carrito.
+
+### Órdenes
+
+Al continuar desde el checkout se genera una orden con número, fecha, datos del comprador y de entrega, productos, totales y estados. Las órdenes se guardan como un historial en `localStorage`, junto con el registro de cada intento de pago.
+
+El estado de la orden y el estado del pago se manejan por separado:
+
+| Situación | Estado del pago | Estado de la orden |
+|---|---|---|
+| Orden recién creada | `PENDING` | `PENDING` |
+| Pago aprobado | `APPROVED` | `CONFIRMED` |
+| Pago rechazado (puede reintentar) | `DECLINED` | `PENDING` |
+| Error del servicio (puede reintentar) | `ERROR` | `PENDING` |
+| No se puede completar la orden | el último estado del pago | `FAILED` |
+
+Una orden pasa a `FAILED` cuando se agotan los 3 intentos de pago, cuando no hay conexión a internet al pagar, cuando permanece 30 minutos sin actividad o cuando se abandona y se inicia un nuevo checkout desde el carrito.
+
+### Pago Sandbox
+
+El componente `PaymentSandbox` simula un proveedor externo de pagos. Recibe el identificador de la orden, el monto, la moneda y los datos de la tarjeta, y devuelve `PAYMENT_APPROVED`, `PAYMENT_DECLINED` o `PAYMENT_ERROR`. Después, la página de pago actualiza la orden según el resultado.
+
+Los escenarios se generan a partir del número de tarjeta. Estas son las tarjetas de prueba (ficticias):
+
+| Tarjeta | Número | Resultado |
+|---|---|---|
+| Visa | `4242 4242 4242 4242` | Pago aprobado |
+| Visa | `4000 0000 0000 0002` | Pago rechazado |
+| Visa | `4000 0000 0000 0119` | Error del servicio |
+| Mastercard | `5555 5555 5555 4444` | Pago aprobado |
+| Mastercard | `5105 1051 0510 5100` | Pago rechazado |
+| Mastercard | `5200 8282 8282 8210` | Error del servicio |
+
+Para cualquier otra tarjeta con estructura válida, el resultado se simula de forma aleatoria, garantizando que cada tres intentos ocurran los tres escenarios. Para las pruebas se puede usar cualquier nombre, una fecha de vencimiento futura y un CVV de 3 dígitos.
+
+Otros comportamientos del pago:
+
+* Validación de la tarjeta: marca (Visa, Mastercard o American Express), longitud, algoritmo de Luhn, vencimiento y CVV.
+* Máximo de 3 intentos de pago por orden, con mensajes que indican los intentos restantes.
+* Botón y campos bloqueados mientras se procesa el pago, con indicador de carga.
+* Si la página se cierra o recarga durante un pago, ese intento se registra como interrumpido y se avisa al usuario al volver.
+* Si se regresa del pago al checkout para corregir datos, se reutiliza la misma orden.
+
+### Confirmación
+
+Cuando el pago es aprobado, la orden pasa a `CONFIRMED`, se vacía el carrito y se muestra la confirmación con el número de orden, los datos del comprador y de entrega, y el resumen de la compra.
+
 ## Estado del proyecto
 
-**Versión 1.1 (Actual)**
+**Versión 1.2 (Actual)**
+
+Esta versión incluye el proceso de checkout, la generación y gestión de órdenes con historial, el procesamiento de pago en ambiente Sandbox con sus tres escenarios (aprobado, rechazado y error del servicio) y la confirmación de la compra.
+
+**Versión 1.1**
 
 Esta versión incluye la implementación de un carrito de compras completamente funcional. Se integró el manejo de estado global de la aplicación, el cálculo automático y en tiempo real de los montos (subtotales, IVA y envío), y la persistencia de datos en el navegador para que el usuario no pierda sus productos al recargar la página. 
 

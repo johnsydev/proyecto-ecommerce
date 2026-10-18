@@ -13,7 +13,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
   gap: 40px;
-  align-items: start;
+  align-items: stretch; 
 }
 
 .confirmation-layout > * {
@@ -145,6 +145,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  margin-top: auto; 
 }
 
 .confirmation-primary-btn,
@@ -188,29 +189,64 @@
   outline-offset: 3px;
 }
 
+/* ========================================
+   RESUMEN DE LA ORDEN Y SCROLL
+======================================== */
 .confirmation-receipt {
-  position: sticky;
-  top: 24px;
-  padding: 26px;
+  
+  padding: 32px;
   background: #faf8f5;
   border: 1px solid #e5e0d8;
   border-radius: 10px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+ 
+  height: 0;
+  min-height: 100%;
 }
 
 .confirmation-receipt h2 {
   margin: 0 0 18px;
   font-size: 1.1rem;
   color: #1f2937;
+  flex-shrink: 0;
 }
 
 .receipt-items {
   list-style: none;
   margin: 0;
-  padding: 0 0 6px;
+  padding: 0 10px 6px 0;
   display: flex;
   flex-direction: column;
   border-bottom: 1px dashed #cfc8bc;
+  
+ 
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1 1 auto;
+  min-height: 0; 
+  scrollbar-width: thin;
+  scrollbar-color: #345499 transparent;
+}
+
+
+.receipt-items::-webkit-scrollbar {
+  width: 5px;
+}
+
+.receipt-items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.receipt-items::-webkit-scrollbar-thumb {
+  background: #345499;
+  border-radius: 10px;
+}
+
+.receipt-items::-webkit-scrollbar-thumb:hover {
+  background: #2a437a;
 }
 
 .receipt-item {
@@ -298,6 +334,8 @@
   flex-direction: column;
   gap: 12px;
   padding-top: 16px;
+  flex-shrink: 0;
+  margin-top: auto;  
 }
 
 .receipt-line {
@@ -329,6 +367,9 @@
   font-weight: 700;
 }
 
+/* ========================================
+   BOTÓN SUBIR ARRIBA
+======================================== */
 .scroll-to-top {
   position: fixed;
   right: 18px;
@@ -368,17 +409,13 @@
 }
 
 @keyframes scrollTopAppear {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* ========================================
+   RESPONSIVE
+======================================== */
 @media (max-width: 900px) {
   .confirmation-page {
     max-width: 850px;
@@ -392,6 +429,14 @@
 
   .confirmation-receipt {
     position: static;
+    
+    height: auto; 
+    min-height: 0;
+  }
+
+  .receipt-items {
+    overflow-y: visible;
+    padding-right: 0;
   }
 }
 
@@ -485,5 +530,10 @@
     border: 0;
     box-shadow: none;
     position: static;
+    max-height: none;
+  }
+  
+  .receipt-items {
+    overflow-y: visible;
   }
 }

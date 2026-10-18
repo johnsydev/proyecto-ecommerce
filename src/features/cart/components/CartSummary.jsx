@@ -5,6 +5,22 @@ import {
     formatPrice,
 } from "../../../utils/cartCalculations";
 
+
+/*
+   * Objetivo:
+   *   - Mostrar un resumen del carrito de compras, incluyendo subtotal, descuentos, impuestos, envío y total.
+   * 
+   * Entrada:
+   *   - cart: Arreglo de productos en el carrito.
+   * 
+   * Salida:
+   *   - Renderizado del resumen del carrito con la información de costos y un botón para proceder al pago.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+   */
+
 export default function CartSummary({ cart }) {
   const navigate = useNavigate();
   const location = useLocation();

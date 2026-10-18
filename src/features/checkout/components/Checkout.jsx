@@ -10,6 +10,23 @@ import { generateOrder } from "../../../utils/orderUtils";
 import { createOrReuseOrder } from "../../../utils/orderStorage";
 import ubicacionesCR from "../../../data/ubicacionesCR.json";
 
+
+
+/*
+   * Objetivo:
+   *   - Gestionar el proceso de checkout, incluyendo la recopilación de información del cliente y de entrega, validación de términos y condiciones, y navegación hacia el pago.
+   * 
+   * Entrada:
+   *   - Ninguna entrada directa; se obtiene información del carrito y del estado de la ubicación.
+   * 
+   * Salida:
+   *   - Renderizado del formulario de checkout y resumen de la compra.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+   */
+  
 export default function Checkout() {
     const navigate = useNavigate();
     const location = useLocation();

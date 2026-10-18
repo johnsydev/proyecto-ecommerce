@@ -1,8 +1,28 @@
+/*
+   * Objetivo:
+   *   - Limpiar un número de cédula o teléfono eliminando espacios, paréntesis, puntos y guiones.
+   * 
+   * Entrada:
+   *   - value: Cadena de texto que representa el número a limpiar.
+   * 
+   * Salida:
+   *   - Cadena de texto con el número limpio.
+   */
 const cleanNumber = (value) => {
     return value.trim().replace(/[\s().-]/g, "");
 };
 
-// Acepta 1-2345-6789 o 123456789.
+/*
+   * Objetivo:
+   *   - Normalizar una cédula costarricense eliminando caracteres no numéricos.
+   * 
+   * Entrada:
+   *   - cedula: Cadena de texto que representa la cédula a normalizar.
+   * 
+   * Salida:
+   *   - Cadena de texto con la cédula normalizada.
+   */
+
 export const normalizeCedulaCR = (cedula) => {
     return cleanNumber(cedula);
 };
@@ -13,7 +33,16 @@ export const isValidCedulaCR = (cedula) => {
     return /^[1-9]\d{8}$/.test(normalized);
 };
 
-// Acepta 8888-8888, 88888888 o +506 8888-8888.
+/*
+   * Objetivo:
+   *   - Normalizar un número de teléfono costarricense eliminando caracteres no numéricos y el código de país si está presente.
+   * 
+   * Entrada:
+   *   - phone: Cadena de texto que representa el número de teléfono a normalizar.
+   * 
+   * Salida:
+   *   - Cadena de texto con el número de teléfono normalizado.
+   */
 export const normalizePhoneCR = (phone) => {
     let normalized = cleanNumber(phone);
 
@@ -26,6 +55,16 @@ export const normalizePhoneCR = (phone) => {
     return normalized;
 };
 
+/*
+   * Objetivo:
+   *   - Validar si un número de teléfono costarricense es válido.
+   * 
+   * Entrada:
+   *   - phone: Cadena de texto que representa el número de teléfono a validar.
+   * 
+   * Salida:
+   *   - Booleano que indica si el número de teléfono es válido.
+   */
 export const isValidPhoneCR = (phone) => {
     const normalized = normalizePhoneCR(phone);
 

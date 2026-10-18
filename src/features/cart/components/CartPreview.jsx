@@ -3,6 +3,25 @@ import { Trash2 } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
 import { calculateCartSummary } from "../../../utils/cartCalculations";
 
+/*
+   * Objetivo:
+   *   - Mostrar una vista previa del carrito de compras, ya sea en un menú lateral (drawer) o como una burbuja de animación.
+   * 
+   * Entrada:
+   *   - mode: Modo de visualización ("single" para burbuja, "drawer" para menú lateral).
+   *   - product: Objeto que representa el producto agregado recientemente (usado en modo "single").
+   *   - cart: Arreglo de productos en el carrito (usado en modo "drawer").
+   *   - cartItemCount: Número total de ítems en el carrito.
+   *   - onClose: Función para cerrar la vista previa del carrito.
+   * 
+   * Salida:
+   *   - Renderizado de la vista previa del carrito según el modo seleccionado.
+   * 
+   * Restricciones:
+   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede ser negativa.
+   */
+
 export default function CartPreview({ mode = "single", product, cart = [], cartItemCount, onClose }) {
   const navigate = useNavigate();
   const { removeFromCart } = useCart();

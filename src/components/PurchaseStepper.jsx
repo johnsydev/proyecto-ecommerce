@@ -1,5 +1,21 @@
 import "../styles/PurchaseStepper.css";
 
+/*
+  * Objetivo:
+  * Componente que muestra el progreso de la compra en un paso a paso visual.
+  * Muestra el paso actual y los pasos completados en la interfaz de usuario.
+  * Actualiza visualmente el progreso a medida que el usuario avanza en el proceso de compra.
+  * Recibe el paso actual como prop y lo utiliza para determinar qué pasos están completados y cuál está activo.
+  * Utiliza una lista de pasos predefinidos para renderizar el componente de manera dinámica.
+  * 
+  * Entrada:
+  *   - currentStep: Número del paso actual en el proceso de compra.
+  * Salida:
+  *   - Renderizado del componente de progreso de compra con el paso actual destacado.
+  * Restricciones:
+  *   - currentStep debe ser un número válido correspondiente a uno de los pasos definidos en STEPS.
+*/
+
 const STEPS = [
   { number: 1, label: "Carrito", title: "Mi carrito", description: "Revisa tus productos antes de continuar con la compra." },
   { number: 2, label: "Checkout", title: "Checkout", description: "Completa la información de envío y pago." },
