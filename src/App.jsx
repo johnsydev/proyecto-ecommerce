@@ -7,6 +7,7 @@ import CatalogPage from "./pages/CatalogPage";
 import ProductDetail from "./pages/ProductDetail";
 import CartPage from "./pages/CartPage";
 import Checkout from "./features/checkout/components/Checkout";
+import PoliciesPage from "./pages/PoliciesPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import searchClient from "./features/catalog/services/algolia";
@@ -66,6 +67,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pay" element={<Pay />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/policies" element={<PoliciesPage />} />
         </Routes>
       </main>
       <Footer />
