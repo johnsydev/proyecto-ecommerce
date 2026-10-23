@@ -17,7 +17,10 @@ export default function Policies() {
         </section>
 
         <section className="policies-content-component">
-          <PoliciesContent activePolicy={activePolicy} />
+          <PoliciesContent
+              activePolicy={activePolicy}
+              onSelectPolicy={setActivePolicy}
+          />
         </section>
       </div>
     </div>
