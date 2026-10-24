@@ -14,6 +14,7 @@ const policies = [
 export default function PoliciesSidebar({
   activePolicy,
   onSelectPolicy,
+  onSelectSection,
   sections = [],
 }) {
   const [expandedPolicy, setExpandedPolicy] = useState(activePolicy);
@@ -39,6 +40,8 @@ export default function PoliciesSidebar({
       behavior: "smooth",
       block: "start",
     });
+
+    onSelectSection(sectionId);
   };
 
   return (
@@ -51,7 +54,10 @@ export default function PoliciesSidebar({
         <ul className="policies-sidebar-list">
           {policies.map((policy) => {
             const isActive = activePolicy === policy.id;
-            const isExpanded = expandedPolicy === policy.id && policy.id !== "welcome" && policy.id !== "faq";
+            const isExpanded =
+              expandedPolicy === policy.id &&
+              policy.id !== "welcome" &&
+              policy.id !== "faq";
             const hasSections = isActive && sections.length > 0;
 
             return (
