@@ -4,6 +4,7 @@ import TermsAndConditions from "./TermsAndConditions";
 import ReturnPolicy from "./ReturnPolicy";
 import ShippingPolicy from "./ShippingPolicy";
 import PrivacyPolicy from "./PrivacyPolicy";
+import FAQ from "./FAQ";
 import "../styles/PoliciesContent.css";
 
 export default function PoliciesContent({
@@ -14,7 +15,7 @@ export default function PoliciesContent({
     useEffect(() => {
         const container = document.querySelector(".policies-content");
 
-        if (!container || activePolicy === "welcome") {
+        if (!container || activePolicy === "" || activePolicy === "faq") {
             onSectionsChange([]);
             return;
         }
@@ -46,6 +47,8 @@ export default function PoliciesContent({
         return <ShippingPolicy />;
     } else if (activePolicy === "privacy-policy") {
         return <PrivacyPolicy />;
+    } else if (activePolicy === "faq") {
+        return <FAQ />;
     }
 
     return (
@@ -53,7 +56,7 @@ export default function PoliciesContent({
             <section id="privacy-policy">
                 <h2 className="policies-content-title">Título</h2>
                 <p>
-                    Este es el contenido de la política de privacidad.
+                    Este es el contenido de la sección.
                 </p>
             </section>
         </div>

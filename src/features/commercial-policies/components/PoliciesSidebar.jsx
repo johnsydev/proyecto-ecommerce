@@ -51,7 +51,7 @@ export default function PoliciesSidebar({
         <ul className="policies-sidebar-list">
           {policies.map((policy) => {
             const isActive = activePolicy === policy.id;
-            const isExpanded = expandedPolicy === policy.id && policy.id !== "welcome";
+            const isExpanded = expandedPolicy === policy.id && policy.id !== "welcome" && policy.id !== "faq";
             const hasSections = isActive && sections.length > 0;
 
             return (

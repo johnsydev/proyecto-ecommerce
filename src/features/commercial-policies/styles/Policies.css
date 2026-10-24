@@ -12,7 +12,7 @@
 .policies-main-panel {
   display: flex;
   flex-direction: row;
-  gap: 28px;
+  gap: 10px;
   margin-bottom: 40px;
   align-items: flex-start;
 }
