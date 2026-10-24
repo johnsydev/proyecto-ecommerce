@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import "../styles/PoliciesSidebar.css";
 
@@ -10,7 +11,36 @@ const policies = [
   { id: "faq", label: "Preguntas Frecuentes (FAQ)" },
 ];
 
-export default function PoliciesSidebar({ activePolicy, onSelectPolicy }) {
+export default function PoliciesSidebar({
+  activePolicy,
+  onSelectPolicy,
+  sections = [],
+}) {
+  const [expandedPolicy, setExpandedPolicy] = useState(activePolicy);
+
+  useEffect(() => {
+    setExpandedPolicy(activePolicy);
+  }, [activePolicy]);
+
+  const handlePolicyClick = (policyId) => {
+    if (activePolicy === policyId) {
+      setExpandedPolicy((current) =>
+        current === policyId ? null : policyId
+      );
+      return;
+    }
+
+    setExpandedPolicy(policyId);
+    onSelectPolicy(policyId);
+  };
+
+  const handleSectionClick = (sectionId) => {
+    document.getElementById(sectionId)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <aside className="policies-sidebar">
       <div className="policies-sidebar-content">
@@ -19,31 +49,58 @@ export default function PoliciesSidebar({ activePolicy, onSelectPolicy }) {
         </h2>
 
         <ul className="policies-sidebar-list">
-          {policies.map((policy) => (
-            <li key={policy.id} className="policies-sidebar-item">
-              <button
-                type="button"
-                className={`policies-sidebar-button ${
-                  activePolicy === policy.id ? "active" : ""
-                }`}
-                onClick={() => onSelectPolicy(policy.id)}
-                aria-current={
-                  activePolicy === policy.id ? "page" : undefined
-                }
-              >
-                <span className="policies-sidebar-label">
-                  {policy.label}
-                </span>
+          {policies.map((policy) => {
+            const isActive = activePolicy === policy.id;
+            const isExpanded = expandedPolicy === policy.id && policy.id !== "welcome";
+            const hasSections = isActive && sections.length > 0;
 
-                <ChevronRight
-                  className="policies-sidebar-arrow"
-                  size={20}
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-              </button>
-            </li>
-          ))}
+            return (
+              <li key={policy.id} className="policies-sidebar-item">
+                <button
+                  type="button"
+                  className={`policies-sidebar-button ${
+                    isActive ? "active" : ""
+                  }`}
+                  onClick={() => handlePolicyClick(policy.id)}
+                  aria-current={isActive ? "page" : undefined}
+                  aria-expanded={hasSections ? isExpanded : undefined}
+                >
+                  <span className="policies-sidebar-label">
+                    {policy.label}
+                  </span>
+
+                  <ChevronRight
+                    className={`policies-sidebar-arrow ${
+                      isExpanded ? "expanded" : ""
+                    }`}
+                    size={20}
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {hasSections && isExpanded && (
+                  <ul className="policies-sidebar-sublist">
+                    {sections.map((section) => (
+                      <li
+                        key={section.id}
+                        className={`policies-sidebar-subitem ${
+                          section.level === "h3" ? "nested" : ""
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => handleSectionClick(section.id)}
+                        >
+                          {section.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </aside>

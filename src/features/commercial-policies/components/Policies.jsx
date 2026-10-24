@@ -5,14 +5,16 @@ import "../styles/Policies.css";
 
 export default function Policies() {
   const [activePolicy, setActivePolicy] = useState("welcome");
+  const [policySections, setPolicySections] = useState([]);
 
   return (
     <div className="policies-page">
       <div className="policies-main-panel">
         <section className="policies-sidebar-component">
           <PoliciesSidebar
-            activePolicy={activePolicy}
-            onSelectPolicy={setActivePolicy}
+              activePolicy={activePolicy}
+              onSelectPolicy={setActivePolicy}
+              sections={policySections}
           />
         </section>
 
@@ -20,6 +22,7 @@ export default function Policies() {
           <PoliciesContent
               activePolicy={activePolicy}
               onSelectPolicy={setActivePolicy}
+              onSectionsChange={setPolicySections}
           />
         </section>
       </div>
