@@ -67,7 +67,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pay" element={<Pay />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
-          <Route path="/policies" element={<PoliciesPage />} />
+          <Route path="/policies/*" element={<PoliciesPage />} />
         </Routes>
       </main>
       <Footer />

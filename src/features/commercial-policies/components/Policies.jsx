@@ -1,11 +1,32 @@
+
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { List } from "lucide-react";
 import PoliciesSidebar from "./PoliciesSidebar";
 import PoliciesContent from "./PoliciesContent";
 import "../styles/Policies.css";
 
 export default function Policies() {
-  const [activePolicy, setActivePolicy] = useState("welcome");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getPolicyFromPath = (pathname) => {
+    const policy = pathname.split("/")[2];
+
+    const validPolicies = [
+      "terms-and-conditions",
+      "return-policy",
+      "shipping-policy",
+      "privacy-policy",
+      "faq",
+    ];
+
+    return validPolicies.includes(policy) ? policy : "welcome";
+  };
+
+  const [activePolicy, setActivePolicy] = useState(() =>
+    getPolicyFromPath(location.pathname)
+  );
   const [policySections, setPolicySections] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -21,8 +42,17 @@ export default function Policies() {
     };
   }, [sidebarOpen]);
 
+  useEffect(() => {
+    setActivePolicy(getPolicyFromPath(location.pathname));
+  }, [location.pathname]);
+
   const handleSelectPolicy = (policy) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    navigate(
+      policy === "welcome" ? "/policies" : `/policies/${policy}`
+    );
+
     setActivePolicy(policy);
   };
 
