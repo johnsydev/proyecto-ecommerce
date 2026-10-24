@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import PoliciesWelcome from "./PoliciesWelcome";
 import TermsAndConditions from "./TermsAndConditions";
 import ReturnPolicy from "./ReturnPolicy";
+import ShippingPolicy from "./ShippingPolicy";
+import PrivacyPolicy from "./PrivacyPolicy";
 import "../styles/PoliciesContent.css";
 
 export default function PoliciesContent({
@@ -40,6 +42,10 @@ export default function PoliciesContent({
         return <TermsAndConditions />;
     } else if (activePolicy === "return-policy") {
         return <ReturnPolicy />;
+    } else if (activePolicy === "shipping-policy") {
+        return <ShippingPolicy />;
+    } else if (activePolicy === "privacy-policy") {
+        return <PrivacyPolicy />;
     }
 
     return (
