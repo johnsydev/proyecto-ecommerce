@@ -1,0 +1,173 @@
+.policies-welcome {
+  width: 100%;
+  min-width: 0;
+  color: #1f2937;
+
+  max-width: 900px;
+  margin: 0 auto;
+  color: #374151;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.policies-welcome-header {
+  margin-bottom: 32px;
+}
+
+.policies-welcome-title {
+  margin: 0 0 10px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #1f2937;
+}
+
+.policies-welcome-description {
+  max-width: 700px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.policies-welcome-section {
+  margin-bottom: 20px;
+}
+
+.policies-welcome-section-title {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1f2937;
+}
+
+.policies-welcome-section-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.policies-welcome-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.policies-welcome-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 220px;
+  padding: 22px;
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.policies-welcome-card:hover {
+  border-color: #345499;
+  box-shadow: 0 4px 12px rgba(31, 41, 55, 0.08);
+  transform: translateY(-2px);
+}
+
+.policies-welcome-card:focus-visible {
+  outline: 2px solid #345499;
+  outline-offset: 3px;
+}
+
+.policies-welcome-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 18px;
+  color: #345499;
+  background: #f0f4fc;
+  border-radius: 8px;
+}
+
+.policies-welcome-card-content {
+  flex: 1;
+  width: 100%;
+}
+
+.policies-welcome-card-title {
+  margin: 0 0 9px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1f2937;
+}
+
+.policies-welcome-card-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.policies-welcome-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 14px;
+  color: #345499;
+  font-size: 13px;
+  font-weight: 600;
+  border-top: 1px solid #e5e7eb;
+}
+
+.policies-welcome-card-arrow {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.policies-welcome-card:hover .policies-welcome-card-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 900px) {
+  .policies-welcome-cards {
+    gap: 14px;
+  }
+
+  .policies-welcome-card {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .policies-welcome-title {
+    font-size: 24px;
+  }
+
+  .policies-welcome-description {
+    font-size: 14px;
+  }
+
+  .policies-welcome-section-title {
+    font-size: 18px;
+  }
+
+  .policies-welcome-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .policies-welcome-card {
+    min-height: 190px;
+    padding: 20px;
+  }
+}

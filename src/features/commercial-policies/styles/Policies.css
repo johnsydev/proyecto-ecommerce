@@ -1,0 +1,203 @@
+.policies-page {
+  margin: 0 auto;
+  max-width: 1400px;
+  padding: 40px 20px 120px;
+  text-align: left;
+  width: 100%;
+  font-family: var(--sans, sans-serif);
+  color: #1f2937;
+  box-sizing: border-box;
+}
+
+.policies-main-panel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 40px;
+  align-items: flex-start;
+}
+
+.policies-sidebar-component {
+  flex: 0 0 320px;
+  min-width: 0;
+}
+
+.policies-content-component {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Elementos del menú móvil ocultos en escritorio */
+
+.policies-sidebar-floating-btn {
+  display: none;
+}
+
+.policies-sidebar-overlay {
+  display: none;
+}
+
+/* ========================================
+   TABLETAS Y PANTALLAS MEDIANAS
+   Header: 76px + borde de 3px = 79px
+======================================== */
+@media (max-width: 900px) {
+  .policies-main-panel {
+    flex-direction: column;
+  }
+
+  .policies-sidebar-component {
+    position: fixed;
+    top: 79px;
+    left: 0;
+
+    width: min(82vw, 330px);
+    height: calc(100vh - 79px);
+    height: calc(100dvh - 79px);
+
+    flex: none;
+    min-width: 0;
+    margin: 0;
+    padding: 16px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    background-color: #ffffff;
+    box-shadow: 6px 0 25px rgba(0, 0, 0, 0.25);
+
+    transform: translateX(-105%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    box-sizing: border-box;
+    z-index: 100001;
+  }
+
+  .policies-sidebar-component.open {
+    transform: translateX(0);
+  }
+
+  .policies-content-component {
+    width: 100%;
+    flex: auto;
+    min-width: 0;
+  }
+
+  /* Botón flotante para abrir el índice */
+
+  .policies-sidebar-floating-btn {
+    position: fixed;
+    right: 18px;
+    bottom: 22px;
+
+    width: 56px;
+    height: 56px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    background-color: #345499;
+    color: #ffffff;
+    border: none;
+    border-radius: 16px;
+
+    box-shadow:
+      0 6px 18px rgba(0, 0, 0, 0.22),
+      0 2px 5px rgba(0, 0, 0, 0.12);
+
+    cursor: pointer;
+    z-index: 1500;
+
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .policies-sidebar-floating-btn:hover {
+    background-color: #2a437a;
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 8px 22px rgba(0, 0, 0, 0.27),
+      0 3px 7px rgba(0, 0, 0, 0.15);
+  }
+
+  .policies-sidebar-floating-btn:active {
+    transform: scale(0.94);
+  }
+
+  .policies-sidebar-floating-btn svg {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* Fondo oscuro alineado con el inicio del menú */
+
+  .policies-sidebar-overlay {
+    position: fixed;
+    top: 79px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    display: block;
+
+    background-color: rgba(15, 23, 42, 0.48);
+    backdrop-filter: blur(1px);
+
+    z-index: 100000;
+  }
+}
+
+/* ========================================
+   CELULARES
+   Header: aproximadamente 119px
+======================================== */
+
+@media (max-width: 700px) {
+  .policies-sidebar-component {
+    top: 119px;
+    height: calc(100vh - 119px);
+    height: calc(100dvh - 119px);
+  }
+
+  .policies-sidebar-overlay {
+    top: 119px;
+  }
+}
+
+/* ========================================
+   CELULARES PEQUEÑOS
+   Header: aproximadamente 110px
+======================================== */
+
+@media (max-width: 420px) {
+  .policies-sidebar-component {
+    top: 110px;
+
+    width: 85vw;
+    max-width: 310px;
+
+    height: calc(100vh - 110px);
+    height: calc(100dvh - 110px);
+
+    padding: 12px;
+  }
+
+  .policies-sidebar-overlay {
+    top: 110px;
+  }
+
+  .policies-sidebar-floating-btn {
+    right: 14px;
+    bottom: 12px;
+
+    width: 56px;
+    height: 56px;
+  }
+}

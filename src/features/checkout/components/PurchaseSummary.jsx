@@ -132,14 +132,14 @@ export default function PurchaseSummary({
                             href="#"
                             onClick={(event) => {
                             event.preventDefault();
-                            window.open("#/terms-and-conditions", "_blank");
+                            window.open("#/policies/terms-and-conditions", "_blank");
                             }}
                         >
                             términos y condiciones
                         </a>
                         {" "}y la{" "}
 
-                        <a href="/proyecto-ecommerce/#/privacy-policy" target="_blank" rel="noopener noreferrer">
+                        <a href="/proyecto-ecommerce/#/policies/privacy-policy" target="_blank" rel="noopener noreferrer">
                             política de privacidad
                         </a>
                         .
