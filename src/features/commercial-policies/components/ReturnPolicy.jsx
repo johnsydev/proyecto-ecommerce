@@ -1,10 +1,17 @@
 import React from 'react';
+import { CalendarDays } from 'lucide-react';
 
 export default function ReturnPolicy() {
   return (
     <div className="policies-content">
       <section>
         <h1>Política de Devoluciones y Garantías</h1>
+
+        <div className="policy-updated">
+          <CalendarDays size={15} />
+          <span>Última actualización: 22 de octubre de 2026</span>
+        </div>
+
         <p>
           En Electro-Commerce CR nos enorgullecemos de ofrecer componentes electrónicos y microcontroladores 
           de la más alta calidad para sus proyectos. Entendemos que en el mundo del prototipado y 

@@ -76,6 +76,19 @@
   margin-bottom: 0;
 }
 
+.policy-updated {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  margin: -10px 0 20px;
+  padding: 5px 11px;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
 @media (max-width: 768px) {
   .policies-content section {
     padding: 24px 20px;
@@ -161,5 +174,19 @@
 @media (max-width: 900px) {
   .policy-scroll-top {
     display: none !important;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .policies-sidebar,
+  .policies-sidebar-component {
+    display: none !important;
+  }
+
+  .policies-content {
+    max-width: 100%;
+    padding: 0;
   }
 }

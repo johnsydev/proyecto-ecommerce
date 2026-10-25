@@ -1,3 +1,4 @@
+
 # Electro-Commerce CR
 
 <p align="left">
@@ -9,7 +10,7 @@ Electro-Commerce CR es una aplicación web de comercio electrónico desarrollada
 El proyecto permite buscar productos electrónicos, aplicar filtros, consultar información detallada y revisar la disponibilidad de los productos en diferentes sucursales.
 
 > [!IMPORTANT]
-> Para ver las notas de la versión reciente, **[ir aquí](#checkout-ordenes-y-procesamiento-de-pago)**.
+> Para ver las notas de la versión reciente, **[ir aquí](#políticas-comerciales)**.
 
 ## Funcionalidades
 
@@ -26,6 +27,7 @@ El proyecto permite buscar productos electrónicos, aplicar filtros, consultar i
 * Checkout 
 * Ordenes
 * Procesamiento de pago Sandbox
+* Consulta y navegación de políticas comerciales.
 
 ## Tecnologías utilizadas
 
@@ -105,7 +107,8 @@ src/
 │   ├── product-detail/
 │   ├── checkout/
 │   ├── pay/
-│   └── orderconfirmation/
+│   ├── order-confirmation/
+│   └── commercial-policies/
 ├── locales/
 ├── pages/
 ├── styles/
@@ -202,11 +205,27 @@ Otros comportamientos del pago:
 
 Cuando el pago es aprobado, la orden pasa a `CONFIRMED`, se vacía el carrito y se muestra la confirmación con el número de orden, los datos del comprador y de entrega, y el resumen de la compra.
 
+## Políticas Comerciales
+
+Este módulo incorpora una sección para consultar las políticas comerciales de Electro-Commerce CR.
+
+La interfaz permite seleccionar las diferentes políticas desde una barra lateral y consultar su contenido en el panel correspondiente, así como su fecha de última actualización.
+
+Las políticas comerciales son: Términos y Condiciones, Política de Devoluciones, Política de Envíos y Política de Privacidad. Además, se incluye una sección para Preguntas Frecuentes (FAQ).
+
+En dispositivos móviles, el panel lateral se abre mediante un botón flotante para facilitar la navegación.
+
 ## Estado del proyecto
 
-**Versión 1.2 (Actual)**
+**Versión 1.3 (Actual)**
+
+Esta versión incorpora la sección de políticas comerciales, permitiendo consultar la información correspondiente desde una interfaz dedicada y navegar entre las diferentes políticas disponibles fácilmente.
+
+
+**Versión 1.2**
 
 Esta versión incluye el proceso de checkout, la generación y gestión de órdenes con historial, el procesamiento de pago en ambiente Sandbox con sus tres escenarios (aprobado, rechazado y error del servicio) y la confirmación de la compra.
+
 
 **Versión 1.1**
 

@@ -1,11 +1,17 @@
 
 import React from 'react';
+import { CalendarDays } from 'lucide-react';
 
 export default function TermsAndConditions() {
   return (
     <div className="policies-content">
       <section>
         <h1>Términos y Condiciones de Uso y Compra</h1>
+
+        <div className="policy-updated">
+          <CalendarDays size={15} />
+          <span>Última actualización: 24 de octubre de 2026</span>
+        </div>
 
         <p>
           Bienvenido a Electro-Commerce CR. Estos Términos y Condiciones

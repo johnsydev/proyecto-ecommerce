@@ -1,10 +1,17 @@
 import React from 'react';
+import { CalendarDays } from 'lucide-react';
 
 export default function ShippingPolicy() {
   return (
     <div className="policies-content">
       <section>
         <h1>Política de Envíos y Entregas</h1>
+
+        <div className="policy-updated">
+          <CalendarDays size={15} />
+          <span>Última actualización: 23 de octubre de 2026</span>
+        </div>
+
         <p>
           En Electro-Commerce CR sabemos que cuando estás trabajando en un prototipo o proyecto 
           electrónico, el tiempo es vital. Por eso nos comprometemos a despachar tus microcontroladores, 

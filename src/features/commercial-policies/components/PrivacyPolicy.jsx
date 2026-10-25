@@ -1,10 +1,17 @@
 import React from 'react';
+import { CalendarDays } from 'lucide-react';
 
 export default function PrivacyPolicy() {
   return (
     <div className="policies-content">
       <section>
         <h1>Aviso y Política de Privacidad</h1>
+
+        <div className="policy-updated">
+          <CalendarDays size={15} />
+          <span>Última actualización: 23 de octubre de 2026</span>
+        </div>
+
         <p>
           En Electro-Commerce CR valoramos profundamente tu confianza. Sabemos que la privacidad de tus 
           datos personales es fundamental, por lo que nos comprometemos a proteger la información que 
