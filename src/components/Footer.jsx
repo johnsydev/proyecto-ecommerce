@@ -1,4 +1,5 @@
 import "../styles/Footer.css";
+import { useNavigate } from "react-router-dom";
 
 import robotLogo from "../assets/ElectroLogo.png";
 
@@ -30,6 +31,7 @@ import robotLogo from "../assets/ElectroLogo.png";
  */
 
 export default function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className="site-footer">
       <div className="footer-main">
@@ -124,8 +126,23 @@ export default function Footer() {
         </div>
 
         <div className="footer-legal">
-          <a href="#terminos">Términos de Uso</a>
-          <a href="#privacidad">Política de Privacidad</a>
+          <a
+            onClick={() => {
+              navigate("/policies");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+          Políticas Comerciales
+          </a>
+
+          <a
+            onClick={() => {
+              navigate("/policies/faq");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            Preguntas Frecuentes
+          </a>
         </div>
       </div>
     </footer>
