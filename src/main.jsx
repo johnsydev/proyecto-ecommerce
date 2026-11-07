@@ -2,8 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { CartProvider } from "./context/CartContext.jsx";
+import { startSession } from "./utils/analyticsStorage.js"
 import App from "./App.jsx";
 import "./index.css";
+
+// Registrar una única vez el inicio de la sesión de navegación.
+startSession();
 
 /*
  * Objetivo:

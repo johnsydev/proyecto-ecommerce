@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductInfo from "./ProductInfo";
 import searchClient from "../../catalog/services/algolia";
+import { ANALYTICS_EVENTS, recordEvent } from "../../../utils/analyticsStorage";
 
 /*
  * Objetivo:
@@ -17,6 +18,7 @@ import searchClient from "../../catalog/services/algolia";
  * - Guarda en el estado la información del producto encontrado.
  * - Envía el producto al componente ProductInfo para mostrar sus detalles.
  * - Muestra un mensaje de error si no se puede obtener el producto.
+ * - Registra la visualización del producto para Analytics y el historial.
  *
  * Restricciones:
  * - El componente debe ejecutarse dentro de un Router para poder utilizar useParams.
@@ -31,7 +33,10 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     window.scrollTo(0, 0);
+    setProduct(null);
 
     searchClient
       .getObject({
@@ -39,12 +44,25 @@ export default function ProductDetails() {
         objectID: id,
       })
       .then((product) => {
+        if (cancelled) return;
+
         setProduct(product);
+
+        recordEvent(ANALYTICS_EVENTS.PRODUCT_VIEW, {
+          productId: product.id ?? product.objectID,
+          product,
+        });
       })
       .catch((error) => {
+        if (cancelled) return;
+
         console.error("Error al obtener los detalles del producto:", error);
         setProduct(null);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (!product) {
