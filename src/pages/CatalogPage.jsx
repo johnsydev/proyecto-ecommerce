@@ -7,6 +7,7 @@ import ProductGrid from "../features/catalog/components/ProductGrid";
 import Pagination from "../features/catalog/components/Pagination";
 import Filters from "../features/catalog/components/Filters";
 import RecentlyViewed from "../features/analytics/components/RecentlyViewed";
+import RecentSearches from "../features/analytics/components/RecentSearches";
 import "../styles/CatalogPage.css";
 
 /*
@@ -69,6 +70,7 @@ function CatalogPage() {
       </aside>
 
       <main className="panel-der">
+        <RecentSearches />
         <ProductGrid />
         <Pagination />
         <RecentlyViewed />

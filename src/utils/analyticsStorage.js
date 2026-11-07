@@ -150,7 +150,13 @@ export function recordEvent(type, data = {}, uniqueKey = null) {
     uniqueKey,
   };
 
-  return write(EVENTS_KEY, [...events, event]) ? event : null;
+  if (!write(EVENTS_KEY, [...events, event])) {
+    return null;
+  }
+
+  window.dispatchEvent(new Event("analytics-updated"));
+
+  return event;
 }
 
 /*
