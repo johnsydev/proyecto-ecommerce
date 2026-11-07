@@ -11,6 +11,7 @@ import PoliciesPage from "./pages/PoliciesPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import searchClient from "./features/catalog/services/algolia";
+import AnalyticsPage from "./pages/AnalyticsPage";
 import "./App.css";
 
 /*
@@ -68,6 +69,7 @@ function App() {
           <Route path="/pay" element={<Pay />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/policies/*" element={<PoliciesPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
         </Routes>
       </main>
       <Footer />
