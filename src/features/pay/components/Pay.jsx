@@ -16,6 +16,7 @@ import {
     clearCurrentOrder,
 } from "../../../utils/orderStorage";
 import "../styles/Pay.css";
+import { ANALYTICS_EVENTS, recordEvent } from "../../../utils/analyticsStorage";
 
 /*
    * Objetivo:
@@ -123,6 +124,16 @@ export default function Pay() {
         setInterruptedNotice(false);
 
         if (updated.orderStatus === ORDER_STATUS.CONFIRMED) {
+            recordEvent(
+                ANALYTICS_EVENTS.PURCHASE_COMPLETED,
+                {
+                    orderNumber: updated.orderNumber,
+                    total: updated.total,
+                    currencySymbol: updated.currencySymbol ?? CURRENCY,
+                },
+                updated.orderNumber,
+            );
+
             clearCart?.();
             navigate("/order-confirmation");
         }
