@@ -6,6 +6,11 @@ import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
 import { debounce } from "@algolia/autocomplete-shared";
 import { createLocalStorageRecentSearchesPlugin } from "@algolia/autocomplete-plugin-recent-searches";
 import { useSearchBox } from "react-instantsearch";
+import {
+  ANALYTICS_EVENTS,
+  getSessionId,
+  recordEvent,
+} from "../../../utils/analyticsStorage";
 import searchClient from "../services/algolia";
 import "../styles/SearchBar.css";
 
@@ -56,6 +61,29 @@ export default function SearchBar() {
     refineRef.current = refine;
   }, [refine]);
 
+  /*
+   * Objetivo:
+   * Registrar una búsqueda confirmada por el usuario.
+   *
+   * Entrada:
+   * - value: Texto de la búsqueda.
+   *
+   * Salida:
+   * - Evento de búsqueda asociado a la sesión activa.
+   *
+   * Restricciones:
+   * - No registra textos vacíos.
+   */
+  const recordSearch = (value) => {
+    const searchQuery = String(value ?? "").trim();
+
+    if (!searchQuery) return;
+
+    recordEvent(ANALYTICS_EVENTS.SEARCH, {
+      query: searchQuery,
+    });
+  };
+
   const debouncedRefine = useMemo(
     () => debounce((value) => refineRef.current(value), 300),
     [],
@@ -63,15 +91,21 @@ export default function SearchBar() {
 
   const recentSearchesPlugin = useMemo(() => {
     const plugin = createLocalStorageRecentSearchesPlugin({
-      key: "RECENT_SEARCH",
+      key: `RECENT_SEARCH_${getSessionId()}`,
       limit: 5,
       transformSource({ source }) {
         return {
           ...source,
-          onSelect({ item }) {
-            if (item.query) {
-              refineRef.current(item.query);
-            }
+          onSelect({ item, setQuery, setIsOpen }) {
+            const searchQuery = String(item.query ?? item.label ?? "").trim();
+
+            if (!searchQuery) return;
+
+            setQuery(searchQuery);
+            refineRef.current(searchQuery);
+            recordSearch(searchQuery);
+            setIsOpen(false);
+            navigate("/search");
           },
           templates: {
             ...source.templates,
@@ -88,7 +122,9 @@ export default function SearchBar() {
                       e.stopPropagation();
 
                       Object.keys(localStorage)
-                        .filter((k) => k.includes("RECENT_SEARCH"))
+                        .filter((k) =>
+                          k.includes(`RECENT_SEARCH_${getSessionId()}`),
+                        )
                         .forEach((k) => localStorage.removeItem(k));
 
                       searchInstanceRef.current?.refresh();
@@ -118,9 +154,13 @@ export default function SearchBar() {
       initialState: { query },
       detachedMediaQuery: "none",
       plugins: [recentSearchesPlugin],
+      onSubmit({ state, setIsOpen }) {
+        const searchQuery = state.query.trim();
 
-      onSubmit({ state }) {
-        refineRef.current(state.query);
+        refineRef.current(searchQuery);
+        recordSearch(searchQuery);
+        setIsOpen(false);
+        navigate("/search");
       },
       onReset() {
         refineRef.current("");
@@ -160,11 +200,15 @@ export default function SearchBar() {
             },
 
             onSelect({ item, setIsOpen }) {
+              recordSearch(query);
+
               if (item.title) {
                 navigate(`/producto/${item.objectID}`);
               } else {
                 refineRef.current(query);
+                navigate("/search");
               }
+
               setIsOpen(false);
             },
 
