@@ -6,7 +6,7 @@ import { Funnel, X } from "lucide-react";
 import ProductGrid from "../features/catalog/components/ProductGrid";
 import Pagination from "../features/catalog/components/Pagination";
 import Filters from "../features/catalog/components/Filters";
-
+import RecentlyViewed from "../features/analytics/components/RecentlyViewed";
 import "../styles/CatalogPage.css";
 
 /*
@@ -71,6 +71,7 @@ function CatalogPage() {
       <main className="panel-der">
         <ProductGrid />
         <Pagination />
+        <RecentlyViewed />
       </main>
 
       {!filtersOpen && (
