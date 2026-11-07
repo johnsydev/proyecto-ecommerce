@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useRef,
+} from "react";
+import { ANALYTICS_EVENTS, recordEvent } from "../utils/analyticsStorage.js";
 
-const CART_KEY = 'cart';
+const CART_KEY = "cart";
 
 /*
  * Contexto y lógica del carrito de compras.
@@ -19,29 +26,31 @@ const getInitialState = () => {
 const getProductId = (product) => product.id ?? product.objectID;
 
 /**
-     * Objetivo:
-     * Manejar las acciones relacionadas con el carrito de compras, actualizando el estado según la acción recibida.
-     * 
-     * Entrada:
-     *   - state: Array de productos actualmente en el carrito.
-     *   - action: Objeto que describe la acción a realizar (tipo y payload).
-     * 
-     * Salida:
-     *   - newState: Nuevo estado del carrito después de aplicar la acción.
-     * 
-     * Restricciones:
-     *   - La cantidad de un producto no puede exceder su stock disponible.
-     *   - La cantidad de un producto no puede ser negativa.
-     *
+ * Objetivo:
+ * Manejar las acciones relacionadas con el carrito de compras, actualizando el estado según la acción recibida.
+ *
+ * Entrada:
+ *   - state: Array de productos actualmente en el carrito.
+ *   - action: Objeto que describe la acción a realizar (tipo y payload).
+ *
+ * Salida:
+ *   - newState: Nuevo estado del carrito después de aplicar la acción.
+ *
+ * Restricciones:
+ *   - La cantidad de un producto no puede exceder su stock disponible.
+ *   - La cantidad de un producto no puede ser negativa.
+ *
  */
 function cartReducer(state, action) {
   let newState;
 
   switch (action.type) {
-    case 'ADD_TO_CART': {
+    case "ADD_TO_CART": {
       const { product, quantity } = action.payload;
       const productId = getProductId(product);
-      const existingIndex = state.findIndex((item) => getProductId(item) === productId);
+      const existingIndex = state.findIndex(
+        (item) => getProductId(item) === productId,
+      );
 
       if (existingIndex >= 0) {
         newState = state.map((item, index) => {
@@ -49,7 +58,9 @@ function cartReducer(state, action) {
             const newQty = item.order_quantity + quantity;
             return {
               ...item,
-              order_quantity: item.stock_quantity ? Math.min(newQty, item.stock_quantity) : newQty,
+              order_quantity: item.stock_quantity
+                ? Math.min(newQty, item.stock_quantity)
+                : newQty,
             };
           }
           return item;
@@ -60,22 +71,27 @@ function cartReducer(state, action) {
           {
             ...product,
             id: productId,
-            order_quantity: product.stock_quantity ? Math.min(quantity, product.stock_quantity) : quantity,
+            order_quantity: product.stock_quantity
+              ? Math.min(quantity, product.stock_quantity)
+              : quantity,
           },
         ];
       }
       break;
     }
 
-    case 'REMOVE_FROM_CART': {
+    case "REMOVE_FROM_CART": {
       newState = state.filter((item) => getProductId(item) !== action.payload);
       break;
     }
 
-    case 'ADD_UNIT': {
+    case "ADD_UNIT": {
       newState = state.map((item) => {
         if (getProductId(item) === action.payload) {
-          if (!item.stock_quantity || item.order_quantity < item.stock_quantity) {
+          if (
+            !item.stock_quantity ||
+            item.order_quantity < item.stock_quantity
+          ) {
             return { ...item, order_quantity: item.order_quantity + 1 };
           }
         }
@@ -84,7 +100,7 @@ function cartReducer(state, action) {
       break;
     }
 
-    case 'REMOVE_UNIT': {
+    case "REMOVE_UNIT": {
       newState = state
         .map((item) => {
           if (getProductId(item) === action.payload) {
@@ -96,14 +112,16 @@ function cartReducer(state, action) {
       break;
     }
 
-    case 'UPDATE_QUANTITY': {
+    case "UPDATE_QUANTITY": {
       const { productId, quantity } = action.payload;
       if (quantity <= 0) {
         newState = state.filter((item) => getProductId(item) !== productId);
       } else {
         newState = state.map((item) => {
           if (getProductId(item) === productId) {
-            const finalQty = item.stock_quantity ? Math.min(quantity, item.stock_quantity) : quantity;
+            const finalQty = item.stock_quantity
+              ? Math.min(quantity, item.stock_quantity)
+              : quantity;
             return { ...item, order_quantity: finalQty };
           }
           return item;
@@ -112,7 +130,7 @@ function cartReducer(state, action) {
       break;
     }
 
-    case 'CLEAR_CART': {
+    case "CLEAR_CART": {
       newState = [];
       break;
     }
@@ -130,15 +148,57 @@ const CartContext = createContext();
 // Provider del Contexto
 export function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, [], getInitialState);
-
+  const previousCart = useRef(cart);
   // Sincronizar cambios en localStorage
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }, [cart]);
 
+  /*
+   * Objetivo:
+   * Registrar las unidades que se agregan al carrito.
+   *
+   * Entrada:
+   * - Estado actual y anterior del carrito.
+   *
+   * Salida:
+   * - Un evento por cada producto cuya cantidad aumenta.
+   *
+   * Restricciones:
+   * - Solo registra incrementos efectivos de cantidad.
+   * - No registra productos recuperados al iniciar la aplicación.
+   * - No registra disminuciones ni eliminaciones.
+   */
+  useEffect(() => {
+    const previous = previousCart.current;
+    previousCart.current = cart;
+
+    cart.forEach((product) => {
+      const productId = getProductId(product);
+      const previousProduct = previous.find(
+        (item) => getProductId(item) === productId,
+      );
+
+      const previousQuantity = Number(previousProduct?.order_quantity ?? 0);
+      const currentQuantity = Number(product.order_quantity ?? 0);
+      const addedQuantity = currentQuantity - previousQuantity;
+
+      if (addedQuantity > 0) {
+        recordEvent(ANALYTICS_EVENTS.ADD_TO_CART, {
+          productId,
+          title: product.title,
+          quantity: addedQuantity,
+        });
+      }
+    });
+  }, [cart]);
+
   // Valores calculados requeridos
-  const totalItems = cart.reduce((total, item) => total + Number(item.order_quantity ?? 0), 0);
-  
+  const totalItems = cart.reduce(
+    (total, item) => total + Number(item.order_quantity ?? 0),
+    0,
+  );
+
   // Agregar propiedad subtotal a cada elemento
   const cartWithSubtotals = cart.map((item) => ({
     ...item,
@@ -146,12 +206,17 @@ export function CartProvider({ children }) {
   }));
 
   // Métodos expuestos para la aplicación
-  const addToCart = (product, quantity) => dispatch({ type: 'ADD_TO_CART', payload: { product, quantity } });
-  const removeFromCart = (productId) => dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
-  const addUnit = (productId) => dispatch({ type: 'ADD_UNIT', payload: productId });
-  const removeUnit = (productId) => dispatch({ type: 'REMOVE_UNIT', payload: productId });
-  const updateCartQuantity = (productId, quantity) => dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
-  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
+  const addToCart = (product, quantity) =>
+    dispatch({ type: "ADD_TO_CART", payload: { product, quantity } });
+  const removeFromCart = (productId) =>
+    dispatch({ type: "REMOVE_FROM_CART", payload: productId });
+  const addUnit = (productId) =>
+    dispatch({ type: "ADD_UNIT", payload: productId });
+  const removeUnit = (productId) =>
+    dispatch({ type: "REMOVE_UNIT", payload: productId });
+  const updateCartQuantity = (productId, quantity) =>
+    dispatch({ type: "UPDATE_QUANTITY", payload: { productId, quantity } });
+  const clearCart = () => dispatch({ type: "CLEAR_CART" });
 
   return (
     <CartContext.Provider
@@ -175,7 +240,7 @@ export function CartProvider({ children }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart debe utilizarse dentro de un CartProvider');
+    throw new Error("useCart debe utilizarse dentro de un CartProvider");
   }
   return context;
 }
