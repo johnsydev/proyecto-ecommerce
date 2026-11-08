@@ -10,7 +10,7 @@ const METRICS = [
   {
     key: "searches",
     label: "Búsquedas realizadas",
-    description: "Búsquedas confirmadas durante la sesión.",
+    description: "Búsquedas confirmadas en tu historial.",
     Icon: Search,
   },
   {

@@ -1,8 +1,10 @@
+import { getCurrentUser } from "./userStorage";
 const EVENTS_KEY = "analyticsEvents";
 const SESSION_KEY = "analyticsSessionId";
 
 export const ANALYTICS_EVENTS = {
   SESSION_START: "SESSION_START",
+  LOGIN: "LOGIN",
   SEARCH: "SEARCH",
   PRODUCT_VIEW: "PRODUCT_VIEW",
   ADD_TO_CART: "ADD_TO_CART",
@@ -76,29 +78,59 @@ export function getSessionId() {
 
 /*
  * Objetivo:
- * Obtener los eventos registrados durante la sesión activa.
+ * Identificar al propietario del historial activo.
+ *
+ * Entrada:
+ * - Usuario activo o sesión anónima.
+ *
+ * Salida:
+ * - Clave que permite separar los historiales.
+ */
+export function getAnalyticsOwnerKey() {
+  const user = getCurrentUser();
+
+  return user ? `user_${user.id}` : `session_${getSessionId()}`;
+}
+
+/*
+ * Objetivo:
+ * Obtener los eventos del usuario activo o de la sesión anónima.
  *
  * Entrada:
  * - Ninguna.
  *
  * Salida:
- * - Array de eventos de la sesión.
+ * - Array de eventos pertenecientes al propietario activo.
+ *
+ * Restricciones:
+ * - Los usuarios recuperan su actividad de distintas sesiones.
+ * - Los visitantes anónimos solo consultan su sesión actual.
+ * - La actividad anónima no se transfiere automáticamente a una cuenta.
  */
 export function getEvents() {
-  const events = read(EVENTS_KEY, []);
+  const stored = read(EVENTS_KEY, []);
+  const user = getCurrentUser();
   const sessionId = getSessionId();
 
-  if (!Array.isArray(events)) {
+  if (!Array.isArray(stored)) {
     return [];
   }
 
-  return events.filter(
-    (event) =>
-      event &&
-      event.sessionId === sessionId &&
-      typeof event.type === "string" &&
-      typeof event.createdAt === "string",
-  );
+  return stored.filter((event) => {
+    if (
+      !event ||
+      typeof event.type !== "string" ||
+      typeof event.createdAt !== "string"
+    ) {
+      return false;
+    }
+
+    if (user) {
+      return event.userId === user.id;
+    }
+
+    return event.userId == null && event.sessionId === sessionId;
+  });
 }
 
 /*
@@ -123,18 +155,31 @@ export function recordEvent(type, data = {}, uniqueKey = null) {
   }
 
   const sessionId = getSessionId();
+  const userId = getCurrentUser()?.id ?? null;
+
   const stored = read(EVENTS_KEY, []);
   const events = Array.isArray(stored)
     ? stored.filter((event) => event && typeof event === "object")
     : [];
 
   if (uniqueKey !== null) {
-    const existing = events.find(
-      (event) =>
-        event.sessionId === sessionId &&
+    const existing = events.find((event) => {
+      const sameOwner =
+        userId !== null
+          ? event.userId === userId
+          : event.userId == null && event.sessionId === sessionId;
+
+      const sameScope =
+        type === ANALYTICS_EVENTS.PURCHASE_COMPLETED ||
+        event.sessionId === sessionId;
+
+      return (
+        sameOwner &&
+        sameScope &&
         event.type === type &&
-        event.uniqueKey === uniqueKey,
-    );
+        event.uniqueKey === uniqueKey
+      );
+    });
 
     if (existing) {
       return existing;
@@ -144,6 +189,7 @@ export function recordEvent(type, data = {}, uniqueKey = null) {
   const event = {
     id: crypto.randomUUID(),
     sessionId,
+    userId,
     type,
     createdAt: new Date().toISOString(),
     data,
@@ -161,7 +207,7 @@ export function recordEvent(type, data = {}, uniqueKey = null) {
 
 /*
  * Objetivo:
- * Registrar el inicio de la sesión anónima una única vez.
+ * Registrar el inicio de la sesión de navegación una única vez.
  *
  * Entrada:
  * - Ninguna.
@@ -175,7 +221,9 @@ export function recordEvent(type, data = {}, uniqueKey = null) {
 export function startSession() {
   return recordEvent(
     ANALYTICS_EVENTS.SESSION_START,
-    { mode: "anonymous" },
+    {
+      mode: getCurrentUser() ? "identified" : "anonymous",
+    },
     "session-start",
   );
 }

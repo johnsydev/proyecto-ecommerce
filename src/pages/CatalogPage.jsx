@@ -40,7 +40,7 @@ import "../styles/CatalogPage.css";
 
 function CatalogPage() {
   const location = useLocation();
-  const category = location.state?.category;
+  const initialQuery = location.state?.searchQuery ?? location.state?.category ?? "";
 
   const { refine } = useSearchBox();
 
@@ -48,8 +48,8 @@ function CatalogPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    refine(category ?? "");
-  }, [category, refine]);
+    refine(initialQuery);
+  }, [initialQuery, refine]);
 
   useEffect(() => {
     if (filtersOpen) {

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { getAnalyticsSummary } from "../../../utils/analyticsStorage";
 import AnalyticsSummary from "./AnalyticsSummary";
+import { useUser } from "../../../context/useUser";
 import "../styles/Analytics.css";
 
 /*
@@ -21,6 +22,7 @@ import "../styles/Analytics.css";
  */
 export default function Analytics() {
   const [summary, setSummary] = useState(getAnalyticsSummary);
+  const { user } = useUser();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,9 +46,15 @@ export default function Analytics() {
       </Link>
 
       <header className="analytics-header">
-        <span className="analytics-session-label">Sesión actual</span>
+        <span className="analytics-session-label">
+          {user ? `Usuario: ${user.username}` : "Sesión anónima"}
+        </span>
         <h1>Analytics</h1>
-        <p>Consulta el resumen de tu actividad en la tienda.</p>
+        <p>
+          {user
+            ? "Consultá tu actividad acumulada en este navegador."
+            : "Consultá la actividad de tu sesión actual."}
+        </p>
       </header>
 
       <AnalyticsSummary summary={summary} />

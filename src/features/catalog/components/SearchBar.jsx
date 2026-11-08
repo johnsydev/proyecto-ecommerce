@@ -1,14 +1,13 @@
-import { useEffect, useMemo, useRef, createElement, Fragment } from "react";
+import { useEffect, useState, useRef, createElement, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { autocomplete } from "@algolia/autocomplete-js";
 import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
-import { debounce } from "@algolia/autocomplete-shared";
 import { createLocalStorageRecentSearchesPlugin } from "@algolia/autocomplete-plugin-recent-searches";
 import { useSearchBox } from "react-instantsearch";
 import {
   ANALYTICS_EVENTS,
-  getSessionId,
+  getAnalyticsOwnerKey,
   recordEvent,
 } from "../../../utils/analyticsStorage";
 import searchClient from "../services/algolia";
@@ -47,6 +46,29 @@ import "../styles/SearchBar.css";
  * - Solo se muestran cinco productos como máximo en el autocompletado.
  */
 
+/*
+ * Objetivo:
+ * Registrar una búsqueda confirmada por el usuario.
+ *
+ * Entrada:
+ * - value: Texto de la búsqueda.
+ *
+ * Salida:
+ * - Evento asociado al usuario activo o a la sesión anónima.
+ *
+ * Restricciones:
+ * - No registra textos vacíos.
+ */
+function recordSearch(value) {
+  const searchQuery = String(value ?? "").trim();
+
+  if (!searchQuery) return;
+
+  recordEvent(ANALYTICS_EVENTS.SEARCH, {
+    query: searchQuery,
+  });
+}
+
 export default function SearchBar() {
   const containerRef = useRef(null);
   const panelRootRef = useRef(null);
@@ -61,42 +83,25 @@ export default function SearchBar() {
     refineRef.current = refine;
   }, [refine]);
 
-  /*
-   * Objetivo:
-   * Registrar una búsqueda confirmada por el usuario.
-   *
-   * Entrada:
-   * - value: Texto de la búsqueda.
-   *
-   * Salida:
-   * - Evento de búsqueda asociado a la sesión activa.
-   *
-   * Restricciones:
-   * - No registra textos vacíos.
-   */
-  const recordSearch = (value) => {
-    const searchQuery = String(value ?? "").trim();
+  const [initialQuery] = useState(query);
 
-    if (!searchQuery) return;
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-    recordEvent(ANALYTICS_EVENTS.SEARCH, {
-      query: searchQuery,
-    });
-  };
+    let refineTimeout;
+    const debouncedRefine = (value) => {
+      clearTimeout(refineTimeout);
+      refineTimeout = setTimeout(() => refineRef.current(value), 300);
+    };
 
-  const debouncedRefine = useMemo(
-    () => debounce((value) => refineRef.current(value), 300),
-    [],
-  );
-
-  const recentSearchesPlugin = useMemo(() => {
-    const plugin = createLocalStorageRecentSearchesPlugin({
-      key: `RECENT_SEARCH_${getSessionId()}`,
+    const recentSearchesPlugin = createLocalStorageRecentSearchesPlugin({
+      key: `RECENT_SEARCH_${getAnalyticsOwnerKey()}`,
       limit: 5,
       transformSource({ source }) {
         return {
           ...source,
           onSelect({ item, setQuery, setIsOpen }) {
+            clearTimeout(refineTimeout);
             const searchQuery = String(item.query ?? item.label ?? "").trim();
 
             if (!searchQuery) return;
@@ -105,7 +110,7 @@ export default function SearchBar() {
             refineRef.current(searchQuery);
             recordSearch(searchQuery);
             setIsOpen(false);
-            navigate("/search");
+            navigate("/search", { state: { searchQuery } });
           },
           templates: {
             ...source.templates,
@@ -123,7 +128,7 @@ export default function SearchBar() {
 
                       Object.keys(localStorage)
                         .filter((k) =>
-                          k.includes(`RECENT_SEARCH_${getSessionId()}`),
+                          k.includes(`RECENT_SEARCH_${getAnalyticsOwnerKey()}`),
                         )
                         .forEach((k) => localStorage.removeItem(k));
 
@@ -140,29 +145,26 @@ export default function SearchBar() {
         };
       },
     });
-    return plugin;
-  }, []);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
 
     const search = autocomplete({
       container: containerRef.current,
       panelContainer: containerRef.current, // se coloca en div
       placeholder: "Buscar productos...",
       openOnFocus: true,
-      initialState: { query },
+      initialState: { query: initialQuery },
       detachedMediaQuery: "none",
       plugins: [recentSearchesPlugin],
       onSubmit({ state, setIsOpen }) {
+        clearTimeout(refineTimeout);
         const searchQuery = state.query.trim();
 
         refineRef.current(searchQuery);
         recordSearch(searchQuery);
         setIsOpen(false);
-        navigate("/search");
+        navigate("/search", { state: { searchQuery } });
       },
       onReset() {
+        clearTimeout(refineTimeout);
         refineRef.current("");
       },
       onStateChange({ prevState, state }) {
@@ -200,13 +202,14 @@ export default function SearchBar() {
             },
 
             onSelect({ item, setIsOpen }) {
+              clearTimeout(refineTimeout);
               recordSearch(query);
 
               if (item.title) {
                 navigate(`/producto/${item.objectID}`);
               } else {
                 refineRef.current(query);
-                navigate("/search");
+                navigate("/search", { state: { searchQuery: query } });
               }
 
               setIsOpen(false);
@@ -275,12 +278,17 @@ export default function SearchBar() {
     searchInstanceRef.current = search; //guarda instancia para poder refrescar al borrar
 
     return () => {
+      clearTimeout(refineTimeout);
       search.destroy();
       searchInstanceRef.current = null;
       panelRootRef.current?.unmount();
       panelRootRef.current = null;
     };
-  }, []);
+  }, [initialQuery, navigate]);
+
+  useEffect(() => {
+    searchInstanceRef.current?.setQuery(query);
+  }, [query]);
 
   return <div className="ctg-search-bar" ref={containerRef} />;
 }
