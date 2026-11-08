@@ -9,8 +9,7 @@ import PurchaseSummary from "./PurchaseSummary";
 import { generateOrder } from "../../../utils/orderUtils";
 import { createOrReuseOrder } from "../../../utils/orderStorage";
 import ubicacionesCR from "../../../data/ubicacionesCR.json";
-
-
+import { ANALYTICS_EVENTS, recordEvent } from "../../../utils/analyticsStorage";
 
 /*
    * Objetivo:
@@ -39,6 +38,7 @@ export default function Checkout() {
 
     const checkoutFormRef = useRef(null);
     const errorTimeout = useRef(null);
+    const checkoutVisitId = useRef(null);
 
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [termsError, setTermsError] = useState(false);
@@ -107,6 +107,44 @@ export default function Checkout() {
             navigate("/cart");
         }
     }, [cart, navigate]);
+
+    /*
+     * Objetivo:
+     * Registrar el inicio del checkout con un carrito válido.
+     *
+     * Entrada:
+     * - Productos y cantidades del carrito.
+     *
+     * Salida:
+     * - Evento de inicio del checkout.
+     *
+     * Restricciones:
+     * - No registra carritos vacíos.
+     * - Registra una única vez por entrada al componente.
+     */
+    useEffect(() => {
+        if (cart.length === 0) return;
+
+        if (!checkoutVisitId.current) {
+            checkoutVisitId.current = crypto.randomUUID();
+        }
+
+        recordEvent(
+            ANALYTICS_EVENTS.CHECKOUT_START,
+            {
+                products: cart.map((product) => ({
+                    productId: product.id ?? product.objectID,
+                    quantity: Number(product.order_quantity),
+                })),
+                totalItems: cart.reduce(
+                    (total, product) =>
+                        total + Number(product.order_quantity ?? 0),
+                    0,
+                ),
+            },
+            checkoutVisitId.current,
+        );
+    }, [cart]);
 
     useEffect(() => {
         window.scrollTo(0, 0);

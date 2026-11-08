@@ -6,7 +6,8 @@ import { Funnel, X } from "lucide-react";
 import ProductGrid from "../features/catalog/components/ProductGrid";
 import Pagination from "../features/catalog/components/Pagination";
 import Filters from "../features/catalog/components/Filters";
-
+import RecentlyViewed from "../features/analytics/components/RecentlyViewed";
+import RecentSearches from "../features/analytics/components/RecentSearches";
 import "../styles/CatalogPage.css";
 
 /*
@@ -39,7 +40,7 @@ import "../styles/CatalogPage.css";
 
 function CatalogPage() {
   const location = useLocation();
-  const category = location.state?.category;
+  const initialQuery = location.state?.searchQuery ?? location.state?.category ?? "";
 
   const { refine } = useSearchBox();
 
@@ -47,8 +48,8 @@ function CatalogPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    refine(category ?? "");
-  }, [category, refine]);
+    refine(initialQuery);
+  }, [initialQuery, refine]);
 
   useEffect(() => {
     if (filtersOpen) {
@@ -69,8 +70,10 @@ function CatalogPage() {
       </aside>
 
       <main className="panel-der">
+        <RecentSearches />
         <ProductGrid />
         <Pagination />
+        <RecentlyViewed />
       </main>
 
       {!filtersOpen && (

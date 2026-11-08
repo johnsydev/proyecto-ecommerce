@@ -136,6 +136,8 @@
   padding: 25px 20px;
   border-top: 1px solid #1e293b;
   display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   justify-content: space-between;
   align-items: center;
 }
@@ -147,6 +149,8 @@
 
 .footer-legal {
   display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   gap: 24px;
 }
 

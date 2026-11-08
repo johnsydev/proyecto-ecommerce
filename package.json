@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "seed-algolia": "node scripts/seed-algolia.mjs",
+    "seed-users-algolia": "node scripts/seed-users-algolia.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

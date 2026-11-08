@@ -1,6 +1,5 @@
 import "../styles/Footer.css";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import robotLogo from "../assets/ElectroLogo.png";
 
 /*
@@ -143,6 +142,7 @@ export default function Footer() {
           >
             Preguntas Frecuentes
           </a>
+          <Link to="/analytics">Analytics</Link>
         </div>
       </div>
     </footer>

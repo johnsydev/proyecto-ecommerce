@@ -1,0 +1,17 @@
+[
+  {
+    "objectID": "user-01",
+    "username": "erin",
+    "password": "PruebaErin123!"
+  },
+  {
+    "objectID": "user-02",
+    "username": "johnsy",
+    "password": "PruebaJohnsy123!"
+  },
+  {
+    "objectID": "user-03",
+    "username": "david",
+    "password": "PruebaDavid123!"
+  }
+]
