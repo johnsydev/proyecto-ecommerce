@@ -10,7 +10,7 @@ Electro-Commerce CR es una aplicación web de comercio electrónico desarrollada
 El proyecto permite buscar productos electrónicos, aplicar filtros, consultar información detallada y revisar la disponibilidad de los productos en diferentes sucursales.
 
 > [!IMPORTANT]
-> Para ver las notas de la versión reciente, **[ir aquí](#políticas-comerciales)**.
+> Para ver las notas de la versión reciente, **[ir aquí](#inicio-de-sesión-y-personalización)**.
 
 ## Funcionalidades
 
@@ -28,6 +28,12 @@ El proyecto permite buscar productos electrónicos, aplicar filtros, consultar i
 * Ordenes
 * Procesamiento de pago Sandbox
 * Consulta y navegación de políticas comerciales.
+* Inicio de sesión con usuarios existentes en Algolia.
+* Cierre de sesión.
+* Personalización del catálogo según la actividad del usuario.
+* Visualización de productos vistos recientemente.
+* Registro de eventos de interacción para Analytics.
+* Consulta de métricas de actividad del usuario.
 
 ## Tecnologías utilizadas
 
@@ -215,9 +221,43 @@ Las políticas comerciales son: Términos y Condiciones, Política de Devolucion
 
 En dispositivos móviles, el panel lateral se abre mediante un botón flotante para facilitar la navegación.
 
+## Inicio de sesión y personalización
+
+Este módulo incorpora el acceso de usuarios mediante cuentas existentes en Algolia, permitiendo iniciar y cerrar sesión dentro de la aplicación.
+
+La información y actividad de cada usuario se administra de forma independiente, evitando que los datos de una cuenta se mezclen con los de otra.
+
+Entre sus funcionalidades se incluyen:
+
+* **Inicio de sesión:** permite acceder utilizando usuarios existentes en Algolia.
+* **Cierre de sesión:** permite finalizar la sesión del usuario actual.
+* **Productos vistos recientemente:** el catálogo muestra los productos que el usuario ha consultado anteriormente.
+* **Búsquedas recientes:** se presenta el historial de búsquedas realizadas por el usuario para facilitar la navegación y personalizar su experiencia.
+
+## Analytics
+
+Este módulo incorpora una simulación de Analytics que registra las interacciones reales de los usuarios con la aplicación, permitiendo recopilar información sobre su actividad durante el proceso de navegación y compra.
+
+Los eventos registrados incluyen:
+
+* Búsquedas de productos.
+* Visualizaciones de productos.
+* Adiciones de productos al carrito.
+* Compras completadas.
+
+Además, se incorpora una página de Analytics que presenta cuatro métricas de actividad, permitiendo consultar y visualizar información relacionada con las interacciones de los usuarios en el comercio electrónico.
+
+La información recopilada permite representar el comportamiento de los usuarios y ofrecer una experiencia de compra personalizada a partir de sus interacciones con la aplicación.
+
 ## Estado del proyecto
 
-**Versión 1.3 (Actual)**
+**Versión 1.4 (Actual)**
+
+Esta versión incorpora la simulación de Analytics y la personalización del comercio electrónico a partir de las interacciones de los usuarios. Se implementa el registro de eventos relacionados con las búsquedas, visualizaciones de productos, adiciones al carrito y compras completadas.
+
+Además, se incorpora el acceso mediante usuarios existentes en Algolia, el cierre de sesión y la separación de historiales, métricas y otros datos por usuario. El catálogo muestra productos vistos y búsquedas recientes, mientras que una nueva página de Analytics permite consultar cuatro métricas de actividad.
+
+**Versión 1.3**
 
 Esta versión incorpora la sección de políticas comerciales, permitiendo consultar la información correspondiente desde una interfaz dedicada y navegar entre las diferentes políticas disponibles fácilmente.
 
