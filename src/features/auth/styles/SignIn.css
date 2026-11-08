@@ -9,7 +9,7 @@
 
 .signin-layout {
   display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   overflow: hidden;
   border: 1px solid #e1e7f0;
   border-radius: 24px;
@@ -22,6 +22,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  min-width: 0;
   padding: 36px;
   border-right: 1px solid #e1e7f0;
   background: #f4f7fc;
@@ -29,6 +30,8 @@
 }
 
 .signin-brand {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: #345499;
   font-size: 0.9rem;
   font-weight: 700;
@@ -38,6 +41,8 @@
 .signin-mascot {
   align-self: center;
   width: 170px;
+  max-width: 100%;
+  flex-shrink: 0;
   height: 170px;
   margin: 36px 0 28px;
   object-fit: contain;
@@ -140,6 +145,8 @@
 }
 
 .signin-label {
+  display: block;
+  overflow-wrap: anywhere;
   color: #64748b;
   font-size: 0.6rem;
   font-weight: 600;
@@ -147,6 +154,8 @@
 }
 
 .signin-card h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
   margin: 0;
   color: #1e293b;
   font-size: clamp(1.65rem, 3vw, 2rem);
@@ -191,7 +200,9 @@
 }
 
 .signin-field input {
+  color-scheme: light;
   width: 100%;
+  min-width: 0;
   min-height: 50px;
   padding: 12px 46px 12px 42px;
   border: 1px solid #dce3ed;
@@ -215,6 +226,19 @@
   box-shadow: 0 0 0 3px rgba(52, 84, 153, 0.12);
 }
 
+/* Mantener el estilo del formulario al autocompletar credenciales. */
+.signin-field input:is(:autofill, :-webkit-autofill) {
+  -webkit-text-fill-color: #1e293b;
+  caret-color: #1e293b;
+  box-shadow: 0 0 0 1000px #f9fbfe inset;
+}
+
+.signin-field input:is(:autofill, :-webkit-autofill):focus {
+  box-shadow:
+    0 0 0 1000px #ffffff inset,
+    0 0 0 3px rgba(52, 84, 153, 0.12);
+}
+
 .signin-field input[aria-invalid="true"] {
   border-color: #c24138;
 }
@@ -227,8 +251,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
   border-radius: 7px;
@@ -249,6 +273,8 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
   min-height: 50px;
   padding: 12px 16px;
   border: 1px solid #345499;
@@ -327,6 +353,7 @@
 }
 
 .signin-error {
+  overflow-wrap: anywhere;
   margin: 0;
   padding: 12px 14px;
   border: 1px solid #fecaca;
@@ -378,14 +405,7 @@
 }
 
 @media (max-width: 900px) {
-  .signin-page { padding: 32px 16px 48px; }
-  .signin-welcome { padding: 28px; }
-  .signin-card { padding: 28px; }
-  .signin-mascot { width: 140px; height: 140px; }
-}
-
-@media (max-width: 700px) {
-  .signin-page { max-width: 540px; padding: 24px 10px 36px; }
+  .signin-page { max-width: 600px; padding: 32px 16px 48px; }
   .signin-layout { grid-template-columns: minmax(0, 1fr); border-radius: 18px; }
   .signin-welcome {
     flex-direction: row;
@@ -400,8 +420,13 @@
   .signin-mascot { width: 62px; height: 62px; margin: 0; }
   .signin-welcome-content { display: none; }
   .signin-card { padding: 24px; }
-  .signin-back { margin-bottom: 8px; }
+  .signin-back { min-height: 44px; margin-bottom: 8px; }
   .signin-heading { margin-top: 24px; }
+  .signin-field input { font-size: 16px; }
+}
+
+@media (max-width: 700px) {
+  .signin-page { max-width: 540px; padding: 24px 10px 36px; }
 }
 
 @media (max-width: 380px) {

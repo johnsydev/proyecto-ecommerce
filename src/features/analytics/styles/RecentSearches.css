@@ -29,7 +29,8 @@
   align-items: center;
   gap: 8px;
   max-width: 100%;
-  min-height: 40px;
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 8px 14px;
 
   border: 1px solid #dbe3ef;
@@ -52,6 +53,7 @@
 }
 
 .recent-searches-button span {
+  min-width: 0;
   overflow-wrap: anywhere;
   text-align: left;
 }

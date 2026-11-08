@@ -50,4 +50,11 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
+
+  .recently-viewed .product-button,
+  .recently-viewed .pc-without-stock {
+    height: auto;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }

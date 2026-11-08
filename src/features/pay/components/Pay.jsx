@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowUp, ArrowLeft, ShieldCheck, XOctagon, Info } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
@@ -17,6 +17,7 @@ import {
 } from "../../../utils/orderStorage";
 import "../styles/Pay.css";
 import { ANALYTICS_EVENTS, recordEvent } from "../../../utils/analyticsStorage";
+import { getPurchaseOwnerKey } from "../../../utils/purchaseStorage";
 
 /*
    * Objetivo:
@@ -69,6 +70,15 @@ export default function Pay() {
     const [orderInfo, setOrderInfo] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [interruptedNotice, setInterruptedNotice] = useState(false);
+    const [paymentOwner] = useState(getPurchaseOwnerKey);
+    const paymentActive = useRef(false);
+
+    useEffect(() => {
+        paymentActive.current = true;
+        return () => {
+            paymentActive.current = false;
+        };
+    }, []);
 
     useEffect(() => {
         expireStaleOrders();
@@ -107,6 +117,7 @@ export default function Pay() {
     };
 
     const handleProcessingChange = (processing) => {
+        if (!paymentActive.current || getPurchaseOwnerKey() !== paymentOwner) return;
         setIsProcessing(processing);
         if (processing && orderInfo) {
             markPaymentStarted(orderInfo.orderNumber);
@@ -114,6 +125,8 @@ export default function Pay() {
     };
 
     const handlePaymentResult = (response) => {
+        // Ignorar respuestas tardías si se abandonó el pago o cambió la cuenta.
+        if (!paymentActive.current || getPurchaseOwnerKey() !== paymentOwner) return;
         const updated = recordPaymentAttempt(orderInfo.orderNumber, {
             ...response,
             currencySymbol: CURRENCY,

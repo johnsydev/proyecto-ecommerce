@@ -6,19 +6,20 @@ import React, {
   useRef,
 } from "react";
 import { ANALYTICS_EVENTS, recordEvent } from "../utils/analyticsStorage.js";
-
-const CART_KEY = "cart";
+import { useUser } from "./useUser";
+import {
+  getPurchaseOwnerKey,
+  readCart,
+  writeCart,
+} from "../utils/purchaseStorage";
 
 /*
  * Contexto y lógica del carrito de compras.
  * Proporciona un estado global para manejar los productos en el carrito,
  * incluyendo la adición, eliminación, actualización de cantidades y limpieza del carrito.
+ * Conserva un carrito independiente por usuario y otro para el visitante.
  * Sincroniza el estado con localStorage para persistencia entre sesiones.
  */
-const getInitialState = () => {
-  const localData = localStorage.getItem(CART_KEY);
-  return localData ? JSON.parse(localData) : [];
-};
 
 /**
  * Obtiene el ID de un producto, utilizando `id` o `objectID` como fallback.
@@ -147,12 +148,24 @@ const CartContext = createContext();
 
 // Provider del Contexto
 export function CartProvider({ children }) {
-  const [cart, dispatch] = useReducer(cartReducer, [], getInitialState);
+  const { user } = useUser();
+  const ownerKey = getPurchaseOwnerKey(user?.id ?? null);
+
+  return (
+    <UserCartProvider key={ownerKey} ownerKey={ownerKey}>
+      {children}
+    </UserCartProvider>
+  );
+}
+
+// Reiniciar el estado al cambiar de cuenta evita mezclar carritos y métricas.
+function UserCartProvider({ children, ownerKey }) {
+  const [cart, dispatch] = useReducer(cartReducer, ownerKey, readCart);
   const previousCart = useRef(cart);
   // Sincronizar cambios en localStorage
   useEffect(() => {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  }, [cart]);
+    writeCart(cart, ownerKey);
+  }, [cart, ownerKey]);
 
   /*
    * Objetivo:
@@ -173,6 +186,8 @@ export function CartProvider({ children }) {
     const previous = previousCart.current;
     previousCart.current = cart;
 
+    if (getPurchaseOwnerKey() !== ownerKey) return;
+
     cart.forEach((product) => {
       const productId = getProductId(product);
       const previousProduct = previous.find(
@@ -191,7 +206,7 @@ export function CartProvider({ children }) {
         });
       }
     });
-  }, [cart]);
+  }, [cart, ownerKey]);
 
   // Valores calculados requeridos
   const totalItems = cart.reduce(
