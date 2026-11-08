@@ -1,4 +1,6 @@
 import { ORDER_STATUS, PAYMENT_STATUS } from "./constants";
+import { getCurrentUser } from "./userStorage";
+import { getPurchaseStorageKey } from "./purchaseStorage";
 
 /*
    * Objetivo:
@@ -38,7 +40,7 @@ const LAST_CONFIRMED_KEY = "lastConfirmedOrderNumber";
 
 function read(key, fallback) {
     try {
-        const raw = localStorage.getItem(key);
+        const raw = localStorage.getItem(getPurchaseStorageKey(key));
         return raw ? JSON.parse(raw) : fallback;
     } catch {
         return fallback;
@@ -57,7 +59,7 @@ function read(key, fallback) {
    */
 function write(key, value) {
     try {
-        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(getPurchaseStorageKey(key), JSON.stringify(value));
     } catch {
         return;
     }
@@ -88,7 +90,10 @@ function nowISO() {
    */
 export function getOrders() {
     const list = read(ORDERS_KEY, []);
-    return Array.isArray(list) ? list : [];
+    const userId = getCurrentUser()?.id ?? null;
+    return Array.isArray(list)
+        ? list.filter((order) => order && (order.userId ?? null) === userId)
+        : [];
 }
 
 /*
@@ -146,7 +151,7 @@ export function getLastConfirmedOrder() {
    *   - Ninguna salida; la orden actual se elimina del almacenamiento local.
    */
 export function clearCurrentOrder() {
-    localStorage.removeItem(CURRENT_KEY);
+    localStorage.removeItem(getPurchaseStorageKey(CURRENT_KEY));
 }
 
 /*
@@ -163,7 +168,11 @@ export function clearCurrentOrder() {
 function saveOrder(order) {
     const list = getOrders();
     const index = list.findIndex((item) => item.orderNumber === order.orderNumber);
-    const saved = { ...order, updatedAt: nowISO() };
+    const saved = {
+        ...order,
+        userId: getCurrentUser()?.id ?? null,
+        updatedAt: nowISO(),
+    };
 
     if (index >= 0) {
         list[index] = saved;

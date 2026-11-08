@@ -4,7 +4,8 @@ import robotLogo from "../assets/ElectroLogo.png";
 import CartPreview from "../features/cart/components/CartPreview";
 import { useCart } from "../context/CartContext";
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useUser } from "../context/useUser";
 
 /*
  * Objetivo:
@@ -22,19 +23,18 @@ import { useLocation } from "react-router-dom";
  * - Permite acceder a la página de búsqueda mediante el logo y el nombre
  *   de la tienda.
  * - Muestra la barra de búsqueda de productos.
- * - Presenta accesos visuales para inicio de sesión, registro y carrito.
+ * - Permite acceder a la cuenta del usuario y al carrito.
  *
  * Restricciones:
  * - El componente SearchBar debe existir y estar correctamente importado.
  * - El archivo ElectroLogo.png debe encontrarse en la ruta indicada.
  * - El archivo Header.css debe existir para aplicar los estilos del componente.
- * - Los enlaces de acceso y registro no están conectados a rutas funcionales, ya que
- *   no se definieron en el alcance del proyecto.
  * - El contador del carrito refleja la cantidad total de unidades agregadas.
  */
 
 export default function Header() {
   const { cart, totalItems } = useCart();
+  const { user } = useUser();
   const [previewProduct, setPreviewProduct] = useState(null);
   const [showCartPreview, setShowCartPreview] = useState(false);
   
@@ -123,22 +123,39 @@ export default function Header() {
         </div>
 
         <div className="header-actions">
-          <div className="header-account">
+          <Link
+            to="/signin"
+            className="header-account"
+            aria-label={
+              user
+                ? `Ver cuenta de ${user.username}`
+                : "Iniciar sesión"
+            }
+          >
             <div className="account-icon-wrapper">
-              <svg className="account-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
+              <svg
+                className="account-svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
               </svg>
             </div>
+
             <div className="account-text">
-              <span className="account-label">Cuenta</span>
-              <div className="account-links">
-                <a href="#signin">Acceso</a>
-                <span className="separator">/</span>
-                <a href="#signup">Registro</a>
-              </div>
+              <span className="account-label">
+                {user ? "Mi cuenta" : "Cuenta"}
+              </span>
+
+              <span className="account-username">
+                {user ? user.username : "Iniciar sesión"}
+              </span>
             </div>
-          </div>
+          </Link>
 
           <div className="header-cart-wrapper">
             <a

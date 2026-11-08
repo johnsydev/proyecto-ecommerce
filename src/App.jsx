@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes, Link, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Pay from "./features/pay/components/Pay";
 import OrderConfirmation from "./features/order-confirmation/components/OrderConfirmation";
 import { InstantSearch } from "react-instantsearch";
@@ -11,6 +11,9 @@ import PoliciesPage from "./pages/PoliciesPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import searchClient from "./features/catalog/services/algolia";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import { useUser } from "./context/useUser";
+import SignInPage from "./pages/SignIn";
 import "./App.css";
 
 /*
@@ -42,13 +45,14 @@ import "./App.css";
  */
 
 function App() {
+  const { user } = useUser();
   const location = useLocation();
   const category = location.state?.category;
   const query = category ? category : "";
 
   return (
     <InstantSearch
-      key={query}
+      key={JSON.stringify([user?.id ?? null, query])}
       searchClient={searchClient}
       indexName={import.meta.env.VITE_ALGOLIA_INDEX_NAME}
       initialUiState={{
@@ -68,6 +72,8 @@ function App() {
           <Route path="/pay" element={<Pay />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/policies/*" element={<PoliciesPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/signin" element={<SignInPage />} />
         </Routes>
       </main>
       <Footer />

@@ -2,8 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
 import { CartProvider } from "./context/CartContext.jsx";
+import { startSession } from "./utils/analyticsStorage.js";
+import { UserProvider } from "./context/UserContext.jsx";
 import App from "./App.jsx";
 import "./index.css";
+
+// Registrar una única vez el inicio de la sesión de navegación.
+startSession();
 
 /*
  * Objetivo:
@@ -32,9 +37,11 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HashRouter>
-      <CartProvider>
-        <App />
-      </CartProvider>
+      <UserProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </UserProvider>
     </HashRouter>
   </React.StrictMode>,
 );
