@@ -35,7 +35,9 @@ export default function RecentlyViewed() {
         <p>Vuelve a consultar los productos que te interesaron.</p>
       </div>
 
-      <div className="recently-viewed-grid">
+      <div
+        className={`recently-viewed-grid${products.length < 4 ? " recently-viewed-grid--centered" : ""}`}
+      >
         {products.map((product) => (
           <ProductCard key={product.id ?? product.objectID} hit={product} />
         ))}
