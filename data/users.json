@@ -2,16 +2,35 @@
   {
     "objectID": "user-01",
     "username": "erin",
-    "password": "PruebaErin123!"
+    "password": "PruebaErin123!",
+    "name": "Erin Camacho González",
+    "email": "erin.camacho@example.com",
+    "role": "B2C"
   },
   {
     "objectID": "user-02",
     "username": "johnsy",
-    "password": "PruebaJohnsy123!"
+    "password": "PruebaJohnsy123!",
+    "name": "Johnsy López Aguilar",
+    "email": "compras@electrosoluciones.example.com",
+    "role": "B2B",
+    "company": "Electro Soluciones del Pacífico S.A.",
+    "taxId": "3-101-845231"
   },
   {
     "objectID": "user-03",
     "username": "david",
-    "password": "PruebaDavid123!"
+    "password": "PruebaDavid123!",
+    "name": "David Calvo García",
+    "email": "admin@electrocommerce.example.com",
+    "role": "ADMIN"
+  },
+  {
+    "objectID": "user-04",
+    "username": "invitado",
+    "password": "PruebaInvitado123!",
+    "name": "Usuario sin rol válido",
+    "email": "invitado@example.com",
+    "role": "GUEST"
   }
 ]
