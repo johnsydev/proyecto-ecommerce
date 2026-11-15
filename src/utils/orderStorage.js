@@ -222,6 +222,7 @@ export function createOrReuseOrder(newOrder, reuse = false) {
         if (reuse) {
             return saveOrder({
                 ...newOrder,
+                objectID: existing.orderNumber,
                 orderNumber: existing.orderNumber,
                 createdAt: existing.createdAt,
                 paymentStatus: existing.paymentStatus,

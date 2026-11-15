@@ -104,6 +104,18 @@ export default function OrderConfirmation() {
                             <dt>Fecha</dt>
                             <dd>{formatDateTime(order.date)}</dd>
                         </div>
+                        {order.branch?.name && (
+                            <div>
+                                <dt>Sucursal</dt>
+                                <dd>{order.branch.name}</dd>
+                            </div>
+                        )}
+                        {order.commercialConditions?.priceList && (
+                            <div>
+                                <dt>Lista de precios</dt>
+                                <dd>{order.commercialConditions.priceList}</dd>
+                            </div>
+                        )}
                         <div>
                             <dt>Pago</dt>
                             <dd>
@@ -128,6 +140,18 @@ export default function OrderConfirmation() {
                                 <dd>{client.email}</dd>
                                 <dt>Teléfono</dt>
                                 <dd>{client.phone}</dd>
+                                {order.company?.name && (
+                                    <>
+                                        <dt>Empresa</dt>
+                                        <dd>{order.company.name}</dd>
+                                        {order.company.taxId && (
+                                            <>
+                                                <dt>Cédula jurídica</dt>
+                                                <dd>{order.company.taxId}</dd>
+                                            </>
+                                        )}
+                                    </>
+                                )}
                             </dl>
                         </div>
 
