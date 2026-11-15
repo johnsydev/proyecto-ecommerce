@@ -1,0 +1,389 @@
+[
+  {
+    "objectID": "ORD-20261104-K3M9QA",
+    "orderNumber": "ORD-20261104-K3M9QA",
+    "date": "2026-11-04T10:15:32",
+    "dateTimestamp": 1793808932000,
+    "userId": "user-01",
+    "username": "erin",
+    "role": "B2C",
+    "client": {
+      "fullName": "Erin Camacho González",
+      "email": "erin.camacho@example.com",
+      "cedula": "1-1234-5678",
+      "phone": "+506 8888 1234",
+      "requiresElectronicInvoice": false
+    },
+    "company": null,
+    "commercialConditions": {
+      "customerType": "B2C",
+      "priceList": "B2C",
+      "minQuantity": 1,
+      "ivaPercentage": 13,
+      "rule": "Precio B2C con cantidad mínima de compra de 1 unidad."
+    },
+    "branch": {
+      "branch_id": "SJ-01",
+      "name": "San José Centro",
+      "province": "San José"
+    },
+    "delivery": {
+      "province": "Cartago",
+      "canton": "Cartago",
+      "district": "Oriental",
+      "address": "Del parque central 200 metros norte",
+      "recipients": "Erin Camacho González",
+      "additionalNotes": ""
+    },
+    "products": [
+      {
+        "productId": "ELEC001",
+        "name": "Placa de desarrollo compatible con Arduino UNO",
+        "quantity": 1,
+        "priceList": "B2C",
+        "originalUnitPrice": 6500,
+        "saleUnitPrice": 5850,
+        "discount_percentage": 10,
+        "iva_percentage": 13,
+        "lineSubtotal": 5850,
+        "image_url": "https://res.cloudinary.com/dpuuo4mfh/image/upload/v1788126278/steren-products/ELEC001.jpg"
+      },
+      {
+        "productId": "ELEC010",
+        "name": "Raspberry Pi 4 Model B 4 GB",
+        "quantity": 1,
+        "priceList": "B2C",
+        "originalUnitPrice": 110500,
+        "saleUnitPrice": 99450,
+        "discount_percentage": 10,
+        "iva_percentage": 13,
+        "lineSubtotal": 99450,
+        "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPL0SyMVjhiNGISWcun2sYp4jyBM7zfAeDXvLkVkkWPeb3Hlj1ivsA3bSE&s=10"
+      }
+    ],
+    "currency": "CRC",
+    "subtotal": 105300,
+    "total_iva": 13689,
+    "shippingCost": 3000,
+    "total": 121989,
+    "orderStatus": "CONFIRMED",
+    "paymentStatus": "APPROVED",
+    "paymentAttempts": 1,
+    "paymentHistory": [
+      {
+        "attempt": 1,
+        "status": "PAYMENT_APPROVED",
+        "reason": null,
+        "transactionId": "TXN-K3M9QA",
+        "at": "2026-11-04T10:15:32"
+      }
+    ]
+  },
+  {
+    "objectID": "ORD-20261107-P7X2LD",
+    "orderNumber": "ORD-20261107-P7X2LD",
+    "date": "2026-11-07T16:40:05",
+    "dateTimestamp": 1794091205000,
+    "userId": "user-01",
+    "username": "erin",
+    "role": "B2C",
+    "client": {
+      "fullName": "Erin Camacho González",
+      "email": "erin.camacho@example.com",
+      "cedula": "1-1234-5678",
+      "phone": "+506 8888 1234",
+      "requiresElectronicInvoice": false
+    },
+    "company": null,
+    "commercialConditions": {
+      "customerType": "B2C",
+      "priceList": "B2C",
+      "minQuantity": 1,
+      "ivaPercentage": 13,
+      "rule": "Precio B2C con cantidad mínima de compra de 1 unidad."
+    },
+    "branch": {
+      "branch_id": "ALA-01",
+      "name": "Alajuela",
+      "province": "Alajuela"
+    },
+    "delivery": {
+      "province": "Cartago",
+      "canton": "Cartago",
+      "district": "Oriental",
+      "address": "Del parque central 200 metros norte",
+      "recipients": "Erin Camacho González",
+      "additionalNotes": ""
+    },
+    "products": [
+      {
+        "productId": "ELEC007",
+        "name": "Raspberry Pi Pico 2",
+        "quantity": 1,
+        "priceList": "B2C",
+        "originalUnitPrice": 9200,
+        "saleUnitPrice": 8740,
+        "discount_percentage": 5,
+        "iva_percentage": 13,
+        "lineSubtotal": 8740,
+        "image_url": "https://www.raspberrypi.com/app/uploads/2024/08/PICO-2-exploded-Large-800x727.jpeg"
+      }
+    ],
+    "currency": "CRC",
+    "subtotal": 8740,
+    "total_iva": 1136.2,
+    "shippingCost": 3000,
+    "total": 12876.2,
+    "orderStatus": "FAILED",
+    "paymentStatus": "DECLINED",
+    "paymentAttempts": 3,
+    "paymentHistory": [
+      {
+        "attempt": 1,
+        "status": "PAYMENT_DECLINED",
+        "reason": "CARD_DECLINED",
+        "transactionId": null,
+        "at": "2026-11-07T16:40:05"
+      },
+      {
+        "attempt": 2,
+        "status": "PAYMENT_DECLINED",
+        "reason": "CARD_DECLINED",
+        "transactionId": null,
+        "at": "2026-11-07T16:40:05"
+      },
+      {
+        "attempt": 3,
+        "status": "PAYMENT_DECLINED",
+        "reason": "CARD_DECLINED",
+        "transactionId": null,
+        "at": "2026-11-07T16:40:05"
+      }
+    ],
+    "failureReason": "MAX_ATTEMPTS_REACHED"
+  },
+  {
+    "objectID": "ORD-20261109-W4T8NB",
+    "orderNumber": "ORD-20261109-W4T8NB",
+    "date": "2026-11-09T09:05:11",
+    "dateTimestamp": 1794236711000,
+    "userId": "user-02",
+    "username": "johnsy",
+    "role": "B2B",
+    "client": {
+      "fullName": "Johnsy López Aguilar",
+      "email": "compras@electrosoluciones.example.com",
+      "cedula": "2-0456-0789",
+      "phone": "+506 8777 4321",
+      "requiresElectronicInvoice": true
+    },
+    "company": {
+      "name": "Electro Soluciones del Pacífico S.A.",
+      "taxId": "3-101-845231"
+    },
+    "commercialConditions": {
+      "customerType": "B2B",
+      "priceList": "B2B",
+      "minQuantity": 5,
+      "ivaPercentage": 13,
+      "rule": "Precio B2B con cantidad mínima de compra de 5 unidades por producto."
+    },
+    "branch": {
+      "branch_id": "ALA-01",
+      "name": "Alajuela",
+      "province": "Alajuela"
+    },
+    "delivery": {
+      "province": "Alajuela",
+      "canton": "Alajuela",
+      "district": "Alajuela",
+      "address": "Zona industrial, bodega 4",
+      "recipients": "Recepción de bodega",
+      "additionalNotes": "Entregar en horario de oficina"
+    },
+    "products": [
+      {
+        "productId": "ELEC012",
+        "name": "Raspberry Pi 5 8 GB",
+        "quantity": 5,
+        "priceList": "B2B",
+        "originalUnitPrice": 105000,
+        "saleUnitPrice": 89250,
+        "discount_percentage": 15,
+        "iva_percentage": 13,
+        "lineSubtotal": 446250,
+        "image_url": "https://m.media-amazon.com/images/I/81XB4LUuFOL._AC_SX679_.jpg"
+      },
+      {
+        "productId": "ELEC018",
+        "name": "Arduino Nano Every",
+        "quantity": 5,
+        "priceList": "B2B",
+        "originalUnitPrice": 10500,
+        "saleUnitPrice": 8925,
+        "discount_percentage": 15,
+        "iva_percentage": 13,
+        "lineSubtotal": 44625,
+        "image_url": "https://store.arduino.cc/cdn/shop/files/ABX00028_01.iso_934x700.jpg?v=1727099488"
+      }
+    ],
+    "currency": "CRC",
+    "subtotal": 490875,
+    "total_iva": 63813.75,
+    "shippingCost": 3000,
+    "total": 557688.75,
+    "orderStatus": "CONFIRMED",
+    "paymentStatus": "APPROVED",
+    "paymentAttempts": 1,
+    "paymentHistory": [
+      {
+        "attempt": 1,
+        "status": "PAYMENT_APPROVED",
+        "reason": null,
+        "transactionId": "TXN-W4T8NB",
+        "at": "2026-11-09T09:05:11"
+      }
+    ]
+  },
+  {
+    "objectID": "ORD-20261112-R6H1ZC",
+    "orderNumber": "ORD-20261112-R6H1ZC",
+    "date": "2026-11-12T14:22:47",
+    "dateTimestamp": 1794514967000,
+    "userId": "user-02",
+    "username": "johnsy",
+    "role": "B2B",
+    "client": {
+      "fullName": "Johnsy López Aguilar",
+      "email": "compras@electrosoluciones.example.com",
+      "cedula": "2-0456-0789",
+      "phone": "+506 8777 4321",
+      "requiresElectronicInvoice": true
+    },
+    "company": {
+      "name": "Electro Soluciones del Pacífico S.A.",
+      "taxId": "3-101-845231"
+    },
+    "commercialConditions": {
+      "customerType": "B2B",
+      "priceList": "B2B",
+      "minQuantity": 5,
+      "ivaPercentage": 13,
+      "rule": "Precio B2B con cantidad mínima de compra de 5 unidades por producto."
+    },
+    "branch": {
+      "branch_id": "HER-01",
+      "name": "Heredia",
+      "province": "Heredia"
+    },
+    "delivery": {
+      "province": "Alajuela",
+      "canton": "Alajuela",
+      "district": "Alajuela",
+      "address": "Zona industrial, bodega 4",
+      "recipients": "Recepción de bodega",
+      "additionalNotes": "Entregar en horario de oficina"
+    },
+    "products": [
+      {
+        "productId": "ELEC013",
+        "name": "Raspberry Pi Zero 2 W",
+        "quantity": 6,
+        "priceList": "B2B",
+        "originalUnitPrice": 26000,
+        "saleUnitPrice": 22100,
+        "discount_percentage": 15,
+        "iva_percentage": 13,
+        "lineSubtotal": 132600,
+        "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQofWNjcTICbz4rawAZQwK2_B7Hpx2Tq_JKIf7bo0YEcg&s=10"
+      }
+    ],
+    "currency": "CRC",
+    "subtotal": 132600,
+    "total_iva": 17238,
+    "shippingCost": 3000,
+    "total": 152838,
+    "orderStatus": "DELIVERED",
+    "paymentStatus": "APPROVED",
+    "paymentAttempts": 2,
+    "paymentHistory": [
+      {
+        "attempt": 1,
+        "status": "PAYMENT_DECLINED",
+        "reason": "CARD_DECLINED",
+        "transactionId": null,
+        "at": "2026-11-12T14:22:47"
+      },
+      {
+        "attempt": 2,
+        "status": "PAYMENT_APPROVED",
+        "reason": null,
+        "transactionId": "TXN-R6H1ZC",
+        "at": "2026-11-12T14:22:47"
+      }
+    ]
+  },
+  {
+    "objectID": "ORD-20261113-D2Q5VY",
+    "orderNumber": "ORD-20261113-D2Q5VY",
+    "date": "2026-11-13T11:48:20",
+    "dateTimestamp": 1794592100000,
+    "userId": "user-02",
+    "username": "johnsy",
+    "role": "B2B",
+    "client": {
+      "fullName": "Johnsy López Aguilar",
+      "email": "compras@electrosoluciones.example.com",
+      "cedula": "2-0456-0789",
+      "phone": "+506 8777 4321",
+      "requiresElectronicInvoice": true
+    },
+    "company": {
+      "name": "Electro Soluciones del Pacífico S.A.",
+      "taxId": "3-101-845231"
+    },
+    "commercialConditions": {
+      "customerType": "B2B",
+      "priceList": "B2B",
+      "minQuantity": 5,
+      "ivaPercentage": 13,
+      "rule": "Precio B2B con cantidad mínima de compra de 5 unidades por producto."
+    },
+    "branch": {
+      "branch_id": "SJ-01",
+      "name": "San José Centro",
+      "province": "San José"
+    },
+    "delivery": {
+      "province": "Alajuela",
+      "canton": "Alajuela",
+      "district": "Alajuela",
+      "address": "Zona industrial, bodega 4",
+      "recipients": "Recepción de bodega",
+      "additionalNotes": "Entregar en horario de oficina"
+    },
+    "products": [
+      {
+        "productId": "ELEC008",
+        "name": "Raspberry Pi Pico 2 W",
+        "quantity": 8,
+        "priceList": "B2B",
+        "originalUnitPrice": 11500,
+        "saleUnitPrice": 9775,
+        "discount_percentage": 15,
+        "iva_percentage": 13,
+        "lineSubtotal": 78200,
+        "image_url": "https://cdn11.bigcommerce.com/s-64749/images/stencil/1280x1280/products/2344/8801/Pico-2-W__16621.1747686183.jpg?c=2"
+      }
+    ],
+    "currency": "CRC",
+    "subtotal": 78200,
+    "total_iva": 10166,
+    "shippingCost": 3000,
+    "total": 91366,
+    "orderStatus": "PENDING",
+    "paymentStatus": "PENDING",
+    "paymentAttempts": 0,
+    "paymentHistory": []
+  }
+]
