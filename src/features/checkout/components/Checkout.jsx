@@ -7,6 +7,9 @@ import PurchaseStepper from "../../../components/PurchaseStepper";
 import CheckoutForm from "./CheckoutForm";
 import PurchaseSummary from "./PurchaseSummary";
 import { generateOrder } from "../../../utils/orderUtils";
+import { useUser } from "../../../context/useUser";
+import { getBranch } from "../../../utils/inventory";
+import { BRANCH_REQUIRED_MESSAGE, validateCart } from "../../../utils/cartValidation";
 import { createOrReuseOrder } from "../../../utils/orderStorage";
 import ubicacionesCR from "../../../data/ubicacionesCR.json";
 import { ANALYTICS_EVENTS, recordEvent } from "../../../utils/analyticsStorage";
@@ -31,7 +34,18 @@ export default function Checkout() {
     const location = useLocation();
     const checkoutData = location.state;
 
-    const { cart } = useCart();
+    const { cart, branchId } = useCart();
+    const { user } = useUser();
+    const branch = getBranch(branchId);
+    const validation = validateCart(cart, user, branchId);
+    const blockingMessages = [
+        ...(validation.branchMissing ? [BRANCH_REQUIRED_MESSAGE] : []),
+        ...cart
+            .filter((product) => validation.lineIssues[product.id ?? product.objectID])
+            .map((product) =>
+                `${product.title}: ${validation.lineIssues[product.id ?? product.objectID].message}`
+            ),
+    ];
 
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [formHeight, setFormHeight] = useState(0);
@@ -89,10 +103,14 @@ export default function Checkout() {
     };
 
    const handleCheckoutSubmit = () => {
+       if (!validation.isValid) return;
+
        const orderData = generateOrder({ 
         cart, 
         client: clientInfo, 
-        delivery });
+        delivery,
+        user,
+        branch });
        createOrReuseOrder(orderData, location.state?.from === "/checkout");
        navigate("/pay", {
            state: { 
@@ -201,6 +219,20 @@ export default function Checkout() {
         <div className="checkout-page">
             <PurchaseStepper currentStep={2} />
 
+            {cart.length > 0 && !validation.isValid && (
+                <div className="checkout-blocked" role="alert">
+                    <h2>No puedes continuar con la compra todavía</h2>
+                    <ul>
+                        {blockingMessages.map((message) => (
+                            <li key={message}>{message}</li>
+                        ))}
+                    </ul>
+                    <button type="button" onClick={() => navigate("/cart")}>
+                        Volver al carrito para corregirlo
+                    </button>
+                </div>
+            )}
+
             {cart.length > 0 && (
                 <div className="checkout-layout">
                     <div className="checkout-form-wrapper" ref={checkoutFormRef}>
@@ -221,6 +253,8 @@ export default function Checkout() {
                     >
                         <PurchaseSummary
                             cart={cart}
+                            branch={branch}
+                            blocked={!validation.isValid}
                             acceptedTerms={acceptedTerms}
                             setAcceptedTerms={setAcceptedTerms}
                             termsError={termsError}

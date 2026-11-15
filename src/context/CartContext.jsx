@@ -4,14 +4,18 @@ import React, {
   useReducer,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import { ANALYTICS_EVENTS, recordEvent } from "../utils/analyticsStorage.js";
 import { useUser } from "./useUser";
 import {
   getPurchaseOwnerKey,
+  readBranchId,
   readCart,
+  writeBranchId,
   writeCart,
 } from "../utils/purchaseStorage";
+import { getUnitPrice } from "../utils/pricing";
 
 /*
  * Contexto y lógica del carrito de compras.
@@ -160,12 +164,18 @@ export function CartProvider({ children }) {
 
 // Reiniciar el estado al cambiar de cuenta evita mezclar carritos y métricas.
 function UserCartProvider({ children, ownerKey }) {
+  const { user } = useUser();
   const [cart, dispatch] = useReducer(cartReducer, ownerKey, readCart);
+  const [branchId, setBranchId] = useState(() => readBranchId(ownerKey));
   const previousCart = useRef(cart);
   // Sincronizar cambios en localStorage
   useEffect(() => {
     writeCart(cart, ownerKey);
   }, [cart, ownerKey]);
+
+  useEffect(() => {
+    writeBranchId(branchId, ownerKey);
+  }, [branchId, ownerKey]);
 
   /*
    * Objetivo:
@@ -214,10 +224,10 @@ function UserCartProvider({ children, ownerKey }) {
     0,
   );
 
-  // Agregar propiedad subtotal a cada elemento
+  // Agregar propiedad subtotal a cada elemento con el precio del usuario
   const cartWithSubtotals = cart.map((item) => ({
     ...item,
-    subtotal: (item.price ?? 0) * item.order_quantity,
+    subtotal: (getUnitPrice(item, user) ?? 0) * item.order_quantity,
   }));
 
   // Métodos expuestos para la aplicación
@@ -244,6 +254,8 @@ function UserCartProvider({ children, ownerKey }) {
         removeUnit,
         updateCartQuantity,
         clearCart,
+        branchId,
+        selectBranch: setBranchId,
       }}
     >
       {children}

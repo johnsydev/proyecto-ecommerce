@@ -211,11 +211,16 @@
   transition: background-color 0.15s ease;
 }
 
-.checkout-continue-button:hover {
+.checkout-continue-button:hover:not(:disabled) {
   background: #2a437a;
 }
 
-.checkout-continue-button:active {
+.checkout-continue-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.checkout-continue-button:active:not(:disabled) {
   transform: scale(0.98);
 }
 
