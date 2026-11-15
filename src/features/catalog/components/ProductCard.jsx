@@ -1,10 +1,15 @@
 import "../styles/ProductCard.css";
 import { ShoppingCart, XCircle } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../../context/CartContext";
 import { useUser } from "../../../context/useUser";
 import { PERMISSIONS } from "../../../utils/permissions";
+import {
+  getMinQuantity,
+  getPriceInfo,
+  isProductEnabled,
+  PRICE_LISTS,
+} from "../../../utils/pricing";
 
 /*
  * Objetivo:
@@ -35,16 +40,23 @@ import { PERMISSIONS } from "../../../utils/permissions";
  */
 
 export default function ProductCard({ hit }) {
-  const [tieneDescuento, setTieneDescuento] = useState(false);
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
-  const { can } = useUser();
+  const { user, can } = useUser();
   const canAddToCart = can(PERMISSIONS.ADD_TO_CART);
 
-  const isAvailable = hit.in_stock && hit.b2c?.enabled;
-  const notAvailableText = !hit.b2c?.enabled
+  const price = getPriceInfo(hit, user);
+  const minQuantity = getMinQuantity(hit, user);
+  const isB2B = price.priceList === PRICE_LISTS.B2B;
+  const symbol = hit.currency !== "CRC" ? "$" : "₡";
+
+  const isEnabled = isProductEnabled(hit, user);
+  const isAvailable = hit.in_stock && isEnabled && price.isValid;
+  const notAvailableText = !isEnabled
     ? "Producto no disponible"
-    : "Producto agotado";
+    : !price.isValid
+      ? "Precio no disponible"
+      : "Producto agotado";
 
   const productId = hit.objectID || hit.id;
   const stockTotal = hit.stock_quantity ?? (hit.in_stock ? 999 : 0);
@@ -55,29 +67,22 @@ export default function ProductCard({ hit }) {
   const cantidadEnCarrito = productoEnCarrito ? productoEnCarrito.order_quantity : 0;
   const stockDisponibleParaAgregar = stockTotal - cantidadEnCarrito;
 
-  useEffect(() => {
-    if (hit.b2c?.discount_percentage > 0) {
-      setTieneDescuento(true);
-    }
-  }, [hit]);
+  // Un cliente B2B completa primero su cantidad mínima y luego agrega de a una unidad.
+  const cantidadAAgregar = Math.max(1, minQuantity - cantidadEnCarrito);
+  const alcanzaMinimo = stockDisponibleParaAgregar >= cantidadAAgregar;
 
   const handleAddToCart = () => {
-    if (stockDisponibleParaAgregar <= 0) return;
-
-    const precioFinal = tieneDescuento
-      ? Number(hit.b2c.sale_price)
-      : Number(hit.b2c.regular_price);
+    if (!alcanzaMinimo) return;
 
     const productoAEnviar = {
       ...hit,
       id: productId,
       name: hit.title || hit.name,
-      price: precioFinal,
       image: hit.image_url || hit.image,
       stock_quantity: stockTotal,
     };
 
-    addToCart(productoAEnviar, 1);
+    addToCart(productoAEnviar, cantidadAAgregar);
   };
 
   return (
@@ -105,24 +110,33 @@ export default function ProductCard({ hit }) {
 
         <p className="product-model">MOD: {hit.model}</p>
 
+        {isB2B && (
+          <p className="product-b2b-note">
+            Precio B2B · Mínimo {minQuantity} unidades
+          </p>
+        )}
+
         <p className="product-price">
-          {tieneDescuento && (
+          {!price.isValid && (
+            <span className="product-price-invalid">Precio no disponible</span>
+          )}
+          {price.hasDiscount && (
             <>
               <span className="product-discount">
-                {hit.currency !== "CRC" ? "$" : "₡"}
-                {Number(hit.b2c.sale_price).toLocaleString("en-US")}
+                {symbol}
+                {price.unitPrice.toLocaleString("en-US")}
               </span>
 
               <span className="product-regular-price-discount">
-                {hit.currency !== "CRC" ? "$" : "₡"}
-                {Number(hit.b2c.regular_price).toLocaleString("en-US")}
+                {symbol}
+                {price.regularPrice.toLocaleString("en-US")}
               </span>
             </>
           )}
-          {!tieneDescuento && (
+          {price.isValid && !price.hasDiscount && (
             <span className="product-regular-price">
-              {hit.currency !== "CRC" ? "$" : "₡"}
-              {Number(hit.b2c.regular_price).toLocaleString("en-US")}
+              {symbol}
+              {price.unitPrice.toLocaleString("en-US")}
             </span>
           )}
         </p>
@@ -136,6 +150,15 @@ export default function ProductCard({ hit }) {
             >
               <XCircle size={22} strokeWidth={2} />
               Límite alcanzado
+            </button>
+          ) : !alcanzaMinimo ? (
+            <button
+              type="button"
+              className="pc-without-stock"
+              title={`Solo hay ${stockTotal} unidades y la compra mínima B2B es de ${minQuantity}.`}
+            >
+              <XCircle size={22} strokeWidth={2} />
+              Stock menor al mínimo
             </button>
           ) : (
             <button

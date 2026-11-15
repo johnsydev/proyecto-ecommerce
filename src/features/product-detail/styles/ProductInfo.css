@@ -151,6 +151,12 @@
   font-weight: 700;
 }
 
+.pi-product-price-invalid {
+  font-size: 16px;
+  font-weight: 600;
+  color: #b42318;
+}
+
 .pi-product-regular-price-discount {
   font-size: 20px;
   text-decoration: line-through;
@@ -283,6 +289,18 @@
 .pi-add-to-cart svg {
   flex-shrink: 0;
   display: block;
+}
+
+.pi-b2b-stock-warning {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff5f5;
+  color: #b42318;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .pi-without-stock {
