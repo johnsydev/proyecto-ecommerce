@@ -15,6 +15,8 @@ import AnalyticsPage from "./pages/AnalyticsPage";
 import { useUser } from "./context/useUser";
 import SignInPage from "./pages/SignIn";
 import AdminPage from "./pages/AdminPage";
+import OrdersPage from "./pages/OrdersPage";
+import OrderDetailPage from "./pages/OrderDetailPage";
 import RoleGuard from "./components/RoleGuard";
 import { PERMISSIONS } from "./utils/permissions";
 import "./App.css";
@@ -106,6 +108,8 @@ function App() {
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/:orderNumber" element={<OrderDetailPage />} />
         </Routes>
       </main>
       <Footer />
