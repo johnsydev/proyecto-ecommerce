@@ -112,7 +112,7 @@ export default function ProductCard({ hit }) {
 
         {isB2B && (
           <p className="product-b2b-note">
-            Precio B2B · Mínimo {minQuantity} unidades
+            Mínimo {minQuantity} unidades
           </p>
         )}
 
