@@ -152,7 +152,7 @@ export default function Header() {
 
             <div className="account-text">
               <span className="account-label">
-                {user ? "Mi cuenta" : "Cuenta"}
+                {user ? "" : "Cuenta"}
               </span>
 
               <span className="account-username">

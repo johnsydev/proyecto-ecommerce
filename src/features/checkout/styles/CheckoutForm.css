@@ -26,6 +26,37 @@
   gap: 20px;
 }
 
+.checkout-form .checkout-company {
+  padding: 16px 18px;
+  border: 1px solid #e1e7f0;
+  border-radius: 10px;
+  background: #f9fbfe;
+}
+
+.checkout-form .checkout-company h2 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.checkout-form .checkout-company dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.checkout-form .checkout-company dt {
+  color: #64748b;
+}
+
+.checkout-form .checkout-company dd {
+  margin: 0;
+  color: #1f2937;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
 .checkout-form .form-group {
   display: flex;
   flex-direction: column;

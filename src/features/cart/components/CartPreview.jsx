@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
+import { useUser } from "../../../context/useUser";
 import { calculateCartSummary } from "../../../utils/cartCalculations";
+import { getUnitPrice } from "../../../utils/pricing";
 
 /*
    * Objetivo:
@@ -25,10 +27,11 @@ import { calculateCartSummary } from "../../../utils/cartCalculations";
 export default function CartPreview({ mode = "single", product, cart = [], cartItemCount, onClose }) {
   const navigate = useNavigate();
   const { removeFromCart } = useCart();
+  const { user } = useUser();
 
   // --- MODO 1: MENÚ LATERAL---
   if (mode === "drawer") {
-    const {subtotal, currency } = calculateCartSummary(cart);
+    const {subtotal, currency } = calculateCartSummary(cart, user);
 
     return (
       <>
@@ -45,7 +48,7 @@ export default function CartPreview({ mode = "single", product, cart = [], cartI
 
           <div className="cart-drawer-items">
             {cart.map((p, idx) => {
-              const price = Number(p.b2c?.sale_price ?? p.b2c?.regular_price ?? 0);
+              const price = getUnitPrice(p, user) ?? 0;
               const symbol = p.currency === "CRC" ? "₡" : "$";
               const keyId = p.id ?? p.objectID ?? idx;
 
@@ -127,7 +130,7 @@ export default function CartPreview({ mode = "single", product, cart = [], cartI
   }
 
   // --- MODO 2: BURBUJA DE ANIMACIÓN ---
-  const price = Number(product?.b2c?.sale_price ?? product?.b2c?.regular_price ?? 0);
+  const price = getUnitPrice(product, user) ?? 0;
   const symbol = product?.currency === "CRC" ? "₡" : "$";
 
   return (

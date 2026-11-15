@@ -1,3 +1,4 @@
+import { getCommercialTerms, getPriceInfo, getUnitPrice } from "./pricing";
 
 /*
    * Objetivo:
@@ -5,43 +6,38 @@
    * 
    * Entrada:
    *   - cart: Arreglo de productos en el carrito, cada uno con información de precios, cantidad y detalles de envío.
+   *   - user: Usuario activo (null para visitante); define la lista de precios B2C o B2B.
    * 
    * Salida:
    *   - Objeto con el resumen del carrito, incluyendo moneda, subtotal, descuento, IVA, costos de envío, total y fecha estimada de entrega.
    * 
    * Restricciones:
    *   - Asume que los precios están en la moneda especificada en el primer producto del carrito.
+   *   - Los precios se obtienen siempre con getPriceInfo; una línea con precio inválido no suma al total.
    */
-export function calculateCartSummary(cart = []) {
+export function calculateCartSummary(cart = [], user = null) {
     const currency = cart[0]?.currency === "CRC" ? "₡" : "$";
 
     const subtotal = cart.reduce((total, product) => {
-        const price = Number(
-            product.b2c?.sale_price ??
-            product.b2c?.regular_price ??
-            0
-        );
-
+        const price = getUnitPrice(product, user) ?? 0;
         const quantity = Number(product.order_quantity || 1);
 
         return total + price * quantity;
     }, 0);
 
     const discount = cart.reduce((total, product) => {
-        const regularPrice = Number(product.b2c?.regular_price ?? 0);
-        const salePrice = Number(
-            product.b2c?.sale_price ?? regularPrice
-        );
+        const { unitPrice, regularPrice } = getPriceInfo(product, user);
         const quantity = Number(product.order_quantity || 1);
 
-        return total +
-            Math.max(0, regularPrice - salePrice) * quantity;
+        if (unitPrice === null) return total;
+
+        return total + Math.max(0, regularPrice - unitPrice) * quantity;
     }, 0);
 
     const iva = subtotal * 0.13;
 
     const requiereEnvioPagado = cart.some(
-        (product) => product.b2c?.free_shipping === false
+        (product) => getCommercialTerms(product, user)?.free_shipping === false
     );
 
     const costoEnvio =
@@ -50,7 +46,9 @@ export function calculateCartSummary(cart = []) {
     const total = subtotal + iva + costoEnvio;
 
     const maxDeliveryDays = cart.reduce((max, product) => {
-        const days = Number(product.b2c?.estimated_delivery_days || 0);
+        const days = Number(
+            getCommercialTerms(product, user)?.estimated_delivery_days || 0
+        );
 
         return Math.max(max, days);
     }, 0);

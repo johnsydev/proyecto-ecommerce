@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
 import emptyCartImage from "../../../assets/electro_carrito_vacio.png";
 import { useCart } from "../../../context/CartContext";
+import { useUser } from "../../../context/useUser";
+import { validateCart } from "../../../utils/cartValidation";
+import BranchSelector from "./BranchSelector";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 import PurchaseStepper from "../../../components/PurchaseStepper";
@@ -23,16 +26,27 @@ import PurchaseStepper from "../../../components/PurchaseStepper";
    *   - Renderizado del carrito de compras con la lista de productos y el resumen de la compra.
    * 
    * Restricciones:
-   *   - La cantidad de un producto no puede exceder su stock disponible.
+   *   - La cantidad de un producto no puede exceder su stock disponible en la sucursal seleccionada.
    *   - La cantidad de un producto no puede ser negativa.
+   *   - No se puede continuar al pago sin sucursal ni con líneas que incumplan inventario o mínimo B2B.
 */
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { cart, addUnit, removeUnit, removeFromCart } = useCart();
+  const { user } = useUser();
+  const {
+    cart,
+    addUnit,
+    removeUnit,
+    removeFromCart,
+    updateCartQuantity,
+    branchId,
+    selectBranch,
+  } = useCart();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const getProductId = (product) => product.id ?? product.objectID;
+  const validation = validateCart(cart, user, branchId);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -99,10 +113,18 @@ export default function Cart() {
             className="cart-items-container"
             aria-label="Productos en el carrito"
           >
+            <BranchSelector
+              cart={cart}
+              branchId={branchId}
+              onSelect={selectBranch}
+            />
+
             {cart.map((product) => (
               <CartItem
                 key={getProductId(product)}
                 product={product}
+                branchId={branchId}
+                issue={validation.lineIssues[getProductId(product)] ?? null}
                 onAddUnit={() => {
                   addUnit(getProductId(product));
                 }}
@@ -112,12 +134,15 @@ export default function Cart() {
                 onRemove={() => {
                   removeFromCart(getProductId(product));
                 }}
+                onAdjust={(quantity) => {
+                  updateCartQuantity(getProductId(product), quantity);
+                }}
               />
             ))}
           </section>
 
           {/* Resumen de compra */}
-          <CartSummary cart={cart} />
+          <CartSummary cart={cart} validation={validation} branchId={branchId} />
 
         </div>
       )}

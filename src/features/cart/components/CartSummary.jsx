@@ -4,6 +4,10 @@ import {
     calculateCartSummary,
     formatPrice,
 } from "../../../utils/cartCalculations";
+import { useUser } from "../../../context/useUser";
+import { getBranch } from "../../../utils/inventory";
+import { getPriceList } from "../../../utils/pricing";
+import { BRANCH_REQUIRED_MESSAGE } from "../../../utils/cartValidation";
 
 
 /*
@@ -12,18 +16,22 @@ import {
    * 
    * Entrada:
    *   - cart: Arreglo de productos en el carrito.
+   *   - validation: Resultado de validateCart para el carrito actual.
+   *   - branchId: Sucursal seleccionada o null.
    * 
    * Salida:
    *   - Renderizado del resumen del carrito con la información de costos y un botón para proceder al pago.
    * 
    * Restricciones:
-   *   - La cantidad de un producto no puede exceder su stock disponible.
-   *   - La cantidad de un producto no puede ser negativa.
+   *   - El botón de pago se deshabilita mientras falte la sucursal o existan líneas inválidas.
    */
 
-export default function CartSummary({ cart }) {
+export default function CartSummary({ cart, validation, branchId }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useUser();
+  const branch = getBranch(branchId);
+  const priceList = getPriceList(user);
   const {
     currency,
     subtotal,
@@ -34,7 +42,13 @@ export default function CartSummary({ cart }) {
     maxDeliveryDays,
     deliveryDate,
     formattedDate,
-  } = calculateCartSummary(cart);
+  } = calculateCartSummary(cart, user);
+
+  const blockedMessage = validation.branchMissing
+    ? BRANCH_REQUIRED_MESSAGE
+    : !validation.isValid
+      ? "Corrige los productos marcados en tu carrito para continuar."
+      : "";
 
   return (
     <div className="cart-summary-wrapper">
@@ -42,6 +56,16 @@ export default function CartSummary({ cart }) {
         <h2>Resumen de Orden</h2>
 
         <div className="summary-details">
+          <div className="cart-summary-line">
+            <span>Lista de precios</span>
+            <span>{priceList}</span>
+          </div>
+
+          <div className="cart-summary-line">
+            <span>Sucursal</span>
+            <span>{branch ? branch.name : "Sin seleccionar"}</span>
+          </div>
+
           <div className="cart-summary-line">
             <span>Subtotal</span>
             <span>{currency}{subtotal.toLocaleString("en-US")}</span>
@@ -72,7 +96,16 @@ export default function CartSummary({ cart }) {
           <strong>{currency}{total.toLocaleString("en-US")}</strong>
         </div>
 
-        <button type="button" className="checkout-button" onClick={() => navigate("/checkout", { state: { from: location.pathname } })}>
+        {blockedMessage && (
+          <p className="cart-summary-blocked" role="alert">{blockedMessage}</p>
+        )}
+
+        <button
+          type="button"
+          className="checkout-button"
+          disabled={!validation.isValid}
+          onClick={() => navigate("/checkout", { state: { from: location.pathname } })}
+        >
           Proceder al Pago
         </button>
 

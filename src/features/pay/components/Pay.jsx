@@ -211,6 +211,24 @@ export default function Pay() {
                             <span>Cliente</span>
                             <span>{fullName}</span>
                         </div>
+                        {orderInfo.company?.name && (
+                            <div className="pay-summary-line">
+                                <span>Empresa</span>
+                                <span>{orderInfo.company.name}</span>
+                            </div>
+                        )}
+                        {orderInfo.commercialConditions?.priceList && (
+                            <div className="pay-summary-line">
+                                <span>Lista de precios</span>
+                                <span>{orderInfo.commercialConditions.priceList}</span>
+                            </div>
+                        )}
+                        {orderInfo.branch?.name && (
+                            <div className="pay-summary-line">
+                                <span>Sucursal</span>
+                                <span>{orderInfo.branch.name}</span>
+                            </div>
+                        )}
                         <div className="pay-summary-line">
                             <span>Estado de la orden</span>
                             <span className={`status-pill status-${orderInfo.orderStatus.toLowerCase()}`}>
