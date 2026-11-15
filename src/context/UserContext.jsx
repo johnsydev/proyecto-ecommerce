@@ -2,16 +2,18 @@ import { UserContext } from "./useUser";
 import { useState } from "react";
 import { getCurrentUser, loginUser, logoutUser } from "../utils/userStorage";
 import { ANALYTICS_EVENTS, recordEvent } from "../utils/analyticsStorage";
+import { can } from "../utils/permissions";
 
 /*
  * Objetivo:
- * Compartir el usuario activo y las acciones de acceso mediante Algolia.
+ * Compartir el usuario activo, su rol y las acciones de acceso mediante Algolia.
  *
  * Entrada:
  * - children: Componentes que consumen el contexto.
  *
  * Salida:
- * - Usuario activo y funciones para iniciar y cerrar sesión.
+ * - Usuario activo, su rol, la función can(permission) y las funciones
+ *   para iniciar y cerrar sesión.
  *
  * Restricciones:
  * - Valida credenciales de prueba contra usuarios existentes en Algolia.
@@ -41,7 +43,15 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider
+      value={{
+        user,
+        role: user?.role ?? null,
+        can: (permission) => can(user?.role ?? null, permission),
+        login,
+        logout,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
