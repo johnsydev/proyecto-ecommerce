@@ -3,6 +3,8 @@ import { ShoppingCart, XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../../context/CartContext";
+import { useUser } from "../../../context/useUser";
+import { PERMISSIONS } from "../../../utils/permissions";
 
 /*
  * Objetivo:
@@ -36,6 +38,8 @@ export default function ProductCard({ hit }) {
   const [tieneDescuento, setTieneDescuento] = useState(false);
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
+  const { can } = useUser();
+  const canAddToCart = can(PERMISSIONS.ADD_TO_CART);
 
   const isAvailable = hit.in_stock && hit.b2c?.enabled;
   const notAvailableText = !hit.b2c?.enabled
@@ -123,7 +127,7 @@ export default function ProductCard({ hit }) {
           )}
         </p>
 
-        {isAvailable ? (
+        {!canAddToCart ? null : isAvailable ? (
           stockDisponibleParaAgregar <= 0 ? (
             <button
               type="button"
