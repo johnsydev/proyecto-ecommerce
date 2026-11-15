@@ -10,6 +10,8 @@ import {
   XCircle
 } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
+import { useUser } from "../../../context/useUser";
+import { PERMISSIONS } from "../../../utils/permissions";
 import translations from "../../../locales/es.json";
 import Rating from "./Rating";
 import StoresStock from "./StoresStock";
@@ -59,6 +61,8 @@ export default function ProductInfo({ product }) {
   const [cantidadCarrito, setCantidadCarrito] = useState(1);
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
+  const { can } = useUser();
+  const canAddToCart = can(PERMISSIONS.ADD_TO_CART);
 
   const tieneDescuento = product?.b2c?.discount_percentage > 0;
   const currency = product?.currency !== "CRC" ? "$" : "₡";
@@ -210,7 +214,7 @@ export default function ProductInfo({ product }) {
                 )}
               </div>
 
-              {product.in_stock && product.b2c?.enabled ? (
+              {!canAddToCart ? null : product.in_stock && product.b2c?.enabled ? (
                 <div className="pi-shipping-container">
                   {stockDisponibleParaAgregar <= 0 ? (
                     <button

@@ -346,6 +346,14 @@
   font-size: 0.7rem;
 }
 
+.signin-user-meta {
+  display: block;
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
 .signin-user-details strong {
   color: #1e293b;
   font-size: 0.95rem;
