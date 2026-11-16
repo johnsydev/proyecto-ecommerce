@@ -36,6 +36,7 @@ export default function SignIn() {
   const { user, login, logout, can } = useUser();
   const roleDetails = getRoleDetails(user?.role);
   const canViewAdmin = can(PERMISSIONS.VIEW_ADMIN_INFO);
+  const canViewOwnOrders = can(PERMISSIONS.VIEW_OWN_ORDERS);
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -150,7 +151,12 @@ export default function SignIn() {
                   Ir al panel administrativo <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               ) : null}
-              <Link to="/analytics" className={canViewAdmin ? "signin-secondary" : "signin-submit"}>
+              {canViewOwnOrders && (
+                <Link to="/orders" className="signin-submit">
+                  Mis órdenes <ArrowRight size={18} aria-hidden="true" />
+                </Link>
+              )}
+              <Link to="/analytics" className={canViewAdmin || canViewOwnOrders ? "signin-secondary" : "signin-submit"}>
                 Ver mi actividad <ArrowRight size={18} aria-hidden="true" />
               </Link>
               <button type="button" className="signin-secondary" onClick={handleLogout}>
