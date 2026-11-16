@@ -187,6 +187,13 @@ export default function OrderConfirmation() {
                             <ShoppingBag size={18} />
                             Seguir comprando
                         </button>
+                        <button
+                            type="button"
+                            className="confirmation-secondary-btn"
+                            onClick={() => navigate(`/orders/${order.orderNumber}`)}
+                        >
+                            Ver detalle de la orden
+                        </button>
                     </div>
                 </section>
 

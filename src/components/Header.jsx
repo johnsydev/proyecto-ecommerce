@@ -39,6 +39,7 @@ export default function Header() {
   const roleDetails = getRoleDetails(user?.role);
   const canUseCart = can(PERMISSIONS.ADD_TO_CART);
   const canViewAdmin = can(PERMISSIONS.VIEW_ADMIN_INFO);
+  const canViewOwnOrders = can(PERMISSIONS.VIEW_OWN_ORDERS);
   const [previewProduct, setPreviewProduct] = useState(null);
   const [showCartPreview, setShowCartPreview] = useState(false);
   
@@ -170,6 +171,12 @@ export default function Header() {
           {canViewAdmin && (
             <Link to="/admin" className="header-admin-link">
               Panel admin
+            </Link>
+          )}
+
+          {canViewOwnOrders && user && (
+            <Link to="/orders" className="header-admin-link">
+              Mis órdenes
             </Link>
           )}
 
