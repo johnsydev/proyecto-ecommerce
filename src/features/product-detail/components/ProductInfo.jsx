@@ -1,5 +1,5 @@
 import "../styles/ProductInfo.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
@@ -7,9 +7,19 @@ import {
   Truck,
   BadgePercent,
   Clock8,
+  Package,
   XCircle
 } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
+import { useUser } from "../../../context/useUser";
+import { PERMISSIONS } from "../../../utils/permissions";
+import {
+  getCommercialTerms,
+  getMinQuantity,
+  getPriceInfo,
+  isProductEnabled,
+  PRICE_LISTS,
+} from "../../../utils/pricing";
 import translations from "../../../locales/es.json";
 import Rating from "./Rating";
 import StoresStock from "./StoresStock";
@@ -56,11 +66,17 @@ import StoresStock from "./StoresStock";
  */
 
 export default function ProductInfo({ product }) {
-  const [cantidadCarrito, setCantidadCarrito] = useState(1);
+  const [cantidadElegida, setCantidadElegida] = useState(null);
   const navigate = useNavigate();
   const { cart, addToCart } = useCart();
+  const { user, can } = useUser();
+  const canAddToCart = can(PERMISSIONS.ADD_TO_CART);
 
-  const tieneDescuento = product?.b2c?.discount_percentage > 0;
+  const price = getPriceInfo(product, user);
+  const minQuantity = getMinQuantity(product, user);
+  const isB2B = price.priceList === PRICE_LISTS.B2B;
+  const terms = getCommercialTerms(product, user);
+  const isEnabled = isProductEnabled(product, user);
   const currency = product?.currency !== "CRC" ? "$" : "₡";
 
   // Identificador único
@@ -78,24 +94,27 @@ export default function ProductInfo({ product }) {
   // Unidades restantes que se pueden agregar
   const stockDisponibleParaAgregar = stockTotal - cantidadEnCarrito;
 
-  const handleAddToCart = () => {
-    if (!product || stockDisponibleParaAgregar <= 0) return;
+  // Cantidad mínima que debe agregarse ahora para cumplir la condición comercial
+  const cantidadMinimaAgregar = Math.max(1, minQuantity - cantidadEnCarrito);
+  const alcanzaMinimo = stockDisponibleParaAgregar >= cantidadMinimaAgregar;
+  const cantidadCarrito = Math.max(
+    cantidadElegida ?? cantidadMinimaAgregar,
+    cantidadMinimaAgregar
+  );
 
-    const precioFinal = tieneDescuento
-      ? Number(product.b2c.sale_price)
-      : Number(product.b2c.regular_price);
+  const handleAddToCart = () => {
+    if (!product || !alcanzaMinimo) return;
 
     const productoAEnviar = {
       ...product,
       id: productId,
       name: product.title || product.name,
-      price: precioFinal,
       image: product.image_url || product.image,
       stock_quantity: stockTotal,
     };
 
     addToCart(productoAEnviar, cantidadCarrito);
-    setCantidadCarrito(1);
+    setCantidadElegida(null);
   };
 
   return (
@@ -138,7 +157,7 @@ export default function ProductInfo({ product }) {
                 </span>
                 <span className="pi-product-estimated-delivery pi-product-badge">
                   <Clock8 /> Tiempo de entrega estimado de{" "}
-                  {product.b2c?.estimated_delivery_days} días
+                  {terms?.estimated_delivery_days} días
                 </span>
               </div>
 
@@ -168,49 +187,55 @@ export default function ProductInfo({ product }) {
               </div>
 
               <div className="pi-container-prices">
-                {tieneDescuento ? (
+                {!price.isValid && (
+                  <span className="pi-product-price-invalid">
+                    Precio no disponible
+                  </span>
+                )}
+
+                {price.hasDiscount && (
                   <>
                     <span className="pi-product-price">
                       {currency}
-                      {Number(product.b2c.sale_price).toLocaleString("en-US")}
+                      {price.unitPrice.toLocaleString("en-US")}
                     </span>
                     <span className="pi-product-regular-price-discount">
                       {currency}
-                      {Number(product.b2c.regular_price).toLocaleString(
-                        "en-US"
-                      )}
+                      {price.regularPrice.toLocaleString("en-US")}
                     </span>
 
                     <span className="pi-product-discount-badge">
-                      <BadgePercent /> ¡{product.b2c.discount_percentage}% de
-                      descuento!
+                      <BadgePercent />{" "}
+                      {isB2B
+                        ? `Precio B2B: ${price.discountPercentage}% menos que el precio regular`
+                        : `¡${price.discountPercentage}% de descuento!`}
                     </span>
-                    {product.b2c.free_shipping && (
-                      <span className="pi-product-discount-badge">
-                        <Truck />
-                        ¡Envío gratis!
-                      </span>
-                    )}
                   </>
-                ) : (
-                  <>
-                    <span className="pi-product-price">
-                      {currency}
-                      {Number(
-                        product.b2c?.sale_price || product.b2c?.regular_price
-                      ).toLocaleString("en-US")}
-                    </span>
-                    {product.b2c?.free_shipping && (
-                      <span className="pi-product-discount-badge">
-                        <Truck />
-                        ¡Envío gratis!
-                      </span>
-                    )}
-                  </>
+                )}
+
+                {price.isValid && !price.hasDiscount && (
+                  <span className="pi-product-price">
+                    {currency}
+                    {price.unitPrice.toLocaleString("en-US")}
+                  </span>
+                )}
+
+                {price.isValid && terms?.free_shipping && (
+                  <span className="pi-product-discount-badge">
+                    <Truck />
+                    ¡Envío gratis!
+                  </span>
+                )}
+
+                {isB2B && (
+                  <span className="pi-product-discount-badge">
+                    <Package />
+                    Compra mínima B2B: {minQuantity} unidades por producto
+                  </span>
                 )}
               </div>
 
-              {product.in_stock && product.b2c?.enabled ? (
+              {!canAddToCart ? null : product.in_stock && isEnabled && price.isValid ? (
                 <div className="pi-shipping-container">
                   {stockDisponibleParaAgregar <= 0 ? (
                     <button
@@ -219,13 +244,20 @@ export default function ProductInfo({ product }) {
                     >
                       <XCircle size={22} strokeWidth={2} /> Límite alcanzado
                     </button>
+                  ) : !alcanzaMinimo ? (
+                    <p className="pi-b2b-stock-warning" role="alert">
+                      Solo hay {stockTotal}{" "}
+                      {stockTotal === 1 ? "unidad" : "unidades"} y la compra
+                      mínima B2B es de {minQuantity}. No es posible comprar este
+                      producto por ahora.
+                    </p>
                   ) : (
                     <>
                       <div className="pi-shipping-quantity-container">
                         <button
                           className="pi-shipping-button-del"
-                          onClick={() => setCantidadCarrito(cantidadCarrito - 1)}
-                          disabled={cantidadCarrito === 1}
+                          onClick={() => setCantidadElegida(cantidadCarrito - 1)}
+                          disabled={cantidadCarrito <= cantidadMinimaAgregar}
                         >
                           -
                         </button>
@@ -234,7 +266,7 @@ export default function ProductInfo({ product }) {
                         </span>
                         <button
                           className="pi-shipping-button-add"
-                          onClick={() => setCantidadCarrito(cantidadCarrito + 1)}
+                          onClick={() => setCantidadElegida(cantidadCarrito + 1)}
                           disabled={cantidadCarrito >= stockDisponibleParaAgregar}
                         >
                           +
@@ -253,8 +285,14 @@ export default function ProductInfo({ product }) {
               ) : (
                 <div className="pi-shipping-container">
                   <span className="pi-without-stock">
-                    <XCircle size={22} strokeWidth={2} /> Producto{" "}
-                    {!product.b2c?.enabled ? "no disponible" : "agotado"}
+                    <XCircle size={22} strokeWidth={2} />{" "}
+                    {!isEnabled
+                      ? isB2B
+                        ? "Producto no disponible para clientes B2B"
+                        : "Producto no disponible"
+                      : !price.isValid
+                        ? "Precio no disponible"
+                        : "Producto agotado"}
                   </span>
                 </div>
               )}

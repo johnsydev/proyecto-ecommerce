@@ -6,6 +6,7 @@ import { useCart } from "../context/CartContext";
 import { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useUser } from "../context/useUser";
+import { PERMISSIONS, getRoleDetails } from "../utils/permissions";
 
 /*
  * Objetivo:
@@ -34,7 +35,11 @@ import { useUser } from "../context/useUser";
 
 export default function Header() {
   const { cart, totalItems } = useCart();
-  const { user } = useUser();
+  const { user, can } = useUser();
+  const roleDetails = getRoleDetails(user?.role);
+  const canUseCart = can(PERMISSIONS.ADD_TO_CART);
+  const canViewAdmin = can(PERMISSIONS.VIEW_ADMIN_INFO);
+  const canViewOwnOrders = can(PERMISSIONS.VIEW_OWN_ORDERS);
   const [previewProduct, setPreviewProduct] = useState(null);
   const [showCartPreview, setShowCartPreview] = useState(false);
   
@@ -148,15 +153,34 @@ export default function Header() {
 
             <div className="account-text">
               <span className="account-label">
-                {user ? "Mi cuenta" : "Cuenta"}
+                {user ? "" : "Cuenta"}
               </span>
 
               <span className="account-username">
                 {user ? user.username : "Iniciar sesión"}
               </span>
+
+              {roleDetails && (
+                <span className="account-role">
+                  {roleDetails.type} · {roleDetails.label}
+                </span>
+              )}
             </div>
           </Link>
 
+          {canViewAdmin && (
+            <Link to="/admin" className="header-admin-link">
+              Panel admin
+            </Link>
+          )}
+
+          {canViewOwnOrders && user && (
+            <Link to="/orders" className="header-admin-link">
+              Mis órdenes
+            </Link>
+          )}
+
+          {canUseCart && (
           <div className="header-cart-wrapper">
             <a
               href="#/cart"
@@ -182,6 +206,7 @@ export default function Header() {
               />
             )}
           </div>
+          )}
         </div>
       </div>
     </header>

@@ -4,10 +4,10 @@ import { ArrowUp, ArrowLeft, ShieldCheck, XOctagon, Info } from "lucide-react";
 import { useCart } from "../../../context/CartContext";
 import PurchaseStepper from "../../../components/PurchaseStepper";
 import PaymentSandbox from "./PaymentSandbox";
-import { ORDER_STATUS, PAYMENT_STATUS } from "../../../utils/constants";
+import { ORDER_LABELS, ORDER_STATUS, PAYMENT_LABELS } from "../../../utils/constants";
 import {
     MAX_PAYMENT_ATTEMPTS,
-    FAILURE_REASON,
+    FAILURE_MESSAGES,
     getCurrentOrder,
     expireStaleOrders,
     recoverInterruptedPayment,
@@ -33,29 +33,6 @@ import { getPurchaseOwnerKey } from "../../../utils/purchaseStorage";
    *   - No permite continuar con el pago si la orden ha expirado o ha fallado.
    */
   
-const PAYMENT_LABELS = {
-    [PAYMENT_STATUS.PENDING]: "Pendiente",
-    [PAYMENT_STATUS.APPROVED]: "Aprobado",
-    [PAYMENT_STATUS.DECLINED]: "Rechazado",
-    [PAYMENT_STATUS.ERROR]: "Error",
-};
-
-const ORDER_LABELS = {
-    [ORDER_STATUS.PENDING]: "Pendiente",
-    [ORDER_STATUS.CONFIRMED]: "Confirmada",
-    [ORDER_STATUS.DELIVERED]: "Entregada",
-    [ORDER_STATUS.FAILED]: "Fallida",
-};
-
-const FAILURE_MESSAGES = {
-    [FAILURE_REASON.MAX_ATTEMPTS_REACHED]:
-        "Se alcanzó el número máximo de intentos de pago. No se realizó ningún cobro.",
-    [FAILURE_REASON.ORDER_EXPIRED]:
-        "La orden expiró por inactividad antes de completarse el pago. No se realizó ningún cobro.",
-    [FAILURE_REASON.NETWORK_OFFLINE]:
-        "No se pudo procesar el pago porque no hay conexión a internet. No se realizó ningún cobro.",
-};
-
 const CURRENCY = "₡";
 
 const formatMoney = (currency, value) =>
@@ -211,6 +188,24 @@ export default function Pay() {
                             <span>Cliente</span>
                             <span>{fullName}</span>
                         </div>
+                        {orderInfo.company?.name && (
+                            <div className="pay-summary-line">
+                                <span>Empresa</span>
+                                <span>{orderInfo.company.name}</span>
+                            </div>
+                        )}
+                        {orderInfo.commercialConditions?.priceList && (
+                            <div className="pay-summary-line">
+                                <span>Lista de precios</span>
+                                <span>{orderInfo.commercialConditions.priceList}</span>
+                            </div>
+                        )}
+                        {orderInfo.branch?.name && (
+                            <div className="pay-summary-line">
+                                <span>Sucursal</span>
+                                <span>{orderInfo.branch.name}</span>
+                            </div>
+                        )}
                         <div className="pay-summary-line">
                             <span>Estado de la orden</span>
                             <span className={`status-pill status-${orderInfo.orderStatus.toLowerCase()}`}>

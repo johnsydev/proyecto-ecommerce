@@ -6,6 +6,7 @@ import {
     isValidPhoneCR,
 } from "../../../utils/validations";
 import CustomSelect from "./CustomSelect";
+import { useUser } from "../../../context/useUser";
 
 
 /*
@@ -38,6 +39,7 @@ export default function CheckoutForm({
     setDeliveryInfo,
     onCheckoutSubmit,
 }) {
+    const { user } = useUser();
     const {
         fullName,
         email,
@@ -208,6 +210,22 @@ export default function CheckoutForm({
 
     return (
         <div className="checkout-form">
+            {user?.company && (
+                <section className="checkout-company" aria-label="Información de la empresa">
+                    <h2>Compra a nombre de la empresa</h2>
+                    <dl>
+                        <dt>Empresa</dt>
+                        <dd>{user.company}</dd>
+                        {user.taxId && (
+                            <>
+                                <dt>Cédula jurídica</dt>
+                                <dd>{user.taxId}</dd>
+                            </>
+                        )}
+                    </dl>
+                </section>
+            )}
+
             <h2>Información de contacto</h2>
 
             <form id="checkout-form" onSubmit={handleSubmit} noValidate>

@@ -99,7 +99,7 @@
     transform 0.1s ease;
 }
 
-.checkout-button:hover {
+.checkout-button:hover:not(:disabled) {
   background: #2a437a;
 }
 
@@ -110,6 +110,26 @@
 .checkout-button:focus-visible {
   outline: 3px solid #93b4f5;
   outline-offset: 3px;
+}
+
+.checkout-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.checkout-button:disabled:active {
+  transform: none;
+}
+
+.cart-summary-blocked {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff5f5;
+  color: #b42318;
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 

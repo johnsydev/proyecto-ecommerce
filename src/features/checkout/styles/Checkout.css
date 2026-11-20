@@ -16,6 +16,43 @@
   align-items: start;
 }
 
+.checkout-blocked {
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  background: #fff5f5;
+  color: #b42318;
+}
+
+.checkout-blocked h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.checkout-blocked ul {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.checkout-blocked button {
+  padding: 8px 14px;
+  border: 1px solid #345499;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #345499;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.checkout-blocked button:hover {
+  background: #eef3fc;
+}
+
 .checkout-form-wrapper,
 .purchase-summary-wrapper {
   min-width: 0;

@@ -11,7 +11,10 @@ import {
   recordEvent,
 } from "../../../utils/analyticsStorage";
 import searchClient from "../services/algolia";
+import { useUser } from "../../../context/useUser";
+import { getPriceInfo, isProductEnabled } from "../../../utils/pricing";
 import "../styles/SearchBar.css";
+import { applyStockOverrides } from "../../../utils/stockOverrides";
 
 /*
  * Objetivo:
@@ -77,6 +80,7 @@ export default function SearchBar() {
   const navigate = useNavigate();
 
   const { query, refine } = useSearchBox();
+  const { user } = useUser();
 
   const refineRef = useRef(refine);
   useEffect(() => {
@@ -223,9 +227,12 @@ export default function SearchBar() {
                   </div>
                 );
               },
-              item({ item }) {
+              item({ item: algoliaItem }) {
+                const item = applyStockOverrides(algoliaItem);
                 const isOutOfStock = Number(item.stock_quantity) <= 0;
-                const isEnabled = item.b2c?.enabled;
+                const isEnabled = isProductEnabled(item, user);
+                const price = getPriceInfo(item, user);
+                const symbol = item.currency !== "CRC" ? "$" : "₡";
 
                 return (
                   <div
@@ -239,18 +246,20 @@ export default function SearchBar() {
                       {item.model ? (
                         <p>
                           [{item.model}]{" "}
-                          <span className="ctg-autocomplete-item-price">
-                            {item.currency !== "CRC" ? "$" : "₡"}
-                            {Number(item.b2c.sale_price).toLocaleString(
-                              "en-US",
-                            )}
-                          </span>
-                          {item.b2c.discount_percentage > 0 ? (
+                          {price.isValid ? (
+                            <span className="ctg-autocomplete-item-price">
+                              {symbol}
+                              {price.unitPrice.toLocaleString("en-US")}
+                            </span>
+                          ) : (
+                            <span className="ctg-autocomplete-badge-out-of-stock">
+                              Precio no disponible
+                            </span>
+                          )}
+                          {price.hasDiscount ? (
                             <span className="ctg-autocomplete-item-regular-price">
-                              {item.currency !== "CRC" ? "$" : "₡"}
-                              {Number(item.b2c.regular_price).toLocaleString(
-                                "en-US",
-                              )}
+                              {symbol}
+                              {price.regularPrice.toLocaleString("en-US")}
                             </span>
                           ) : null}
                           {isOutOfStock ? (
@@ -284,7 +293,7 @@ export default function SearchBar() {
       panelRootRef.current?.unmount();
       panelRootRef.current = null;
     };
-  }, [initialQuery, navigate]);
+  }, [initialQuery, navigate, user]);
 
   useEffect(() => {
     searchInstanceRef.current?.setQuery(query);

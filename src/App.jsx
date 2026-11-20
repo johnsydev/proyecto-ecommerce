@@ -14,6 +14,11 @@ import searchClient from "./features/catalog/services/algolia";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import { useUser } from "./context/useUser";
 import SignInPage from "./pages/SignIn";
+import AdminPage from "./pages/AdminPage";
+import OrdersPage from "./pages/OrdersPage";
+import OrderDetailPage from "./pages/OrderDetailPage";
+import RoleGuard from "./components/RoleGuard";
+import { PERMISSIONS } from "./utils/permissions";
 import "./App.css";
 
 /*
@@ -67,13 +72,44 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<CatalogPage />} />
           <Route path="/producto/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/pay" element={<Pay />} />
-          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route
+            path="/cart"
+            element={
+              <RoleGuard permission={PERMISSIONS.ADD_TO_CART}>
+                <CartPage />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <RoleGuard permission={PERMISSIONS.CHECKOUT}>
+                <Checkout />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/pay"
+            element={
+              <RoleGuard permission={PERMISSIONS.CHECKOUT}>
+                <Pay />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/order-confirmation"
+            element={
+              <RoleGuard permission={PERMISSIONS.CHECKOUT}>
+                <OrderConfirmation />
+              </RoleGuard>
+            }
+          />
           <Route path="/policies/*" element={<PoliciesPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/:orderNumber" element={<OrderDetailPage />} />
         </Routes>
       </main>
       <Footer />

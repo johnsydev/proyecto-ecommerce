@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import robotLogo from "../../../assets/ElectroLogo.png";
 import { useUser } from "../../../context/useUser";
+import { PERMISSIONS, getRoleDetails } from "../../../utils/permissions";
 import "../styles/SignIn.css";
 
 /*
@@ -32,7 +33,10 @@ import "../styles/SignIn.css";
  * - Bloquea el formulario mientras se validan las credenciales.
  */
 export default function SignIn() {
-  const { user, login, logout } = useUser();
+  const { user, login, logout, can } = useUser();
+  const roleDetails = getRoleDetails(user?.role);
+  const canViewAdmin = can(PERMISSIONS.VIEW_ADMIN_INFO);
+  const canViewOwnOrders = can(PERMISSIONS.VIEW_OWN_ORDERS);
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -129,11 +133,30 @@ export default function SignIn() {
                 </span>
                 <div>
                   <span className="signin-user-caption">Sesión iniciada como</span>
-                  <strong>{user.username}</strong>
+                  <strong>{user.name}</strong>
+                  <span className="signin-user-meta">
+                    @{user.username} · {roleDetails?.type} · Rol {roleDetails?.label}
+                  </span>
+                  {user.company && (
+                    <span className="signin-user-meta">
+                      {user.company}
+                      {user.taxId ? ` · Cédula jurídica ${user.taxId}` : ""}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              <Link to="/analytics" className="signin-submit">
+              {canViewAdmin ? (
+                <Link to="/admin" className="signin-submit">
+                  Ir al panel administrativo <ArrowRight size={18} aria-hidden="true" />
+                </Link>
+              ) : null}
+              {canViewOwnOrders && (
+                <Link to="/orders" className="signin-submit">
+                  Mis órdenes <ArrowRight size={18} aria-hidden="true" />
+                </Link>
+              )}
+              <Link to="/analytics" className={canViewAdmin || canViewOwnOrders ? "signin-secondary" : "signin-submit"}>
                 Ver mi actividad <ArrowRight size={18} aria-hidden="true" />
               </Link>
               <button type="button" className="signin-secondary" onClick={handleLogout}>

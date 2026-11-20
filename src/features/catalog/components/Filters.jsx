@@ -1,6 +1,8 @@
 import { RefinementList, ClearRefinements } from "react-instantsearch";
 import PriceSlider from "./PriceSlider";
 import { Funnel } from "lucide-react";
+import { useUser } from "../../../context/useUser";
+import { getPriceList, PRICE_LISTS } from "../../../utils/pricing";
 import "../styles/Filters.css";
 
 /*
@@ -11,7 +13,8 @@ import "../styles/Filters.css";
  * Entrada:
  * - Los atributos "categories" y "brand" provenientes de los productos
  *   indexados en Algolia.
- * - El atributo "b2c.sale_price" utilizado para filtrar por precio.
+ * - El atributo de precio de la lista del usuario: "b2c.sale_price" para
+ *   B2C y visitantes, o "b2b.price" para clientes B2B.
  * - El componente PriceSlider para seleccionar un rango de precios.
  *
  * Salida:
@@ -23,7 +26,7 @@ import "../styles/Filters.css";
  * Restricciones:
  * - El componente debe utilizarse dentro de InstantSearch para que los filtros
  *   puedan comunicarse con Algolia.
- * - Los atributos "categories", "brand" y "b2c.sale_price" deben existir
+ * - Los atributos "categories", "brand" y el atributo de precio deben existir
  *   en los productos indexados.
  * - Los atributos utilizados como filtros deben estar configurados correctamente
  *   en Algolia para permitir refinamientos.
@@ -31,6 +34,10 @@ import "../styles/Filters.css";
  */
 
 export default function Filters({ showHeader = true }) {
+  const { user } = useUser();
+  const priceAttribute =
+    getPriceList(user) === PRICE_LISTS.B2B ? "b2b.price" : "b2c.sale_price";
+
   return (
     <div className="filters-container">
       {showHeader && (
@@ -77,7 +84,7 @@ export default function Filters({ showHeader = true }) {
       <div className="filter-section">
         <h3 className="filter-subtitle">Precio (₡)</h3>
 
-        <PriceSlider attribute="b2c.sale_price" />
+        <PriceSlider attribute={priceAttribute} />
       </div>
     </div>
   );

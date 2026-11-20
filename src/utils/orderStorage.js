@@ -22,6 +22,17 @@ export const FAILURE_REASON = {
     ORDER_ABANDONED: "ORDER_ABANDONED",
 };
 
+export const FAILURE_MESSAGES = {
+    [FAILURE_REASON.MAX_ATTEMPTS_REACHED]:
+        "Se alcanzó el número máximo de intentos de pago. No se realizó ningún cobro.",
+    [FAILURE_REASON.ORDER_EXPIRED]:
+        "La orden expiró por inactividad antes de completarse el pago. No se realizó ningún cobro.",
+    [FAILURE_REASON.NETWORK_OFFLINE]:
+        "No se pudo procesar el pago porque no hay conexión a internet. No se realizó ningún cobro.",
+    [FAILURE_REASON.ORDER_ABANDONED]:
+        "La orden se reemplazó por una nueva antes de completar el pago. No se realizó ningún cobro.",
+};
+
 const ORDERS_KEY = "orders";
 const CURRENT_KEY = "currentOrderNumber";
 const LAST_CONFIRMED_KEY = "lastConfirmedOrderNumber";
@@ -222,6 +233,7 @@ export function createOrReuseOrder(newOrder, reuse = false) {
         if (reuse) {
             return saveOrder({
                 ...newOrder,
+                objectID: existing.orderNumber,
                 orderNumber: existing.orderNumber,
                 createdAt: existing.createdAt,
                 paymentStatus: existing.paymentStatus,

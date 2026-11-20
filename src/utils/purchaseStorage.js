@@ -1,4 +1,5 @@
 import { getCurrentUser } from "./userStorage";
+import { getBranch } from "./inventory";
 
 /*
  * Objetivo:
@@ -36,6 +37,33 @@ export function readCart(ownerKey) {
       : [];
   } catch {
     return [];
+  }
+}
+
+/* Recuperar la sucursal elegida por el propietario del carrito. */
+export function readBranchId(ownerKey) {
+  try {
+    const branchId = localStorage.getItem(
+      getPurchaseStorageKey("selectedBranch", ownerKey),
+    );
+    return getBranch(branchId) ? branchId : null;
+  } catch {
+    return null;
+  }
+}
+
+export function writeBranchId(branchId, ownerKey) {
+  try {
+    const key = getPurchaseStorageKey("selectedBranch", ownerKey);
+
+    if (branchId) {
+      localStorage.setItem(key, branchId);
+    } else {
+      localStorage.removeItem(key);
+    }
+    return true;
+  } catch {
+    return false;
   }
 }
 

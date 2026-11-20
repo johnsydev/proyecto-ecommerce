@@ -1,5 +1,6 @@
 import { ORDER_STATUS, PAYMENT_STATUS, TERMS_AND_CONDITIONS_VERSION, PRIVACY_POLICY_VERSION } from "./constants";
 import { calculateCartSummary } from "./cartCalculations";
+import { getCommercialConditions, getPriceInfo } from "./pricing";
 
 /*
    * Objetivo:
@@ -9,19 +10,27 @@ import { calculateCartSummary } from "./cartCalculations";
    *   - cart: Arreglo de productos en el carrito.
    *   - client: Objeto con la información del cliente.
    *   - delivery: Objeto con la información de entrega.
+   *   - user: Usuario activo (null para visitante); define rol, empresa y lista de precios.
+   *   - branch: Sucursal seleccionada para la orden.
    * 
    * Salida:
-   *   - Objeto de la orden generada con detalles de productos, totales, estado de la orden y versiones de políticas.
+   *   - Objeto de la orden generada con detalles de productos, totales, estado de la orden, sucursal,
+   *     condiciones comerciales y versiones de políticas.
+   * 
+   * Restricciones:
+   *   - Los precios de cada línea provienen de getPriceInfo, igual que los mostrados en carrito y checkout.
    */
 
-export function generateOrder({ cart, client, delivery }) {
+export function generateOrder({ cart, client, delivery, user = null, branch }) {
     const {
         subtotal,
         iva,
         costoEnvio,
         total,
         deliveryDate,
-    } = calculateCartSummary(cart);
+    } = calculateCartSummary(cart, user);
+
+    const now = new Date();
 
     const date = new Intl.DateTimeFormat("sv-SE", {
         timeZone: "America/Costa_Rica",
@@ -32,36 +41,60 @@ export function generateOrder({ cart, client, delivery }) {
         minute: "2-digit",
         second: "2-digit",
         hourCycle: "h23",
-    }).format(new Date()).replace(" ", "T");
+    }).format(now).replace(" ", "T");
+
+    const orderNumber = generateOrderId();
 
     return {
-        orderNumber: generateOrderId(),
+        objectID: orderNumber,
+        orderNumber,
         date: date,
+        dateTimestamp: now.getTime(),
+
+        userId: user?.id ?? null,
+        username: user?.username ?? null,
+        role: user?.role ?? null,
 
         client: {
             ...client,
             phone: getPrettyPhoneNumber(client.phone),
         },
+        company: user?.company
+            ? { name: user.company, taxId: user.taxId ?? null }
+            : null,
+        commercialConditions: getCommercialConditions(user),
+        branch: branch
+            ? {
+                branch_id: branch.branch_id,
+                name: branch.name,
+                province: branch.province,
+            }
+            : null,
         delivery: {
             ...delivery,
             estimatedDate: deliveryDate.toISOString(),
         },
 
-        products: cart.map((product) => ({
-            productId: product.objectID ?? product.id,
-            name: product.title,
-            quantity: Number(product.order_quantity || 1),
-            originalUnitPrice: Number(product.b2c?.regular_price ?? 0),
-            saleUnitPrice: Number(
-                product.b2c?.sale_price ??
-                product.b2c?.regular_price ??
-                0
-            ),
-            discount_percentage: Number(product.b2c?.discount_percentage || 0),
-            iva_percentage: 13,
-            image_url: product.image_url || product.imageUrl, 
-        })),
+        products: cart.map((product) => {
+            const { priceList, unitPrice, regularPrice, discountPercentage } =
+                getPriceInfo(product, user);
+            const quantity = Number(product.order_quantity || 1);
 
+            return {
+                productId: product.objectID ?? product.id,
+                name: product.title,
+                quantity,
+                priceList,
+                originalUnitPrice: regularPrice,
+                saleUnitPrice: unitPrice,
+                discount_percentage: discountPercentage,
+                iva_percentage: 13,
+                lineSubtotal: unitPrice * quantity,
+                image_url: product.image_url || product.imageUrl,
+            };
+        }),
+
+        currency: cart[0]?.currency ?? "CRC",
         subtotal,
         total_iva: iva,
         shippingCost: costoEnvio,

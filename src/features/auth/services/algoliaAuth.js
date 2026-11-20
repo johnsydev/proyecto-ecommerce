@@ -1,4 +1,5 @@
 import searchClient from "../../catalog/services/algolia";
+import { isValidRole } from "../../../utils/permissions";
 
 /*
  * Objetivo:
@@ -9,9 +10,11 @@ import searchClient from "../../catalog/services/algolia";
  * - password: Contraseña de prueba, sin modificar espacios ni mayúsculas.
  *
  * Salida:
- * - Identidad del usuario, sin incluir la contraseña.
+ * - Identidad del usuario con rol, empresa e identificación tributaria
+ *   (estas dos últimas solo para B2B), sin incluir la contraseña.
  *
  * Restricciones:
+ * - Rechaza las cuentas cuyo rol no sea B2C, B2B o ADMIN.
  * - No crea ni modifica registros en Algolia.
  * - El campo de usuario debe ser searchable en el índice.
  * - Compara credenciales ficticias en texto como simulación del laboratorio.
@@ -47,7 +50,15 @@ export async function authenticateUser(username, password) {
         searchParams: {
           query: identifier,
           restrictSearchableAttributes: [usernameField],
-          attributesToRetrieve: ["objectID", usernameField, passwordField],
+          attributesToRetrieve: [
+            "objectID",
+            usernameField,
+            passwordField,
+            "name",
+            "role",
+            "company",
+            "taxId",
+          ],
           typoTolerance: false,
           hitsPerPage: 100,
           page,
@@ -83,9 +94,19 @@ export async function authenticateUser(username, password) {
     throw new Error("Usuario o contraseña incorrectos.");
   }
 
+  if (!isValidRole(account.role)) {
+    throw new Error(
+      "Acceso denegado: tu usuario no tiene un rol válido para ingresar.",
+    );
+  }
+
   return {
     id: String(account.objectID),
     username: account[usernameField],
+    name: account.name ?? account[usernameField],
+    role: account.role,
+    company: account.company ?? null,
+    taxId: account.taxId ?? null,
     provider: "algolia",
   };
 }

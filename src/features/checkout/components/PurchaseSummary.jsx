@@ -3,6 +3,8 @@ import {
     calculateCartSummary,
     formatPrice,
 } from "../../../utils/cartCalculations";
+import { useUser } from "../../../context/useUser";
+import { getPriceList, getUnitPrice } from "../../../utils/pricing";
 import "../styles/PurchaseSummary.css";
 import { Info } from "lucide-react";
 
@@ -14,7 +16,8 @@ import { Info } from "lucide-react";
    * 
    * Entrada:
    *   - cart: Arreglo de productos en el carrito.
-   *   - acceptedTerms: Booleano que indica si el usuario ha aceptado los términos y condiciones.
+   *   - branch: Sucursal seleccionada para la compra.
+   *   - blocked: Booleano que indica si el carrito no puede continuar al pago. Booleano que indica si el usuario ha aceptado los términos y condiciones.
    *   - setAcceptedTerms: Función para actualizar el estado de aceptación de términos.
    *   - termsError: Booleano que indica si hay un error relacionado con los términos y condiciones.
    *   - setTermsError: Función para actualizar el estado de error de términos.
@@ -29,12 +32,16 @@ import { Info } from "lucide-react";
   
 export default function PurchaseSummary({
     cart = [],
+    branch = null,
+    blocked = false,
     acceptedTerms,
     setAcceptedTerms,
     termsError,
     setTermsError,
     onTermsError,
 }) {
+    const { user } = useUser();
+    const priceList = getPriceList(user);
     const {
         currency,
         subtotal,
@@ -45,7 +52,7 @@ export default function PurchaseSummary({
         maxDeliveryDays,
         deliveryDate,
         formattedDate,
-    } = calculateCartSummary(cart);
+    } = calculateCartSummary(cart, user);
 
     const handleTermsChange = (e) => {
         const checked = e.target.checked;
@@ -72,6 +79,16 @@ export default function PurchaseSummary({
                 <h2>Resumen de la compra</h2>
 
                 <div className="purchase-summary-details">
+                    <div className="purchase-summary-line">
+                        <span>Lista de precios</span>
+                        <span>{priceList}</span>
+                    </div>
+
+                    <div className="purchase-summary-line">
+                        <span>Sucursal</span>
+                        <span>{branch ? branch.name : "Sin seleccionar"}</span>
+                    </div>
+
                     <div className="purchase-summary-line">
                         <span>Subtotal</span>
                         <span>{currency}{formatPrice(subtotal)}</span>
@@ -158,6 +175,7 @@ export default function PurchaseSummary({
                 type="submit"
                 form="checkout-form"
                 className="checkout-continue-button"
+                disabled={blocked}
                 onClick={() => {
                     if (!acceptedTerms) {
                         onTermsError();
@@ -188,11 +206,7 @@ export default function PurchaseSummary({
                             const keyId =
                                 product.id ?? product.objectID ?? index;
 
-                            const price = Number(
-                                product.b2c?.sale_price ??
-                                product.b2c?.regular_price ??
-                                0
-                            );
+                            const price = getUnitPrice(product, user) ?? 0;
 
                             const quantity = product.order_quantity || 1;
                             const symbol =

@@ -16,7 +16,7 @@ import dotenv from "dotenv";
  *
  * Salida:
  * - Los productos quedan almacenados en el índice "grupo-05_products"
- *   de Algolia.
+ *   de Algolia, con b2b.price disponible como atributo para filtrar precios.
  * - Se muestran mensajes en consola indicando el inicio y la finalización
  *   del proceso de indexación.
  *
@@ -59,6 +59,20 @@ await client.saveObjects({
   objects: products,
   waitForTasks: true,
 });
+
+// El filtro de precio del catálogo B2B necesita b2b.price como atributo de faceting.
+const B2B_PRICE_FACET = "searchable(b2b.price)";
+const currentSettings = await client.getSettings({ indexName: INDEX_NAME });
+const facets = currentSettings.attributesForFaceting ?? [];
+
+if (!facets.some((facet) => facet.replace(/^(searchable|filterOnly)\((.*)\)$/, "$2") === "b2b.price")) {
+  const { taskID } = await client.setSettings({
+    indexName: INDEX_NAME,
+    indexSettings: { attributesForFaceting: [...facets, B2B_PRICE_FACET] },
+  });
+  await client.waitForTask({ indexName: INDEX_NAME, taskID });
+  console.log(`Atributo b2b.price agregado a attributesForFaceting de "${INDEX_NAME}".`);
+}
 
 console.log(
   `${products.length} productos indexados correctamente en "${INDEX_NAME}", listos para ser buscados.`,

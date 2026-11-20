@@ -1,4 +1,5 @@
 import { authenticateUser } from "../features/auth/services/algoliaAuth";
+import { isValidRole } from "./permissions";
 
 const CURRENT_USER_KEY = "currentUser";
 
@@ -10,8 +11,9 @@ const CURRENT_USER_KEY = "currentUser";
  * - Usuario identificado mediante Algolia o null.
  *
  * Restricciones:
- * - Solo conserva identificador, nombre de usuario y proveedor.
- * - Las antiguas identidades locales no son accesos válidos.
+ * - Conserva identificador, usuario, nombre, rol, empresa, identificación
+ *   tributaria y proveedor.
+ * - Las identidades locales o sin un rol válido no son accesos válidos.
  */
 export function getCurrentUser() {
   try {
@@ -23,12 +25,21 @@ export function getCurrentUser() {
       user.provider !== "algolia" ||
       typeof user.id !== "string" ||
       !user.id ||
-      typeof user.username !== "string"
+      typeof user.username !== "string" ||
+      !isValidRole(user.role)
     ) {
       return null;
     }
 
-    return { id: user.id, username: user.username, provider: user.provider };
+    return {
+      id: user.id,
+      username: user.username,
+      name: typeof user.name === "string" ? user.name : user.username,
+      role: user.role,
+      company: typeof user.company === "string" ? user.company : null,
+      taxId: typeof user.taxId === "string" ? user.taxId : null,
+      provider: user.provider,
+    };
   } catch {
     return null;
   }
