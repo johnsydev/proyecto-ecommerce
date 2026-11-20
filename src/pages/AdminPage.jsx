@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import { ClipboardList, Package, Store } from "lucide-react";
 import RoleGuard from "../components/RoleGuard";
-import AdminTabs from "../features/admin/components/AdminTabs";
+import AdminTabs from "../features/admin/components/adminTabs";
 import AdminOrders from "../features/admin/components/AdminOrders";
+import AdminProducts from "../features/admin/components/AdminProducts";
+import AdminInventory from "../features/admin/components/AdminInventory";
 import { useUser } from "../context/useUser";
 import { PERMISSIONS } from "../utils/permissions";
 import "../styles/AdminPage.css";
@@ -64,9 +66,10 @@ export default function AdminPage() {
               <AdminOrders />
             </RoleGuard>
           )}
-          {activeTab !== "orders" && (
-            <p className="admin-empty">Esta sección se completa en los siguientes commits.</p>
-          )}
+
+          {activeTab === "products" && <AdminProducts />}
+
+          {activeTab === "inventory" && <AdminInventory />}
         </div>
       </section>
     </RoleGuard>

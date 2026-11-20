@@ -42,3 +42,21 @@ export function getBranchStock(product, branchId = null) {
 export function formatUnits(quantity) {
   return `${quantity} ${quantity === 1 ? "unidad" : "unidades"}`;
 }
+
+
+/*
+ * Objetivo:
+ * Calcular las unidades disponibles de un producto sumando todas las sucursales.
+ *
+ * Entrada:
+ * - product: Producto con la lista branches.
+ *
+ * Salida:
+ * - Total de unidades en las sucursales registradas en BRANCHES.
+ */
+export function getTotalBranchStock(product) {
+  return BRANCHES.reduce(
+    (total, branch) => total + getBranchStock(product, branch.branch_id),
+    0,
+  );
+}
