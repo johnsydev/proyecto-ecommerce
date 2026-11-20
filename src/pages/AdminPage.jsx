@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { ClipboardList, Package, Store } from "lucide-react";
 import RoleGuard from "../components/RoleGuard";
 import AdminTabs from "../features/admin/components/AdminTabs";
+import AdminOrders from "../features/admin/components/AdminOrders";
 import { useUser } from "../context/useUser";
 import { PERMISSIONS } from "../utils/permissions";
 import "../styles/AdminPage.css";
@@ -58,7 +59,14 @@ export default function AdminPage() {
           role="tabpanel"
           aria-labelledby={`admin-tab-${activeTab}`}
         >
-          <p className="admin-empty">Esta sección se completa en los siguientes commits.</p>
+          {activeTab === "orders" && (
+            <RoleGuard permission={PERMISSIONS.VIEW_ALL_ORDERS}>
+              <AdminOrders />
+            </RoleGuard>
+          )}
+          {activeTab !== "orders" && (
+            <p className="admin-empty">Esta sección se completa en los siguientes commits.</p>
+          )}
         </div>
       </section>
     </RoleGuard>
