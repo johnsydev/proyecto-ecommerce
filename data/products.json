@@ -549,7 +549,7 @@
     "in_stock": true,
     "stock_quantity": 34,
     "rating": 4.3,
-    "image_url": "https://cdn11.bigcommerce.com/s-64749/images/stencil/1280x1280/products/2344/8801/Pico-2-W__16621.1747686183.jpg?c=2",
+    "image_url": "https://crcibernetica.com/static/1789754020021-Pico-2-W__16621.jpg",
     "facets": {
       "board_type": "Microcontrolador IoT",
       "processor": "RP2350",
@@ -13697,7 +13697,7 @@
     "in_stock": false,
     "stock_quantity": 0,
     "rating": 4.1,
-    "image_url": "https://www.tecnoteca.es/wp-content/uploads/RES1_4_1.jpg",
+    "image_url": "https://res.cloudinary.com/dpuuo4mfh/image/upload/v1795158006/elec214_a2xniy.jpg",
     "facets": {
       "component_type": "Resistencia de carbón",
       "value": "680 Ω",
@@ -14837,7 +14837,7 @@
     "in_stock": false,
     "stock_quantity": 0,
     "rating": 4.4,
-    "image_url": "https://electronicadelnorte.com.ec/wp/wp-content/uploads/2025/02/maxitec-steren-resistencia-de-12-kohm-12-w-r1k2-12-1.jpg.webp",
+    "image_url": "https://res.cloudinary.com/dpuuo4mfh/image/upload/v1795158006/elec214_a2xniy.jpg",
     "facets": {
       "component_type": "Resistencia de carbón",
       "value": "12 kΩ",
@@ -15141,7 +15141,7 @@
     "in_stock": true,
     "stock_quantity": 8,
     "rating": 4.2,
-    "image_url": "https://www.masonicwebsites.co.uk/wp-content/uploads/2020/01/masonic-websites-logo-white-150-300x109.png",
+    "image_url": "https://res.cloudinary.com/dpuuo4mfh/image/upload/v1795158006/elec214_a2xniy.jpg",
     "facets": {
       "component_type": "Resistencia de carbón",
       "value": "27 kΩ",
@@ -16205,7 +16205,7 @@
     "in_stock": true,
     "stock_quantity": 6,
     "rating": 4.7,
-    "image_url": "https://www.steren.com.mx/media/catalog/product/cache/295a12aacdcb0329a521cbf9876b29e7/image/199033616/resistencia-de-carbon-de-1-2-watt-al-5-de-tolerancia-de-390-ohms.jpg",
+    "image_url": "https://res.cloudinary.com/dpuuo4mfh/image/upload/v1795158006/elec214_a2xniy.jpg",
     "facets": {
       "component_type": "Resistencia de carbón",
       "value": "390 kΩ",
@@ -16813,7 +16813,7 @@
     "in_stock": true,
     "stock_quantity": 33,
     "rating": 4.5,
-    "image_url": "https://www.dbuelectronics.cr/903-large_default/capacitor-22uf-x-50v.jpg",
+    "image_url": "https://www.teslaelectronic.com.pe/wp-content/uploads/2026/07/Condensador.2.2uf.50v.1.png",
     "facets": {
       "component_type": "Condensador electrolítico",
       "value": "2.2 µF",
@@ -17117,7 +17117,7 @@
     "in_stock": true,
     "stock_quantity": 27,
     "rating": 4.5,
-    "image_url": "https://electromedellin.com/wp-content/uploads/2023/03/electromedellin-CONDENSADOR-ELECTROLITICO-22UF-50V-1.jpg",
+    "image_url": "https://sieeg.com.mx/wp-content/uploads/2023/01/D_NQ_NP_668201-MLA44469909078_012021-O-1-600x600.jpg",
     "facets": {
       "component_type": "Condensador electrolítico",
       "value": "22 µF",
@@ -17801,7 +17801,7 @@
     "in_stock": true,
     "stock_quantity": 17,
     "rating": 4.4,
-    "image_url": "https://electromedellin.com/wp-content/uploads/2023/03/electromedellin-CONDENSADOR-ELECTROLITICO-1000UF-25V-.jpg",
+    "image_url": "https://centroniks.com/cdn/shop/products/CE-CAP-34-01.jpg?v=1636237439",
     "facets": {
       "component_type": "Condensador electrolítico",
       "value": "1000 µF",

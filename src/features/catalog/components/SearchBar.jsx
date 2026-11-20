@@ -14,6 +14,7 @@ import searchClient from "../services/algolia";
 import { useUser } from "../../../context/useUser";
 import { getPriceInfo, isProductEnabled } from "../../../utils/pricing";
 import "../styles/SearchBar.css";
+import { applyStockOverrides } from "../../../utils/stockOverrides";
 
 /*
  * Objetivo:
@@ -226,7 +227,8 @@ export default function SearchBar() {
                   </div>
                 );
               },
-              item({ item }) {
+              item({ item: algoliaItem }) {
+                const item = applyStockOverrides(algoliaItem);
                 const isOutOfStock = Number(item.stock_quantity) <= 0;
                 const isEnabled = isProductEnabled(item, user);
                 const price = getPriceInfo(item, user);

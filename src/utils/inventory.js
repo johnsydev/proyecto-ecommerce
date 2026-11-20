@@ -1,3 +1,5 @@
+import { applyStockOverrides } from "./stockOverrides";
+
 export const BRANCHES = Object.freeze([
   { branch_id: "SJ-01", name: "San José Centro", province: "San José" },
   { branch_id: "HER-01", name: "Heredia", province: "Heredia" },
@@ -24,14 +26,16 @@ export function getBranch(branchId) {
  *
  * Restricciones:
  * - Es el único punto de lectura del inventario por sucursal.
+ * - Incluye los cambios de inventario hechos desde el panel administrativo.
  */
 export function getBranchStock(product, branchId = null) {
+  const current = applyStockOverrides(product);
   if (branchId === null) {
-    const total = Number(product?.stock_quantity);
+    const total = Number(current?.stock_quantity);
     return Number.isFinite(total) && total > 0 ? total : 0;
   }
 
-  const branch = product?.branches?.find((item) => item.branch_id === branchId);
+  const branch = current?.branches?.find((item) => item.branch_id === branchId);
   const stock = Number(branch?.stock_quantity);
 
   if (!branch || branch.available === false) return 0;
@@ -41,4 +45,22 @@ export function getBranchStock(product, branchId = null) {
 
 export function formatUnits(quantity) {
   return `${quantity} ${quantity === 1 ? "unidad" : "unidades"}`;
+}
+
+
+/*
+ * Objetivo:
+ * Calcular las unidades disponibles de un producto sumando todas las sucursales.
+ *
+ * Entrada:
+ * - product: Producto con la lista branches.
+ *
+ * Salida:
+ * - Total de unidades en las sucursales registradas en BRANCHES.
+ */
+export function getTotalBranchStock(product) {
+  return BRANCHES.reduce(
+    (total, branch) => total + getBranchStock(product, branch.branch_id),
+    0,
+  );
 }
