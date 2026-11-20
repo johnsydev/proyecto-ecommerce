@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductInfo from "./ProductInfo";
+import { applyStockOverrides } from "../../../utils/stockOverrides";
 import searchClient from "../../catalog/services/algolia";
 import { ANALYTICS_EVENTS, recordEvent } from "../../../utils/analyticsStorage";
 
@@ -46,7 +47,7 @@ export default function ProductDetails() {
       .then((product) => {
         if (cancelled) return;
 
-        setProduct(product);
+        setProduct(applyStockOverrides(product));
 
         recordEvent(ANALYTICS_EVENTS.PRODUCT_VIEW, {
           productId: product.id ?? product.objectID,

@@ -2,6 +2,7 @@ import { Hits, useInstantSearch } from "react-instantsearch";
 import ProductCard from "./ProductCard";
 import "../styles/ProductGrid.css";
 import noResultsImage from "../../../assets/electroTriste.png";
+import { applyStockOverrides } from "../../../utils/stockOverrides";
 
 /*
  * Objetivo:
@@ -45,7 +46,11 @@ export default function ProductGrid() {
           />
         </>
       ) : (
-        <Hits hitComponent={(props) => <ProductCard {...props} />} />
+        <Hits
+          hitComponent={(props) => (
+            <ProductCard {...props} hit={applyStockOverrides(props.hit)} />
+          )}
+        />
       )}
     </div>
   );

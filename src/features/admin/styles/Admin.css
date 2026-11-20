@@ -238,3 +238,144 @@
   color: #94a3b8;
   cursor: not-allowed;
 }
+
+
+/* Operación simulada de inventario */
+.admin-changed {
+  display: block;
+  margin-top: 2px;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #345499;
+  font-family: var(--sans, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.admin-btn:hover {
+  background: #f1f5f9;
+}
+
+.admin-btn--primary {
+  border-color: #345499;
+  background: #345499;
+  color: #ffffff;
+}
+
+.admin-btn--primary:hover {
+  background: #2a437a;
+}
+
+.admin-btn--small {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.admin-edit-row td {
+  background: #f8fafc;
+}
+
+.admin-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 4px;
+}
+
+.admin-edit-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.admin-edit-fields label,
+.admin-edit-current {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.admin-edit-current strong {
+  padding: 9px 0;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.admin-edit-fields select,
+.admin-edit-fields input {
+  min-width: 170px;
+  height: 40px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1f2937;
+  font-family: var(--sans, sans-serif);
+  font-size: 0.9rem;
+}
+
+.admin-edit-fields select:focus,
+.admin-edit-fields input:focus {
+  border-color: #345499;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 84, 153, 0.15);
+}
+
+.admin-edit-fields input[aria-invalid="true"] {
+  border-color: #b42318;
+}
+
+.admin-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-edit-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .admin-edit-fields select,
+  .admin-edit-fields input,
+  .admin-edit-fields label,
+  .admin-edit-current {
+    width: 100%;
+  }
+}
+
+
+/* Confirmación dentro de la página */
+.admin-confirm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
